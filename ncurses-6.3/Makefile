@@ -37,7 +37,7 @@ SHELL 		= /bin/sh
 
 DESTDIR=
 RPATH_LIST=${libdir}
-TOP_MFLAGS =  DESTDIR="$(DESTDIR)" RPATH_LIST="$(RPATH_LIST)"
+TOP_MFLAGS = -${MAKEFLAGS} DESTDIR="$(DESTDIR)" RPATH_LIST="$(RPATH_LIST)"
 
 
 
@@ -48,7 +48,7 @@ NCURSES_PATCH	= 20211021
 top_srcdir	= .
 srcdir		= .
 
-prefix		= /Users/eric/Desktop/proj
+prefix		= /mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project
 exec_prefix	= ${prefix}
 datarootdir	= ${prefix}/share
 
@@ -58,7 +58,7 @@ includedir	= ${prefix}/include
 includesubdir	= /ncursesw
 libdir		= ${exec_prefix}/lib
 mandir		= ${datarootdir}/man
-pkgdir		= /usr/local/share/pkgconfig
+pkgdir		= /usr/lib/x86_64-linux-gnu/pkgconfig
 
 include_dir	= ${includedir}${includesubdir}
 

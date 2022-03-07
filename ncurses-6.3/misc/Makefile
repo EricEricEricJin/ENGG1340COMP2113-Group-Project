@@ -47,18 +47,18 @@ SHELL		= /bin/sh
 
 THIS		= Makefile
 
-CF_MFLAGS 	= 
+CF_MFLAGS 	= -${MAKEFLAGS}
 
 
 DESTDIR		= 
 top_srcdir	= ..
 srcdir		= .
-prefix		= /Users/eric/Desktop/proj
+prefix		= /mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project
 exec_prefix	= ${prefix}
 bindir		= ${exec_prefix}/bin
 libdir		= ${exec_prefix}/lib
 datarootdir	= ${prefix}/share
-datadir		= /usr/share
+datadir		= ${datarootdir}
 includesubdir	= /ncursesw
 
 INCLUDEDIR	= $(DESTDIR)$(includedir)$(includesubdir)
@@ -73,7 +73,7 @@ INSTALL_PROGRAM	= ${INSTALL}
 INSTALL_SCRIPT	= ${INSTALL}
 INSTALL_DATA	= ${INSTALL} -m 644
 
-PKG_CONFIG_LIBDIR = /usr/local/share/pkgconfig
+PKG_CONFIG_LIBDIR = /usr/lib/x86_64-linux-gnu/pkgconfig
 
 ################################################################################
 

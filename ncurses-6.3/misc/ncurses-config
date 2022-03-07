@@ -36,14 +36,14 @@ LANGUAGE=C;	export LANGUAGE
 LC_ALL=C;	export LC_ALL
 LC_CTYPE=C;	export LC_CTYPE
 
-prefix="/Users/eric/Desktop/proj"
+prefix="/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project"
 exec_prefix="${prefix}"
 
 bindir="${exec_prefix}/bin"
 includedir="${prefix}/include"
 libdir="${exec_prefix}/lib"
 datarootdir="${prefix}/share"
-datadir="/usr/share"
+datadir="${datarootdir}"
 mandir="${datarootdir}/man"
 
 THIS="ncursesw"
@@ -101,7 +101,7 @@ fi
 # There is no portable way to find the list of standard library directories.
 # Require a POSIX shell anyway, to keep this simple.
 lib_flags=
-for opt in -L$libdir  -Wl,-search_paths_first  $LIBS
+for opt in -L$libdir   $LIBS
 do
 	case $opt in
 	-specs*) # ignore linker specs-files which were used to build library
@@ -117,13 +117,13 @@ do
 		lib_check=`echo "x$opt" | sed -e 's/^.-L//'`
 		[ -d "$lib_check" ] || continue
 		case "$lib_check" in
-		$HOME/lib|/usr/local/lib|/usr/lib) # skip standard libdir
+		/lib/x86_64-linux-gnu|/usr/lib/x86_64-linux-gnu|/lib64|/usr/lib64|/usr/local/lib|/lib|/usr/lib) # skip standard libdir
 			if [ "$lib_check" = "$libdir" ]
 			then
 				lib_first=yes
 				IFS_save="$IFS"
 				IFS='|'
-				LIBDIRS="$HOME/lib|/usr/local/lib|/usr/lib"
+				LIBDIRS="/lib/x86_64-linux-gnu|/usr/lib/x86_64-linux-gnu|/lib64|/usr/lib64|/usr/local/lib|/lib|/usr/lib"
 				for lib_check in $LIBDIRS
 				do
 					if [ -d "$lib_check" ]
@@ -183,7 +183,7 @@ while [ $# -gt 0 ]; do
 		;;
 	# compile/link
 	--cflags)
-		INCS=" -D_DARWIN_C_SOURCE"
+		INCS=" -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600"
 		if [ "xno" = xno ]; then
 			INCS="$INCS -I${includesubdir}"
 		fi
@@ -280,7 +280,7 @@ ENDECHO
 		echo "/usr/share/terminfo"
 		;;
 	--terminfo-dirs)
-		echo "/usr/share/terminfo"
+		echo "/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo"
 		;;
 	--termpath)
 		echo ""

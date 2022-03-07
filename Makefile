@@ -3,9 +3,10 @@ abs_path = $(shell pwd)
 .PHONY: install_ncurses uninstall_ncurses clean
 install_ncurses:
 	cd $(abs_path)/ncurses-6.3; \
-	./configure --prefix=$(abs_path) --enable-widec --datadir=/usr/share; \
+	./configure --prefix=$(abs_path) --enable-widec; \
 	make -j4; \
 	make install.includes; \
+	make install.data; \
 	make install.libs; \
 
 uninstall_ncurses:

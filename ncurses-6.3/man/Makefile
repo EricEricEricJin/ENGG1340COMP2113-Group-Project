@@ -40,10 +40,10 @@ SHELL		= /bin/sh
 
 DESTDIR		= 
 srcdir		= .
-prefix		= /Users/eric/Desktop/proj
+prefix		= /mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project
 exec_prefix	= ${prefix}
 datarootdir	= ${prefix}/share
-datadir		= /usr/share
+datadir		= ${datarootdir}
 mandir		= ${datarootdir}/man
 includesubdir	= /ncursesw
 
@@ -99,8 +99,8 @@ mostlyclean :
 clean:	mostlyclean
 	rm -f terminfo.5
 
-../edit_man.sed : make_sed.sh no
-	$(SHELL) $(srcdir)/make_sed.sh no >../edit_man.sed
+../edit_man.sed : make_sed.sh /mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/man/man_db.renames
+	$(SHELL) $(srcdir)/make_sed.sh /mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/man/man_db.renames >../edit_man.sed
 
 distclean realclean: clean
 	rm -f Makefile *-config.1 ../edit_man.* ../man_alias.*

@@ -44,17 +44,17 @@ echo "** Building terminfo database, please wait..."
 
 : ${suffix:=}
 : ${DESTDIR:=}
-: ${prefix:=/Users/eric/Desktop/proj}
+: ${prefix:=/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project}
 : ${exec_prefix:=${prefix}}
 : ${bindir:=${exec_prefix}/bin}
 : ${top_srcdir:=..}
 : ${srcdir:=.}
 : ${datarootdir:=${prefix}/share}
-: ${datadir:=/usr/share}
+: ${datadir:=${datarootdir}}
 : ${TIC_PATH:=tic}
 : ${ticdir:=/usr/share/terminfo}
 : ${source:=${top_srcdir}/misc/terminfo.src}
-: ${LN_S:="ln -s -f"}
+: ${LN_S:="cp -p -f"}
 : ${cross_compiling:=no}
 : ${ext_funcs:=1}
 
@@ -102,7 +102,7 @@ SHLIB_PATH=$PATH
 export SHLIB_PATH
 
 # set a variable to simplify environment update in shlib
-SHLIB_HOST=darwin21.3.0
+SHLIB_HOST=linux-gnu
 export SHLIB_HOST
 
 # don't use user's TERMINFO variable
@@ -200,7 +200,7 @@ if test "$TICDIR" != "$TERMINFO" ; then
 		if test "$RELATIVE" != "$ticdir" ; then
 			RELATIVE=../`echo $ticdir|sed -e 's%^'$prefix'/%%' -e 's%^/%%'`
 		fi
-		if ( ln -s -f "$RELATIVE" "$TICDIR" )
+		if ( cp -p -f "$RELATIVE" "$TICDIR" )
 		then
 			echo "** sym-linked $TICDIR for compatibility"
 		else

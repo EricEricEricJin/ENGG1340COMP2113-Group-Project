@@ -53,12 +53,12 @@
 #define PACKAGE "ncurses"
 #define NCURSES_VERSION "6.3"
 #define NCURSES_PATCHDATE 20211021
-#define SYSTEM_NAME "darwin21.3.0"
+#define SYSTEM_NAME "linux-gnu"
 #if 0
 #include <stdlib.h>
 #endif
 #define HAVE_LONG_FILE_NAMES 1
-#define TERMINFO_DIRS "/usr/share/terminfo"
+#define TERMINFO_DIRS "/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo"
 #define TERMINFO "/usr/share/terminfo"
 #define HAVE_BIG_CORE 1
 #define PURE_TERMINFO 1
@@ -68,9 +68,6 @@
 #define HAVE_UNISTD_H 1
 #define HAVE_REMOVE 1
 #define HAVE_UNLINK 1
-#define HAVE_LINK 1
-#define HAVE_SYMLINK 1
-#define USE_LINKS 1
 #define HAVE_LANGINFO_CODESET 1
 #define USE_WIDEC_SUPPORT 1
 #define NCURSES_WIDECHAR 1
@@ -90,7 +87,7 @@
 #define HAVE_MBSTOWCS 1
 #define NEED_WCHAR_H 1
 #define HAVE_FSEEKO 1
-#define RGB_PATH "/usr/lib64/X11/rgb.txt"
+#define RGB_PATH "/usr/share/X11/rgb.txt"
 #define STDC_HEADERS 1
 #define HAVE_SYS_TYPES_H 1
 #define HAVE_SYS_STAT_H 1
@@ -163,13 +160,11 @@
 #define HAVE_STRDUP 1
 #define HAVE_SYS_TIME_SELECT 1
 #define SIG_ATOMIC_T volatile sig_atomic_t
-#define HAVE_ERRNO 1
 #define HAVE_GETCWD 1
 #define HAVE_GETEGID 1
 #define HAVE_GETEUID 1
 #define HAVE_GETOPT 1
 #define HAVE_GETTTYNAM 1
-#define HAVE_ISSETUGID 1
 #define HAVE_LOCALECONV 1
 #define HAVE_POLL 1
 #define HAVE_PUTENV 1
@@ -178,9 +173,9 @@
 #define HAVE_SETBUF 1
 #define HAVE_SETBUFFER 1
 #define HAVE_SETENV 1
+#define HAVE_SETFSUID 1
 #define HAVE_SETVBUF 1
 #define HAVE_SIGACTION 1
-#define HAVE_SIGVEC 1
 #define HAVE_SNPRINTF 1
 #define HAVE_STRDUP 1
 #define HAVE_STRSTR 1
@@ -191,14 +186,15 @@
 #define HAVE_VSNPRINTF 1
 #define HAVE_ISASCII 1
 #define HAVE_NANOSLEEP 1
+#define HAVE_TERMIO_H 1
 #define HAVE_TERMIOS_H 1
 #define HAVE_UNISTD_H 1
 #define HAVE_SYS_IOCTL_H 1
 #define HAVE_TCGETATTR 1
 #define HAVE_VSSCANF 1
 #define HAVE_UNISTD_H 1
-#define HAVE_MKSTEMP 1
 #define HAVE_SIZECHANGE 1
+#define HAVE_WORKING_POLL 1
 #define HAVE_VA_COPY 1
 #define HAVE_UNISTD_H 1
 #define HAVE_FORK 1
@@ -206,7 +202,7 @@
 #define HAVE_WORKING_VFORK 1
 #define HAVE_WORKING_FORK 1
 #define USE_FOPEN_BIN_R 1
-#define USE_OPENPTY_HEADER <util.h>
+#define USE_OPENPTY_HEADER <pty.h>
 #define USE_XTERM_PTY 1
 #define HAVE_TYPEINFO 1
 #define HAVE_IOSTREAM 1
