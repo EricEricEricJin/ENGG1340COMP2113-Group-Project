@@ -11,6 +11,7 @@ install_ncurses:
 
 uninstall_ncurses:
 	cd $(abs_path)/ncurses-6.3; \
+	./configure --prefix=$(abs_path) --enable-widec; \
 	make uninstall; \
 	make clean
 
