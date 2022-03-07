@@ -3,12 +3,12 @@
         {
             "name": "engg1340_proj",
             "includePath": [
-                "lib/ncurses-6.3/include"
+                "include/ncursesw"
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "lib/ncurses-6.3/include"
+                    "include/ncursesw"
                 ]
             },
             "intelliSenseMode": "linux-gcc-x64",
