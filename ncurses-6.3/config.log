@@ -27,7 +27,7 @@ hostinfo               = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
 
-PATH = /home/eric/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/MinGW/bin/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files/CMake/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/dfu-util-0.9-win64/dfu-util-0.9-win64:/mnt/c/Program Files (x86)/STMicroelectronics/STM32 ST-LINK Utility/ST-LINK Utility:/mnt/c/Users/eric/AppData/Local/Programs/Python/Python310/Scripts/:/mnt/c/Users/eric/AppData/Local/Programs/Python/Python310/:/mnt/c/Users/eric/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/eric/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/texlive/2021/bin/win32:/snap/bin
+PATH = /home/eric/.vscode-server/bin/b5205cc8eb4fbaa726835538cd82372cc0222d43/bin/remote-cli:/home/eric/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/MinGW/bin/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files/CMake/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/dfu-util-0.9-win64/dfu-util-0.9-win64:/mnt/c/Program Files (x86)/STMicroelectronics/STM32 ST-LINK Utility/ST-LINK Utility:/mnt/c/Users/eric/AppData/Local/Programs/Python/Python310/Scripts/:/mnt/c/Users/eric/AppData/Local/Programs/Python/Python310/:/mnt/c/Users/eric/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/eric/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/texlive/2021/bin/win32:/mnt/c/MinGW/bin/:/snap/bin
 
 ## ------------ ##
 ## Core tests.  ##
@@ -43,7 +43,7 @@ configure:1205: found /usr/bin/grep
 configure:1213: result: grep
 configure:1224: checking for egrep
 configure:1280: result: grep -E
-configure:1290: result: Configuring NCURSES 6.3 ABI 6 (Mon Mar  7 21:32:26 HKT 2022)
+configure:1290: result: Configuring NCURSES 6.3 ABI 6 (Mon Mar  7 22:22:12 HKT 2022)
 configure:1294: checking for package version
 configure:1315: result: 6.3
 configure:1318: checking for package patch date
@@ -362,59 +362,59 @@ configure:4395: checking whether make sets ${MAKE}
 configure:4415: result: yes
 configure:4424: checking for ".PHONY" make-support
 make[1]: Entering directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
-make[1]: Warning: File 'makefile' has modification time 0.31 s in the future
+make[1]: Warning: File 'makefile' has modification time 0.48 s in the future
 ** making always.out 1
 echo 1 > always.out
 ** making always 1
 make[1]: warning:  Clock skew detected.  Your build may be incomplete.
 make[1]: Leaving directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
 make[1]: Entering directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
-make[1]: Warning: File 'makefile' has modification time 0.3 s in the future
+make[1]: Warning: File 'makefile' has modification time 0.47 s in the future
 ** making once.out 1
 echo 1 > once.out
 ** making once 1
 make[1]: warning:  Clock skew detected.  Your build may be incomplete.
 make[1]: Leaving directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
 make[1]: Entering directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
-make[1]: Warning: File 'makefile' has modification time 0.29 s in the future
+make[1]: Warning: File 'makefile' has modification time 0.46 s in the future
 make[1]: Nothing to be done for 'always'.
 touch once
 make[1]: warning:  Clock skew detected.  Your build may be incomplete.
 make[1]: Leaving directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
 make[1]: Entering directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
-make[1]: Warning: File 'makefile' has modification time 0.27 s in the future
+make[1]: Warning: File 'makefile' has modification time 0.45 s in the future
 ** making always.out 2
 echo 2 > always.out
 ** making always 2
 make[1]: warning:  Clock skew detected.  Your build may be incomplete.
 make[1]: Leaving directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
 make[1]: Entering directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
-make[1]: Warning: File 'makefile' has modification time 0.27 s in the future
+make[1]: Warning: File 'makefile' has modification time 0.44 s in the future
 ** making once.out 2
 echo 2 > once.out
 make[1]: warning:  Clock skew detected.  Your build may be incomplete.
 make[1]: Leaving directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
 make[1]: Entering directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
-make[1]: Warning: File 'makefile' has modification time 0.26 s in the future
+make[1]: Warning: File 'makefile' has modification time 0.43 s in the future
 make[1]: Nothing to be done for 'always'.
 make[1]: 'once' is up to date.
 make[1]: warning:  Clock skew detected.  Your build may be incomplete.
 make[1]: Leaving directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
 make[1]: Entering directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
-make[1]: Warning: File 'makefile' has modification time 0.24 s in the future
+make[1]: Warning: File 'makefile' has modification time 0.41 s in the future
 ** making always.out 3
 echo 3 > always.out
 ** making always 3
 make[1]: warning:  Clock skew detected.  Your build may be incomplete.
 make[1]: Leaving directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
 make[1]: Entering directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
-make[1]: Warning: File 'makefile' has modification time 0.23 s in the future
+make[1]: Warning: File 'makefile' has modification time 0.41 s in the future
 ** making once.out 3
 echo 3 > once.out
 make[1]: warning:  Clock skew detected.  Your build may be incomplete.
 make[1]: Leaving directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
 make[1]: Entering directory '/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/conftest'
-make[1]: Warning: File 'makefile' has modification time 0.23 s in the future
+make[1]: Warning: File 'makefile' has modification time 0.4 s in the future
 make[1]: Nothing to be done for 'always'.
 make[1]: 'once' is up to date.
 make[1]: warning:  Clock skew detected.  Your build may be incomplete.
@@ -536,7 +536,7 @@ configure:8990: result: BS
 configure:9000: checking for list of terminfo directories
 configure:9063: result: /mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo
 configure:9078: checking for default terminfo directory
-configure:9123: result: /usr/share/terminfo
+configure:9123: result: /mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo
 configure:9134: checking if big-core option selected
 configure:9160: gcc -o conftest -g -O2   conftest.c  >&5
 configure:9163: $? = 0
@@ -1200,7 +1200,7 @@ configure:18652: $? = 0
 configure:18662: result: yes
 configure:18749: checking if -lm needed for math functions
 configure:18772: gcc -o conftest -g -O2 -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -DNDEBUG  conftest.c  >&5
-/usr/bin/ld: /tmp/ccSn607g.o: in function `main':
+/usr/bin/ld: /tmp/ccw3eYFL.o: in function `main':
 /mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/configure:18765: undefined reference to `sin'
 /usr/bin/ld: /mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/configure:18765: undefined reference to `pow'
 collect2: error: ld returned 1 exit status
@@ -1488,7 +1488,7 @@ configure:21097: $? = 0
 configure:21108: result: yes
 configure:21123: checking if external errno exists
 configure:21145: gcc -o conftest -g -O2 --param max-inline-insns-single=1200 -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -DNDEBUG  conftest.c  >&5
-/usr/bin/ld: errno: TLS definition in /lib/x86_64-linux-gnu/libc.so.6 section .tbss mismatches non-TLS reference in /tmp/ccLmxUoh.o
+/usr/bin/ld: errno: TLS definition in /lib/x86_64-linux-gnu/libc.so.6 section .tbss mismatches non-TLS reference in /tmp/ccXnWL9M.o
 /usr/bin/ld: /lib/x86_64-linux-gnu/libc.so.6: error adding symbols: bad value
 collect2: error: ld returned 1 exit status
 configure:21148: $? = 1
@@ -1549,7 +1549,7 @@ configure:21352: $? = 0
 configure:21362: result: yes
 configure:21306: checking for issetugid
 configure:21343: gcc -o conftest -g -O2 --param max-inline-insns-single=1200 -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -DNDEBUG  conftest.c  >&5
-/usr/bin/ld: /tmp/ccvXAzxn.o: in function `main':
+/usr/bin/ld: /tmp/ccCIgKzO.o: in function `main':
 /mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/configure:21336: undefined reference to `issetugid'
 collect2: error: ld returned 1 exit status
 configure:21346: $? = 1
@@ -1640,7 +1640,7 @@ configure:21352: $? = 0
 configure:21362: result: yes
 configure:21306: checking for sigvec
 configure:21343: gcc -o conftest -g -O2 --param max-inline-insns-single=1200 -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -DNDEBUG  conftest.c  >&5
-/usr/bin/ld: /tmp/ccSNQlKs.o: in function `main':
+/usr/bin/ld: /tmp/ccsFOl2U.o: in function `main':
 /mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/ncurses-6.3/configure:21336: undefined reference to `sigvec'
 collect2: error: ld returned 1 exit status
 configure:21346: $? = 1
@@ -2504,7 +2504,7 @@ cf_cv_src_modules='ncurses progs panel menu form'
 cf_cv_struct_dirent64='no'
 cf_cv_sys_time_select='yes'
 cf_cv_system_name='linux-gnu'
-cf_cv_timestamp='Mon Mar  7 21:32:26 HKT 2022'
+cf_cv_timestamp='Mon Mar  7 22:22:12 HKT 2022'
 cf_cv_type_of_bool='unsigned char'
 cf_cv_type_sigaction='no'
 cf_cv_typeof_chtype='uint32_t'
@@ -2529,7 +2529,7 @@ cf_cv_working_poll='yes'
 #endif
 #define HAVE_LONG_FILE_NAMES 1
 #define TERMINFO_DIRS "/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo"
-#define TERMINFO "/usr/share/terminfo"
+#define TERMINFO "/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo"
 #define HAVE_BIG_CORE 1
 #define PURE_TERMINFO 1
 #define USE_HOME_TERMINFO 1

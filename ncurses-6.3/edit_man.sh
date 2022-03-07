@@ -10,7 +10,7 @@ NCURSES_MINOR="3"
 NCURSES_PATCH="20211021"
 
 NCURSES_OSPEED="short"
-TERMINFO="/usr/share/terminfo"
+TERMINFO="/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo"
 
 INSTALL="/usr/bin/install -c"
 INSTALL_DATA="${INSTALL} -m 644"

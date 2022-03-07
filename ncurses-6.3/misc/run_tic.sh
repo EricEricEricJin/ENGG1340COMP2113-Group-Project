@@ -52,7 +52,7 @@ echo "** Building terminfo database, please wait..."
 : ${datarootdir:=${prefix}/share}
 : ${datadir:=${datarootdir}}
 : ${TIC_PATH:=tic}
-: ${ticdir:=/usr/share/terminfo}
+: ${ticdir:=/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo}
 : ${source:=${top_srcdir}/misc/terminfo.src}
 : ${LN_S:="cp -p -f"}
 : ${cross_compiling:=no}

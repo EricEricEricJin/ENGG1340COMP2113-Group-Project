@@ -159,7 +159,7 @@ USE_BIG_STRINGS	= 1
 TERMINFO_CAPS	= $(top_srcdir)/include/Caps
 CAPLIST		= $(TERMINFO_CAPS) $(top_srcdir)/include/Caps-ncurses
 
-TERMINFO	= /usr/share/terminfo
+TERMINFO	= /mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo
 TERMINFO_SRC	= ${top_srcdir}/misc/terminfo.src
 TIC_PATH	= tic
 INFOCMP_PATH	= infocmp

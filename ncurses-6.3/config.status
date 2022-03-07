@@ -222,7 +222,7 @@ NCURSES_OSPEED="short"
 NCURSES_PATCH="20211021"
 PANEL_NAME="panel"
 SRC_SUBDIRS=" man include ncurses progs panel menu form test misc c++"
-TERMINFO="/usr/share/terminfo"
+TERMINFO="/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo"
 TICS_ARG_SUFFIX=""
 TICS_LIB_SUFFIX=""
 TICS_NAME="tic"
@@ -503,7 +503,7 @@ s,@USE_FALLBACKS@,#,;t t
 s,@WHICH_XTERM@,xterm-new,;t t
 s,@XTERM_KBS@,BS,;t t
 s,@TERMINFO_DIRS@,/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo,;t t
-s,@TERMINFO@,/usr/share/terminfo,;t t
+s,@TERMINFO@,/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo,;t t
 s,@MAKE_TERMINFO@,,;t t
 s,@USE_BIG_STRINGS@,1,;t t
 s,@TERMPATH@,,;t t
@@ -984,7 +984,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
 #endif
 #define HAVE_LONG_FILE_NAMES 1
 #define TERMINFO_DIRS "/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo"
-#define TERMINFO "/usr/share/terminfo"
+#define TERMINFO "/mnt/g/undergraduate_2021-2025/Courses/2nd_sem_course/ENGG1340/project/share/terminfo"
 #define HAVE_BIG_CORE 1
 #define PURE_TERMINFO 1
 #define USE_HOME_TERMINFO 1
