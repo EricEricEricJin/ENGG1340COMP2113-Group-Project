@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "name": "engg1340_proj",
+            "includePath": [
+                "lib/ncurses-6.3/include"
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "lib/ncurses-6.3/include"
+                ]
+            },
+            "intelliSenseMode": "linux-gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++14"
+        }
+    ],
+    "version": 4
+}
