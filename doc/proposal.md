@@ -1,6 +1,6 @@
 # ENGG1340COMP2113 Group Project Proposal
 Group No.: 106  
-Group members: Jin Yushang (3035855064), Lu Haoze ()  
+Group members: Jin Yushang (3035855064), Lu Haoze (3035951519)  
 Topic: Boxhead  
 Link: [https://github.com/EricEricEricJin/ENGG1340COMP2113-Group-Project](https://github.com/EricEricEricJin/ENGG1340COMP2113-Group-Project)
 
