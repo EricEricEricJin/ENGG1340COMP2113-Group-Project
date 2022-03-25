@@ -1,7 +1,7 @@
 # [Box head game]
 > HKU ENGG1340 / COMP2113 Group Project
 
-<div align=right>Group members: Jin Yushang (3035855064), Lu Haoze (3035951519)</div>
+<div align=left>Group members: Jin Yushang (3035855064), Lu Haoze (3035951519)</div>
 Description of the game:
 The Box head game is a fast paced zombie shooting game in which the player act as the main character whose aim is to shoot as much zombies as possible(getting more points) before the main character dies. The number of zombies is changing(probably increasing) as the game proceeds, all the zombies are trying to get closer to the main character.
 Rules and actions:
