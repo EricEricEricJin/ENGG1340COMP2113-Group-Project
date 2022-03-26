@@ -6,10 +6,10 @@
 #include "zombie.h"
 #include "map.h"
 
-#define UP 0b00'01
-#define DOWN 0b00'10
-#define RIGHT 0b10'00
-#define LEFT 0b01'00
+#define UP 0b11'10
+#define DOWN 0b11'01
+#define LEFT 0b10'11
+#define RIGHT 0b01'11
 
 namespace game
 {

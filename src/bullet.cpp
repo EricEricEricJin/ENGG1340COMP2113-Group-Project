@@ -32,28 +32,28 @@ void game::Bullet::go()
     case UP:
         y -= speed;
         break;
-    case (UP | RIGHT):
+    case (UP & RIGHT):
         y -= speed;
         x += speed;
         break;
     case RIGHT:
         x += speed;
         break;
-    case (DOWN | RIGHT):
+    case (DOWN & RIGHT):
         x += speed;
         y += speed;
         break;
     case DOWN:
         y += speed;
         break;
-    case (LEFT | DOWN):
+    case (LEFT & DOWN):
         x -= speed;
         y += speed;
         break;
     case LEFT:
         x -= speed;
         break;
-    case (LEFT | UP):
+    case (LEFT & UP):
         x -= speed;
         y -= speed;
     default:
