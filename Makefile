@@ -1,3 +1,5 @@
+CC = g++
+COMPILE_FLAGS = -std=c++17
 abs_path = $(shell pwd)
 
 .PHONY: install_ncurses uninstall_ncurses clean
@@ -11,26 +13,36 @@ install_ncurses:
 	make install.data; \
 	make install.libs; \
 
-map.o: src/map.h src/map.cpp
-	g++ -c src/map.cpp -I src \
+# NOTE: dependencies of object files below are not complete
+bullet.o: src/bullet.cpp src/bullet.h
+	$(CC) -c $(COMPILE_FLAGS) $< -I src
+
+map.o: src/map.cpp src/map.h
+	$(CC) -c $(COMPILE_FLAGS) $< -I src
+
+player.o: src/player.cpp src/player.h
+	$(CC) -c $(COMPILE_FLAGS) $< -I src
+
+setting.o: src/setting.cpp src/setting.h
+	$(CC) -c $(COMPILE_FLAGS) $< -I src
+
+ui.o: src/ui.cpp src/ui.h
+	$(CC) -c $(COMPILE_FLAGS) $< -I src \
 	$(shell $(abs_path)/bin/ncursesw6-config --cflags)
 
-screen.o: src/screen.h src/screen.cpp
-	g++ -c src/screen.cpp \
-	-I src \
-	$(shell $(abs_path)/bin/ncursesw6-config --cflags)
+weapon.o: src/weapon.cpp src/weapon.h
+	$(CC) -c $(COMPILE_FLAGS) $< -I src
 
-mainloop.o: src/mainloop.h src/mainloop.cpp
-	g++ -c src/mainloop.cpp \
-	-I src \
-	$(shell $(abs_path)/bin/ncursesw6-config --cflags)
+zombie.o: src/zombie.cpp src/zombie.h 
+	$(CC) -c $(COMPILE_FLAGS) $< -I src
+
+mainloop.o: src/mainloop.cpp src/mainloop.h
+	$(CC) -c $(COMPILE_FLAGS) $< -I src
 
 main.o: src/main.cpp
-	g++ -c src/main.cpp \
-	-I src
-	$(shell $(abs_path)/bin/ncursesw6-config --cflags)
+	$(CC) -c $(COMPILE_FLAGS) $< -I src
 
-main: main.o map.o screen.o mainloop.o
+main: bullet.o map.o player.o setting.o ui.o weapon.o zombie.o mainloop.o main.o
 	g++ $^ -o main \
 	$(shell $(abs_path)/bin/ncursesw6-config --libs)
 

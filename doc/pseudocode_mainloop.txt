@@ -1,0 +1,24 @@
+LOOP
+
+    // Deal with: 
+    // (1) Zombie king Kill Player
+    // (2) Ordinary zombie Kill Player
+    //     Consider ordinary zombies as shooting bullets with 0 unit range and damage of x when distance <= 1 otherwise 0.
+    //     The bullet's lifespan (when to trigger) is one loop. 
+    // (2) Player Kill Zombies
+    // (3) Player Kill Wall
+
+    FOR EACH bullet
+        IF bullet.triggered THEN
+            FOR EACH wall, player, zombie AS item
+                IF item.type in bullet.target_type THEN
+                    damage = bullet.damage(distance(item, bullet))
+                    item.hp -= damage
+                    bullet.shooter.score(damage, item.type)
+                END IF
+            END FOR
+        END IF
+        ENDFOR
+    ENDFOR
+
+ENDLOOP

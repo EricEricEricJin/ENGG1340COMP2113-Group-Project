@@ -1,45 +1,30 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctime>
-#include <unistd.h>
+#ifndef _MAP_H
+#define _MAP_H
 
-struct map_struct
+#include <iostream>
+#include <vector>
+
+// Load map file and add / delete walls.
+namespace game
 {
-    int **_map;
-    int _map_h;
-    int _map_w;
-};
+    class Wall
+    {
+    public:
+        std::vector<int> get_xy();
+    };
 
-struct obstacle_struct
-{
-    int empty_y_0;
-    int empty_y_1;
-};
+    class Map
+    {
+    private:
+    public:
+        Map();
+        bool load(std::string fp);                        // Load map from file, return whether success
+        int get(int x, int y);                            // Get the content in xy, return the content
+        bool add(int x, int y, int type);                 // Put content in xy, return whether valid
+        bool remove(int x, int y);                        // Remove content in xy, return whether valid
+        int shortest_dir(int x0, int y0, int x1, int y1); // Return the direction to follow shortest path
+        ~Map();
+    };
 
-class Map
-{
-public:
-    Map(int height, int width);
-    void setup();
-    void step_fwd();
-    map_struct _map;
-
-private:
-    const int obstacle_num = 6;
-
-    int obstacle_width;
-
-    const int bird_height = 4;
-
-    obstacle_struct *_obstacles;
-
-    int x_shift;
-
-    int first_obstacle_index;
-
-    void create_obstacle(obstacle_struct *obstacle);
-
-    void draw_line(int x, int y_0, int y_1);
-
-    void clear_map();
-};
+}
+#endif

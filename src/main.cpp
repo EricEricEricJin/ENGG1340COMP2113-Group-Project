@@ -1,8 +1,8 @@
-#include "mainloop.h"
+#include <iostream>
+
+using namespace std;
 
 int main()
 {
-
-    main_loop();
-    return 0;
+    
 }
