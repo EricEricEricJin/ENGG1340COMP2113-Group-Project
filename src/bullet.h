@@ -6,10 +6,12 @@
 #include "zombie.h"
 #include "map.h"
 
+#ifndef UP
 #define UP 0b11'10
 #define DOWN 0b11'01
 #define LEFT 0b10'11
 #define RIGHT 0b01'11
+#endif
 
 namespace game
 {
@@ -44,6 +46,7 @@ namespace game
         std::vector<Zombie> *zombie_list;
         std::vector<Wall> *wall_list;
         const int damage_c = 0;
+
     public:
         void init(std::vector<Zombie> &_zombie_list, std::vector<Wall> &_wall_list);
         int damage(int distance);
