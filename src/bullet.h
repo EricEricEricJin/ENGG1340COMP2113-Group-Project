@@ -48,7 +48,7 @@ namespace game
         const int damage_c = 0;
 
     public:
-        void init(std::vector<Zombie> &_zombie_list, std::vector<Wall> &_wall_list);
+        void init(std::vector<Zombie> &_zombie_list, std::vector<Wall> &_wall_list, int _x, int _y, int _dir);
         int damage(int distance);
         bool triggered();
     };
