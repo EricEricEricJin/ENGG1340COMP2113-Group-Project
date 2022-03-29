@@ -65,10 +65,13 @@ game::Bullet::~Bullet()
 {
 }
 
-void game::bullet9mm::init(std::vector<Zombie> &_zombie_list, std::vector<Wall> &_wall_list)
+void game::bullet9mm::init(std::vector<Zombie> &_zombie_list, std::vector<Wall> &_wall_list, int _x, int _y, int _dir)
 {
     zombie_list = &_zombie_list;
     wall_list = &_wall_list;
+    x = _x;
+    y = _y;
+    dir = _dir;
 }
 
 int game::bullet9mm::damage(int distance)
