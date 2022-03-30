@@ -3,16 +3,18 @@
 
 namespace game
 {
-    class player
+    class Player
     {
     private:
         /* data */
     public:
-        player();
+        Player();
         int get_type();          // return type
         int get_hp();            // return hp
+        std::string get_char(); // depend on direction
+        std::vector<int> get_xy();
         void set_hp(int new_hp); // set hp
-        ~player();
+        ~Player();
     };
 
 }

@@ -19,10 +19,12 @@ namespace game
     public:
         Map();
         bool load(std::string fp);                        // Load map from file, return whether success
-        int get(int x, int y);                            // Get the content in xy, return the content
+        std::string get_char(int x, int y);                            // Get the content in xy, return the content
         bool add(int x, int y, int type);                 // Put content in xy, return whether valid
         bool remove(int x, int y);                        // Remove content in xy, return whether valid
         int shortest_dir(int x0, int y0, int x1, int y1); // Return the direction to follow shortest path
+        int columns();
+        int rows();
         ~Map();
     };
 
