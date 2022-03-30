@@ -37,7 +37,7 @@ namespace game
 
     void UI::_draw_players()
     {
-        for (auto player : *player_list)
+        for (auto &player : *player_list)
         {
             move(player.get_xy()[1], player.get_xy()[0]);
             addstr(player.get_char().c_str());
@@ -46,7 +46,7 @@ namespace game
 
     void UI::_draw_zombies()
     {
-        for (auto zombie : *zombie_list)
+        for (auto &zombie : *zombie_list)
         {
             move(zombie.get_xy()[1], zombie.get_xy()[0]);
             addstr(zombie.get_char().c_str());
@@ -55,7 +55,7 @@ namespace game
 
     void UI::_draw_bullets()
     {
-        for (auto bullet : *bullet_list)
+        for (auto &bullet : *bullet_list)
         {
             move(bullet.get_xy()[1], bullet.get_xy()[0]);
             addstr(bullet.get_char().c_str());
