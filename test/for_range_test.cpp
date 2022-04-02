@@ -24,7 +24,7 @@ int main()
     A a;
     vector<A> l = {a};   
     cout << l[0].get() << endl;
-    for (auto &a : l)
+    for (int i = 0; auto &a : l; i++)
         a.add();
     cout << l[0].get() << endl;
     return 0;
