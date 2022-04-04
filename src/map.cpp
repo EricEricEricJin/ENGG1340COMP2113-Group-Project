@@ -2,6 +2,28 @@
 
 namespace game
 {
+
+    Wall::Wall(int _durability, int _x, int _y)
+    {
+        x = _x;
+        y = _y;
+        durability = _durability;
+    }
+
+    std::vector<int> Wall::get_xy()
+    {
+        std::vector<int> ret = {x, y};
+        return ret;
+    }
+
+    std::string Wall::get_char()
+    {
+        if (durability == -1)
+            return "1"; // char for permanent wall
+        else
+            return "0"; // with color
+    }
+
     Map::Map(int _lines, int _cols)
     {
         LINES = _lines;
@@ -58,7 +80,7 @@ namespace game
         for (auto &line : vec)
             for (int x = line[0] * COLS; x <= line[2] * COLS; x++)
                 for (int y = line[1] * LINES; y < line[3] * LINES; y++)
-                    map[y][x] = new Wall();
+                    map[y][x] = new Wall(-1);
 
         return true;
     }

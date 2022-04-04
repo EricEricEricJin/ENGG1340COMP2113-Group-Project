@@ -12,9 +12,15 @@ namespace game
 {
     class Wall
     {
+    private:
+        int durability;
+        int type;
+        int x;
+        int y;
+
     public:
+        Wall(int _durability);
         std::vector<int> get_xy();
-        int get_type();
         std::string get_char();
     };
 
@@ -27,13 +33,13 @@ namespace game
 
     public:
         Map(int _lines, int _cols);
-        bool load(std::string fp);                        // Load map from file, return whether success
-        std::string get_char(int x, int y);               // Get the content in xy, return the content
-        bool add(int x, int y, Wall *wall);               // Put content in xy, return whether valid
-        bool remove(int x, int y);                        // Remove content in xy, return whether valid
+        bool load(std::string fp);          // Load map from file, return whether success
+        std::string get_char(int x, int y); // Get the content in xy, return the content
+        bool add(int x, int y, Wall *wall); // Put content in xy, return whether valid
+        bool remove(int x, int y);          // Remove content in xy, return whether valid
         // int shortest_dir(int x0, int y0, int x1, int y1); // Return the direction to follow shortest path
         int columns();
-        int rows();
+        int lines();
         ~Map();
     };
 
