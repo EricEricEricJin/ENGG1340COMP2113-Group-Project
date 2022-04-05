@@ -4,9 +4,9 @@ game::Bullet::Bullet()
 {
 }
 
-std::vector<int> game::Bullet::get_xy()
+std::pair<int, int> game::Bullet::get_xy()
 {
-    std::vector<int> ret = {(int)x, (int)y};
+    std::pair<int, int> ret = {(int)x, (int)y};
     return ret;
 }
 
@@ -20,46 +20,46 @@ int game::Bullet::get_shooter()
     return shooter;
 }
 
-int game::Bullet::get_life_remain()
-{
-    return life_remain;
-}
+// int game::Bullet::get_life_remain()
+// {
+//     return life_remain;
+// }
 
-void game::Bullet::go()
-{
-    switch (dir)
-    {
-    case UP:
-        y -= speed;
-        break;
-    case (UP & RIGHT):
-        y -= speed;
-        x += speed;
-        break;
-    case RIGHT:
-        x += speed;
-        break;
-    case (DOWN & RIGHT):
-        x += speed;
-        y += speed;
-        break;
-    case DOWN:
-        y += speed;
-        break;
-    case (LEFT & DOWN):
-        x -= speed;
-        y += speed;
-        break;
-    case LEFT:
-        x -= speed;
-        break;
-    case (LEFT & UP):
-        x -= speed;
-        y -= speed;
-    default:
-        break;
-    }
-}
+// void game::Bullet::go()
+// {
+//     switch (dir)
+//     {
+//     case UP:
+//         y -= speed;
+//         break;
+//     case (UP & RIGHT):
+//         y -= speed;
+//         x += speed;
+//         break;
+//     case RIGHT:
+//         x += speed;
+//         break;
+//     case (DOWN & RIGHT):
+//         x += speed;
+//         y += speed;
+//         break;
+//     case DOWN:
+//         y += speed;
+//         break;
+//     case (LEFT & DOWN):
+//         x -= speed;
+//         y += speed;
+//         break;
+//     case LEFT:
+//         x -= speed;
+//         break;
+//     case (LEFT & UP):
+//         x -= speed;
+//         y -= speed;
+//     default:
+//         break;
+//     }
+// }
 
 game::Bullet::~Bullet()
 {
@@ -74,7 +74,7 @@ void game::bullet9mm::init(std::vector<Zombie> &_zombie_list, std::vector<Wall> 
     dir = _dir;
 }
 
-int game::bullet9mm::damage(int distance)
+float game::bullet9mm::damage(float distance)
 {
     if (distance)
         return 0;

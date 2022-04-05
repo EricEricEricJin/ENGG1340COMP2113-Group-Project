@@ -30,12 +30,13 @@ namespace game
     public:
         Bullet();
         virtual void init();
-        std::vector<int> get_xy();
+        std::pair<int, int> get_xy();
         std::string get_char();
         int get_shooter();
-        int get_life_remain();
-        virtual void go();
-        virtual int damage(int distance);
+        // int get_life_remain();
+        virtual void run();
+        virtual void stop();
+        virtual float damage(float distance);
         virtual bool triggered();
         ~Bullet();
     };
@@ -45,11 +46,11 @@ namespace game
     private:
         std::vector<Zombie> *zombie_list;
         std::vector<Wall> *wall_list;
-        const int damage_c = 0;
+        const float damage_c = 0;
 
     public:
         void init(std::vector<Zombie> &_zombie_list, std::vector<Wall> &_wall_list, int _x, int _y, int _dir);
-        int damage(int distance);
+        float damage(float distance);
         bool triggered();
     };
 

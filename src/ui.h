@@ -7,6 +7,7 @@
 #include <thread>
 
 #include <unistd.h>
+#include <sstream>
 
 // #include <experimental/filesystem>
 
@@ -15,10 +16,11 @@
 #include "zombie.h"
 #include "bullet.h"
 
-#ifndef MODE_GAME
-#define MODE_SETTING 0
-#define MODE_GAME 1
-#endif
+#define MAX_PLAYER_NUM 2
+#define MAX_DIFF_LEVEL 10
+
+#define UI_PAUSE 0
+#define UI_QUIT 1
 
 namespace game
 {
@@ -53,13 +55,15 @@ namespace game
 
     public:
         UI();
-        bool homepage(std::vector<std::pair<std::string**, std::pair<int, int>>> maps, int& map_id, int& player_num, int& difficulty); // return only when select map and mode
+        bool homepage(std::vector<std::pair<std::string **, std::pair<int, int>>> maps, int &map_id, int &difficulty); // return only when select map and mode
         // parameter: [map list: Map]
         // return value: [map id: int], [# of players: int], [difficulty: int]
 
-        void start_game(std::vector<Player> &_player_list, std::vector<Zombie> &_zombie_list, Map &_map);
+        void start_game(Player &player, std::vector<Zombie> &_zombie_list, Map &_map);
         // THIS FUNC IS NON-BLOCK
         // Will start UI in new thread
+
+        int get_status();
 
         void get_op(bool &running, int &p1_dir, int &p1_shooting, int &p1_weapon, int &p2_dir, int &p2_shooting, int &p2_weapon); // [direction: int], [isshooting: bool], [weapon]
         // modify parameters with pointer

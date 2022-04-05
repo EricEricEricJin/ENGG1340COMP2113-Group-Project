@@ -43,5 +43,8 @@ namespace game
         ~Map();
     };
 
+    std::vector<std::pair<std::string **, std::pair<int, int>>> load_all_maps();
+    std::string map_id_to_fp(int map_id);
+
 }
 #endif
