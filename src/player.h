@@ -20,9 +20,9 @@ namespace game
 
     public:
         Player(std::vector<Bullet> &bullet_list, Map &map);
-        float get_hp();           // return hp
+        float get_hp();            // return hp
         bool set_hp(float new_hp); // true for alive, false for dead
-        std::string get_char(); // depend on direction
+        std::string get_char();    // depend on direction
         std::pair<int, int> get_xy();
         Weapon *get_weapon();
         void run();

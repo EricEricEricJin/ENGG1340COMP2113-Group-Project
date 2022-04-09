@@ -139,7 +139,7 @@ namespace game
         return true;
     }
 
-    void UI::start_game(std::vector<Player> &_player_list, std::vector<Zombie> &_zombie_list, Map &_map)
+    void UI::start_game(Player player, std::vector<Zombie> &_zombie_list, Map &_map)
     {
         // set dependencies
         player_list = &_player_list;

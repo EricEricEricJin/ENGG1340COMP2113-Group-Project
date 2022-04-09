@@ -5,14 +5,14 @@ namespace game
 
     Wall::Wall(int _durability, int _x, int _y)
     {
+        durability = _durability;
         x = _x;
         y = _y;
-        durability = _durability;
     }
 
-    std::vector<int> Wall::get_xy()
+    std::pair<int, int> Wall::get_xy()
     {
-        std::vector<int> ret = {x, y};
+        std::pair<int, int> ret = {x, y};
         return ret;
     }
 
@@ -24,28 +24,19 @@ namespace game
             return "0"; // with color
     }
 
-    Map::Map(int _lines, int _cols)
+    Map::Map()
     {
-        LINES = _lines;
-        COLS = _cols;
-
         // allocate map
-        map = (Wall ***)malloc(sizeof(Wall **) * LINES);
-        for (int i = 0; i < LINES; i++)
-        {
-            map[i] = (Wall **)malloc(sizeof(Wall *) * COLS);
-            for (int j = 0; j < COLS; j++)
-                map[i][j] = NULL;
-        }
+        std::cout << "Map init" << std::endl;
     }
 
+    // Load map: load size and bitmap
     bool Map::load(std::string fp)
     {
-        std::vector<std::vector<float>> vec;
-
         nlohmann::json json_data;
         std::ifstream file_stream(fp, std::fstream::in);
 
+        // Open resource file
         try
         {
             file_stream >> json_data;
@@ -58,30 +49,106 @@ namespace game
             return false;
         }
 
-        if (!json_data.is_array())
+        // Load size
+        int lines;
+        int cols;
+
+        if (json_data["lines"].is_number_integer())
+            lines = json_data["lines"];
+        else
             return false;
 
-        for (auto &line : json_data)
+        if (json_data["cols"].is_number_integer())
+            cols = json_data["cols"];
+        else
+            return false;
+
+        LINES = lines;
+        COLS = cols;
+
+        // Load bitmap
+        map = (Wall ***)malloc(sizeof(Wall **) * lines); // ?
+        for (int i = 0; i < cols; i++)
+            map[i] = (Wall **)malloc(sizeof(Wall *) * cols);
+
+        int i, j;
+
+        if (json_data["bitmap"].is_array())
         {
-            if (!line.is_array())
-                return false;
-            std::vector<float> l;
-            for (auto &number : line)
+            i = 0;
+            for (auto &line : json_data["bitmap"])
             {
-                if (number.is_number_float())
-                    l.push_back(number.get<float>());
+                if (line.is_string())
+                {
+                    j = 0;
+                    for (auto &chr : line.get<std::string>())
+                    {
+                        // std::cout << "in Map::load(): " << i << " " << j << std::endl;
+                        if (chr == ' ')
+                            map[i][j] = NULL;
+                        else if (chr == '#')
+                            map[i][j] = new Wall(-1, i, j);
+                        j++;
+                    }
+                    i++;
+                }
                 else
                     return false;
             }
-            vec.push_back(l);
         }
+        else
+            return false;
 
-        // build bitmap
-        for (auto &line : vec)
-            for (int x = line[0] * COLS; x <= line[2] * COLS; x++)
-                for (int y = line[1] * LINES; y < line[3] * LINES; y++)
-                    map[y][x] = new Wall(-1);
+        // Load player initialize point
+        if (json_data["player_init"].is_array())
+        {
+            if (json_data["player_init"][0].is_number_integer() &&
+                json_data["player_init"][1].is_number_integer())
+            {
+                player_init_yx = {
+                    json_data["player_init"][0],
+                    json_data["player_init"][1]};
+            }
+            else
+                return false;
+        }
+        else
+            return false;
 
+        // Load zombie entrance points
+        if (json_data["z_entrance"]["up"].is_array())
+        {
+            // up: only x coord
+            for (auto &x : json_data["z_entrance"]["up"])
+                zb_ent_yx_list.push_back({0, x});
+        }
+        else
+            return false;
+
+        if (json_data["z_entrance"]["left"].is_array())
+        {
+            // left: only y coord
+            for (auto &y : json_data["z_entrance"]["left"])
+                zb_ent_yx_list.push_back({y, 0});
+        }
+        else
+            return false;
+
+        if (json_data["z_entrance"]["down"].is_array())
+        {
+            for (auto &x : json_data["z_entrance"]["down"])
+                zb_ent_yx_list.push_back({lines - 1, x});
+        }
+        else
+            return false;
+
+        if (json_data["z_entrance"]["right"].is_array())
+        {
+            for (auto &y : json_data["z_entrance"]["right"])
+                zb_ent_yx_list.push_back({y, cols - 1});
+        }
+        else
+            return false;
         return true;
     }
 
@@ -93,11 +160,11 @@ namespace game
             return map[y][x]->get_char();
     }
 
-    bool Map::add(int x, int y, Wall *wall)
+    bool Map::add(int x, int y, int durability)
     {
         if (map[y][x] == NULL)
         {
-            map[y][x] = wall;
+            map[y][x] = new Wall(durability, x, y);
             return true;
         }
         return false;
@@ -108,7 +175,17 @@ namespace game
         if (map[y][x] == NULL)
             return false;
         delete map[y][x];
+        map[y][x] = NULL;
         return true;
+    }
+
+    std::pair<int, int> Map::zb_get_rand_ent_xy()
+    {
+        std::cout << "Size: " << zb_ent_yx_list.size() << std::endl;
+        std::random_device rd;
+        int i = (int)((float)(rd() - rd.min()) / (float)(rd.max() - rd.min()) * zb_ent_yx_list.size());
+        std::cout << "Rand: " << i << std::endl;
+        return zb_ent_yx_list[i];
     }
 
     int Map::columns()
@@ -123,12 +200,8 @@ namespace game
 
     Map::~Map()
     {
-        for (int i = 0; i < LINES; i++)
-        {
-            for (int j = 0; j < COLS; j++)
-                free(map[i][j]);
-            free(map[i]);
-        }
+        delete[] map;
+        // std::cout << "Map Dec" << std::endl;
     }
 
 }

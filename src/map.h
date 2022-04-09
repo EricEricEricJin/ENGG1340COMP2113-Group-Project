@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <vector>
+#include <random>
+
 
 #include <json.hpp>
 #include <fstream>
@@ -19,8 +21,8 @@ namespace game
         int y;
 
     public:
-        Wall(int _durability);
-        std::vector<int> get_xy();
+        Wall(int _durability, int _x, int _y);
+        std::pair<int, int> get_xy();
         std::string get_char();
     };
 
@@ -30,14 +32,19 @@ namespace game
         Wall ***map;
         int COLS;
         int LINES;
+        std::pair<int, int> player_init_yx;
+        std::vector<std::pair<int, int>> zb_ent_yx_list;
 
     public:
-        Map(int _lines, int _cols);
+        Map();
         bool load(std::string fp);          // Load map from file, return whether success
         std::string get_char(int x, int y); // Get the content in xy, return the content
-        bool add(int x, int y, Wall *wall); // Put content in xy, return whether valid
+        bool add(int x, int y, int durability); // Put content in xy, return whether valid
         bool remove(int x, int y);          // Remove content in xy, return whether valid
         // int shortest_dir(int x0, int y0, int x1, int y1); // Return the direction to follow shortest path
+        
+        std::pair<int, int> zb_get_rand_ent_xy();
+        
         int columns();
         int lines();
         ~Map();

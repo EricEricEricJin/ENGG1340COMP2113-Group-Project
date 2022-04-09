@@ -15,26 +15,36 @@ install_ncurses:
 
 # NOTE: dependencies of object files below are not complete
 bullet.o: src/bullet.cpp src/bullet.h
-	$(CC) -c $(COMPILE_FLAGS) $< -I src
+	$(CC) -c $(COMPILE_FLAGS) \
+	-lpthread \
+	$< -I src
 
 map.o: src/map.cpp src/map.h
 	$(CC) -c $(COMPILE_FLAGS) $< -I src
 
 player.o: src/player.cpp src/player.h
-	$(CC) -c $(COMPILE_FLAGS) $< -I src
+	$(CC) -c $(COMPILE_FLAGS) \
+	-lpthread \
+	$< -I src
 
 setting.o: src/setting.cpp src/setting.h
-	$(CC) -c $(COMPILE_FLAGS) $< -I src
+	$(CC) -c $(COMPILE_FLAGS) \
+	-lpthread \
+	$< -I src
 
 ui.o: src/ui.cpp src/ui.h
-	$(CC) -c $(COMPILE_FLAGS) $< -I src \
+	$(CC) -c $(COMPILE_FLAGS) \
+	-lpthread \
+	$< -I src \
 	$(shell $(abs_path)/bin/ncursesw6-config --cflags)
 
 weapon.o: src/weapon.cpp src/weapon.h
 	$(CC) -c $(COMPILE_FLAGS) $< -I src
 
 zombie.o: src/zombie.cpp src/zombie.h 
-	$(CC) -c $(COMPILE_FLAGS) $< -I src
+	$(CC) -c $(COMPILE_FLAGS) \
+	-lpthread \
+	$< -I src
 
 mainloop.o: src/mainloop.cpp src/mainloop.h
 	$(CC) -c $(COMPILE_FLAGS) $< -I src
