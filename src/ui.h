@@ -16,11 +16,15 @@
 #include "zombie.h"
 #include "bullet.h"
 
-#define MAX_PLAYER_NUM 2
 #define MAX_DIFF_LEVEL 10
 
 #define UI_PAUSE 0
 #define UI_QUIT 1
+
+#define STATUS_RUNNING 1
+#define STATUS_MENU 2
+
+#define MENU_KEY ((int)'p')
 
 namespace game
 {
@@ -38,20 +42,22 @@ namespace game
     private:
         char mode;
 
-        std::vector<Player> *player_list;
+        Player *player;
         std::vector<Zombie> *zombie_list;
         std::vector<Bullet> *bullet_list;
         Map *map;
 
-        bool running;
+        int status_val;
 
         void _game_thread_loop();
+
+        void _game_menu();
 
         void _draw_walls();
         void _draw_players();
         void _draw_zombies();
         void _draw_bullets();
-        void _show_score(std::vector<int> scores);
+        void _show_info(); // Display score, weapon, etc
 
     public:
         UI();
@@ -59,13 +65,13 @@ namespace game
         // parameter: [map list: Map]
         // return value: [map id: int], [# of players: int], [difficulty: int]
 
-        void start_game(Player &player, std::vector<Zombie> &_zombie_list, Map &_map);
+        void start_game(Player *player, std::vector<Zombie> *_zombie_list, Map *_map);
         // THIS FUNC IS NON-BLOCK
         // Will start UI in new thread
 
         int get_status();
 
-        void get_op(bool &running, int &p1_dir, int &p1_shooting, int &p1_weapon, int &p2_dir, int &p2_shooting, int &p2_weapon); // [direction: int], [isshooting: bool], [weapon]
+        int status();
         // modify parameters with pointer
 
         void exit_game();

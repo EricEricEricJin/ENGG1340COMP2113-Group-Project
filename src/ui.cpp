@@ -103,7 +103,7 @@ namespace game
                     break;
                 }
                 // prompt warning
-                        }
+            }
 
             // View selection:
             move(LINES / 2 - 5, COLS / 2 - 10);
@@ -139,14 +139,14 @@ namespace game
         return true;
     }
 
-    void UI::start_game(Player player, std::vector<Zombie> &_zombie_list, Map &_map)
+    void UI::start_game(Player *_player, std::vector<Zombie> *_zombie_list, Map *_map)
     {
         // set dependencies
-        player_list = &_player_list;
-        zombie_list = &_zombie_list;
-        map = &_map;
+        player = _player;
+        zombie_list = _zombie_list;
+        map = _map;
 
-        running = true;
+        status_val = 1;
         std::thread(_game_thread_loop); // launch game loop
         // stop when running become false
     }
@@ -154,21 +154,37 @@ namespace game
     void UI::_game_thread_loop()
     {
         // NOTE: DO NOT MODIFY ANY VALUES IN the three lists
-        while (running)
+        while (status_val)
         {
             // update_op: update user op
             // menu: prompt menu
             // refresh: move zombies, bullets, and players
+            if (getch() == MENU_KEY)
+            {
+                _game_menu();
+            }
+            _draw_walls();
+            _draw_players();
+            _draw_zombies();
+            _draw_bullets();
+            _show_info();
+            usleep(50'000); // 20Hz
         }
     }
 
-    void UI::start_game(std::vector<Player> &_player_list, std::vector<Zombie> &_zombie_list, Map &_map)
+    int UI::status()
     {
+        return status_val;
     }
 
-    void UI::get_op(bool &running, int &p1_dir, int &p1_shooting, int &p1_weapon, int &p2_dir, int &p2_shooting, int &p2_weapon)
+    void UI::_game_menu()
     {
-        int key = getch();
+        status_val = STATUS_MENU;
+        while (true)
+        {
+            
+        }
+        status_val = STATUS_RUNNING;
     }
 
     void UI::_draw_walls()
@@ -188,18 +204,15 @@ namespace game
 
     void UI::_draw_players()
     {
-        for (auto &player : *player_list)
-        {
-            move(player.get_xy()[1], player.get_xy()[0]);
-            addstr(player.get_char().c_str());
-        }
+        move(player->get_xy().first, player->get_xy().second);
+        addstr(player->get_char().c_str());
     }
 
     void UI::_draw_zombies()
     {
         for (auto &zombie : *zombie_list)
         {
-            move(zombie.get_xy()[1], zombie.get_xy()[0]);
+            move(zombie.get_xy().second, zombie.get_xy().first);
             addstr(zombie.get_char().c_str());
         }
     }
@@ -208,20 +221,14 @@ namespace game
     {
         for (auto &bullet : *bullet_list)
         {
-            move(bullet.get_xy()[1], bullet.get_xy()[0]);
+            move(bullet.get_xy().second, bullet.get_xy().first);
             addstr(bullet.get_char().c_str());
         }
     }
 
-    void UI::_show_score(std::vector<int> scores)
+    void UI::_show_info()
     {
         // Show on the top
-        for (int i = 0; i < scores.size(); i++)
-        {
-            int x = i * (COLS / scores.size());
-            move(0, x);
-            addstr(("player " + std::to_string(i + 1) + ": " + std::to_string(scores[i])).c_str());
-        }
     }
 
 }
