@@ -3,69 +3,64 @@
 
 #include <iostream>
 #include <vector>
-#include "zombie.h"
-#include "map.h"
+#include <thread>
 
-#ifndef UP
-#define UP 0b11'10
-#define DOWN 0b11'01
-#define LEFT 0b10'11
-#define RIGHT 0b01'11
-#endif
+#define BUL_PATH "../resource/bullet/"
 
 namespace game
 {
-    class Bullet
-    {
-    protected:
-        float x;
-        float y;
-        int dir;
-        float speed;
-        int life_remain;
-        int range;
-        int shooter;
-        std::string character;
+    class Map;
+    class Wall;
+    class Player;
+    class Zombie;
 
-    public:
-        Bullet();
-        virtual void init();
-        std::pair<int, int> get_xy();
-        std::string get_char();
-        int get_shooter();
-        // int get_life_remain();
-        virtual void run();
-        virtual void stop();
-        virtual float damage(float distance);
-        virtual bool triggered();
-        ~Bullet();
+    struct Bullet
+    {
+        int type;
+        std::string chr;
+        int x;
+        int y;
+        int dir;
     };
 
-    class bullet9mm : public Bullet // for machine gun and pistol
+    class bulletManager
     {
     private:
-        std::vector<Zombie> *zombie_list;
-        std::vector<Wall> *wall_list;
-        const float damage_c = 0;
+        Map *map;
+        std::vector<Zombie *> *zombie_list;
+        Player *player;
+
+        std::vector<Bullet> bullet_list;
+
+        // define a type "bullet_t"
+        // map<string, bullet_t>
+        std::map<std::string, std::string> char_dict;
+        std::map<std::string, float> speed_dict;
+        std::map<std::string, bool *()> trigger_dict;
+        std::map<std::string, float *()> damage_dict;
+
+        bool running;
+
+        void _thread_loop();
+        std::thread *thread_obj;
 
     public:
-        void init(std::vector<Zombie> &_zombie_list, std::vector<Wall> &_wall_list, int _x, int _y, int _dir);
-        float damage(float distance);
-        bool triggered();
-    };
+        bulletManager();
 
-    class bulletRPG : public Bullet
-    {
-    };
+        int load_resource();
+        void run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player);
 
-    class bulletGrenade : public Bullet
-    {
-    };
+        void shoot(std::string name); // add bullet to loop
 
-    class bulletShotgun : public Bullet
-    {
-    };
+        void pause();
+        void resume();
 
+        std::string get_char();
+        std::pair<int, int> get_xy();
+        std::vector<std::string> get_names();
+
+        ~bulletManager();
+    };
 }
 
 #endif

@@ -1,103 +1,95 @@
 #include "bullet.h"
+#include "map.h"
+#include "player.h"
+#include "zombie.h"
 
-game::Bullet::Bullet()
+#include <filesystem>
+#include <fstream>
+
+#include "tinyexpr.h"
+
+namespace game
 {
-}
-
-std::pair<int, int> game::Bullet::get_xy()
-{
-    std::pair<int, int> ret = {(int)x, (int)y};
-    return ret;
-}
-
-std::string game::Bullet::get_char()
-{
-    return character;
-}
-
-int game::Bullet::get_shooter()
-{
-    return shooter;
-}
-
-// int game::Bullet::get_life_remain()
-// {
-//     return life_remain;
-// }
-
-// void game::Bullet::go()
-// {
-//     switch (dir)
-//     {
-//     case UP:
-//         y -= speed;
-//         break;
-//     case (UP & RIGHT):
-//         y -= speed;
-//         x += speed;
-//         break;
-//     case RIGHT:
-//         x += speed;
-//         break;
-//     case (DOWN & RIGHT):
-//         x += speed;
-//         y += speed;
-//         break;
-//     case DOWN:
-//         y += speed;
-//         break;
-//     case (LEFT & DOWN):
-//         x -= speed;
-//         y += speed;
-//         break;
-//     case LEFT:
-//         x -= speed;
-//         break;
-//     case (LEFT & UP):
-//         x -= speed;
-//         y -= speed;
-//     default:
-//         break;
-//     }
-// }
-
-game::Bullet::~Bullet()
-{
-}
-
-void game::bullet9mm::init(std::vector<Zombie> &_zombie_list, std::vector<Wall> &_wall_list, int _x, int _y, int _dir)
-{
-    zombie_list = &_zombie_list;
-    wall_list = &_wall_list;
-    x = _x;
-    y = _y;
-    dir = _dir;
-}
-
-float game::bullet9mm::damage(float distance)
-{
-    if (distance)
-        return 0;
-    return damage_c;
-}
-
-bool game::bullet9mm::triggered()
-{
-    for (Zombie zombie : *zombie_list)
+    bulletManager::bulletManager()
     {
-        if (zombie.get_xy() == get_xy())
-            goto TRIGGERED;
     }
 
-    for (Wall wall : *wall_list)
+    int bulletManager::load_resource()
     {
-        if (wall.get_xy() == get_xy())
-            goto TRIGGERED;
+        using namespace std;
+
+        filesystem::path str(BUL_PATH);
+        if (filesystem::exists(str))
+            return 0;
+        filesystem::directory_entry entry(str);
+        if (entry.status().type() != filesystem::file_type::directory)
+            return 0;
+        filesystem::directory_iterator list(str);
+
+        for (auto &_name : list)
+        {
+            auto name = _name.path().filename().string();
+            // open and parse file
+            ifstream f(BUL_PATH + name, fstream::in);
+            if (f.fail())
+                continue;
+            nlohmann::json json_data;
+            try
+            {
+                f >> json_data;
+                f.close();
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << e.what() << '\n';
+                f.close();
+                return 0;
+            }
+
+            auto type = json_data["type"].get<string>();
+
+            char_dict[type] = json_data["char"].get<string>();
+            speed_dict[type] = json_data["speed"].get<float>();
+
+            // @TODO
+            auto a = new[](float distance, string obj)
+            {
+
+                te_eval("");
+            };
+            trigger_dict[type] = &a;
+        }
+        return 1;
     }
 
-    return false;
+    void bulletManager::run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player)
+    {
+        map = _map;
+        zombie_list = _zombie_list;
+        player = _player;
+    }
 
-TRIGGERED:
-    life_remain--;
-    return true;
+    void bulletManager::_thread_loop()
+    {
+        // DO NOT DO ANY INITIALIZE HERE
+        // DO IT IN FUNCTION `run`
+        while (running)
+        {
+            // ...
+        }
+    }
+
+    void bulletManager::pause()
+    {
+        running = false;
+        thread_obj->join(); // block wait until thread complete
+        delete thread_obj;
+    }
+
+    void bulletManager::resume()
+    {
+        running = true;
+        thread_obj = new std::thread(_thread_loop);
+    }
+
 }

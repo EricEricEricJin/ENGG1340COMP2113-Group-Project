@@ -11,10 +11,7 @@
 
 // #include <experimental/filesystem>
 
-#include "player.h"
-#include "map.h"
-#include "zombie.h"
-#include "bullet.h"
+
 
 #define MAX_DIFF_LEVEL 10
 
@@ -28,6 +25,10 @@
 
 namespace game
 {
+    class Player;
+    class Zombie;
+    class Map;
+    class Bullet;
 
     class Block
     {
@@ -43,8 +44,8 @@ namespace game
         char mode;
 
         Player *player;
-        std::vector<Zombie> *zombie_list;
-        std::vector<Bullet> *bullet_list;
+        std::vector<Zombie *> *zombie_list;
+        std::vector<Bullet *> *bullet_list;
         Map *map;
 
         int status_val;
@@ -61,11 +62,12 @@ namespace game
 
     public:
         UI();
-        bool homepage(std::vector<std::pair<std::string **, std::pair<int, int>>> maps, int &map_id, int &difficulty); // return only when select map and mode
+        bool homepage(int *map_id, int *difficulty); // return only when select map and mode
         // parameter: [map list: Map]
         // return value: [map id: int], [# of players: int], [difficulty: int]
 
         void start_game(Player *player, std::vector<Zombie> *_zombie_list, Map *_map);
+        void stop_game();
         // THIS FUNC IS NON-BLOCK
         // Will start UI in new thread
 

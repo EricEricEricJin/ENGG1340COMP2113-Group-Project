@@ -1,4 +1,8 @@
 #include "ui.h"
+#include "player.h"
+#include "map.h"
+#include "zombie.h"
+#include "bullet.h"
 
 namespace game
 {
@@ -11,7 +15,7 @@ namespace game
         noecho();
     }
 
-    bool UI::homepage(std::vector<std::pair<std::string **, std::pair<int, int>>> maps, int &map_id, int &difficulty)
+    bool UI::homepage(int *map_id, int *difficulty)
     {
         // This page: block input
         cbreak();
@@ -24,6 +28,7 @@ namespace game
 
         int key = 0;
         // ask user to select map, player number, and difficulty
+        auto map_names = Map::names_of_maps();
 
         for (;;)
         {
@@ -31,8 +36,9 @@ namespace game
             for (;;)
             {
                 // show map
-                int map_height = maps[_map_id].second.first;
-                int map_width = maps[_map_id].second.second;
+                auto map = Map::minimap(map_names[_map_id]);
+                int map_height = map.size();
+                int map_width = map[0].size();
 
                 if ((LINES < map_height) || (COLS < map_width))
                     return false; // Window to small. Cannot display
@@ -46,7 +52,7 @@ namespace game
                     for (int x = 0; x < map_width; x++)
                     {
                         move(y + y_offset, x + x_offset);
-                        addstr(maps[_map_id].first[y][x].c_str());
+                        addstr(map[y][x].c_str());
                     }
                 }
 
@@ -59,34 +65,18 @@ namespace game
                 if (key == 'j') // next map
                 {
                     _map_id++;
-                    if (_map_id >= maps.size())
+                    if (_map_id >= map_names.size())
                         _map_id = 0;
                 }
                 else if (key == 'k') // prev map
                 {
                     _map_id--;
                     if (_map_id < 0)
-                        _map_id = maps.size() - 1;
+                        _map_id = map_names.size() - 1;
                 }
                 else if (key == '\n')
                     break;
             }
-
-            // Select player number
-            // for (;;)
-            // {
-            //     move(LINES / 2 - 1, COLS / 2 - 10);
-            //     addstr("Number of players: ");
-
-            //     char pn_str[10];
-            //     move(LINES / 2 - 1, COLS / 2 + 10);
-            //     if (_player_num != 0)
-            //         addstr(std::to_string(_player_num).c_str());
-            //     getstr(pn_str);
-            //     std::istringstream(pn_str) >> _player_num;
-            //     if (_player_num >= 1 && _player_num <= MAX_PLAYER_NUM)
-            //         break;
-            // }
 
             // Select difficulty
             for (;;)
@@ -131,9 +121,9 @@ namespace game
                 break;
         }
 
-        map_id = _map_id;
+        *map_id = _map_id;
         // player_num = _player_num;
-        difficulty = _difficulty;
+        *difficulty = _difficulty;
         nocbreak();
         timeout(0);
         return true;
@@ -149,6 +139,11 @@ namespace game
         status_val = 1;
         std::thread(_game_thread_loop); // launch game loop
         // stop when running become false
+    }
+
+    void UI::stop_game()
+    {
+        status_val = 0;
     }
 
     void UI::_game_thread_loop()
@@ -182,7 +177,6 @@ namespace game
         status_val = STATUS_MENU;
         while (true)
         {
-            
         }
         status_val = STATUS_RUNNING;
     }
@@ -229,6 +223,11 @@ namespace game
     void UI::_show_info()
     {
         // Show on the top
+    }
+
+    UI::~UI()
+    {
+        endwin();
     }
 
 }
