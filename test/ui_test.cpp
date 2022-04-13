@@ -7,12 +7,10 @@
 
 int main()
 {
-    game::Zombie zombie;
-    game::Player player;
+    
     game::UI ui;
-
-    ui.start_game();
-    ui.refresh();
-
+    int difficulty, map_id;
+    ui.homepage(&map_id, &difficulty);
+    return 0;
 }
 

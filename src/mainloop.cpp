@@ -19,8 +19,15 @@
 */
 
 #include "mainloop.h"
+#include <queue>
+#include <vector>
 
 float distance(std::pair<int, int> p1, std::pair<int, int> p2);
+
+std::vector<game::Zombie*> zombie_list;
+std::vector<std::pair<int, int>> zb_xy_list;
+
+std::queue<std::pair<void*, float>> trig_msg_queue; // <obj_ptr, damage>
 
 void mainloop()
 {

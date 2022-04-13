@@ -5,9 +5,11 @@
 #include <vector>
 #include <random>
 
-
 #include <json.hpp>
 #include <fstream>
+#include <experimental/filesystem>
+
+#define MAP_PATH "../resource/map/"
 
 // Load map file and add / delete walls.
 namespace game
@@ -37,21 +39,20 @@ namespace game
 
     public:
         Map();
-        bool load(std::string fp);          // Load map from file, return whether success
-        std::string get_char(int x, int y); // Get the content in xy, return the content
+        bool load(std::string fp);              // Load map from file, return whether success
+        std::string get_char(int x, int y);     // Get the content in xy, return the content
         bool add(int x, int y, int durability); // Put content in xy, return whether valid
-        bool remove(int x, int y);          // Remove content in xy, return whether valid
+        bool remove(int x, int y);              // Remove content in xy, return whether valid
         // int shortest_dir(int x0, int y0, int x1, int y1); // Return the direction to follow shortest path
-        
+
         std::pair<int, int> zb_get_rand_ent_xy();
-        
+
         int columns();
         int lines();
         ~Map();
+
+        static std::vector<std::string> names_of_maps();
+        static std::vector<std::vector<std::string>> minimap(std::string name);
     };
-
-    std::vector<std::pair<std::string **, std::pair<int, int>>> load_all_maps();
-    std::string map_id_to_fp(int map_id);
-
 }
 #endif

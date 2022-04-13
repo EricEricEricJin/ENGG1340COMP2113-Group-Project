@@ -204,4 +204,46 @@ namespace game
         // std::cout << "Map Dec" << std::endl;
     }
 
+    std::vector<std::string> Map::names_of_maps()
+    {
+        using namespace std::filesystem;
+        using namespace std;
+
+        vector<string> ret;
+
+        path str(MAP_PATH);
+        if (!exists(str))
+            return ret;
+        directory_entry entry(str);
+        if (entry.status().type() != file_type::directory)
+            return ret;
+        directory_iterator list(str);
+        for (auto &i : list)
+            ret.push_back(i.path().filename());
+        return ret;
+    }
+
+    std::vector<std::vector<std::string>> Map::minimap(std::string name)
+    {
+
+        std::vector<std::vector<std::string>> ret;
+
+        nlohmann::json json_data;
+        std::ifstream file_stream(MAP_PATH + name, std::fstream::in);
+        try
+        {
+            file_stream >> json_data;
+            file_stream.close();
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << e.what() << '\n';
+            file_stream.close();
+            return ret;
+        }
+
+        // json_data["minimap"]
+        return ret;
+    }
+
 }

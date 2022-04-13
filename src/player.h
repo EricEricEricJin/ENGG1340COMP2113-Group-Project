@@ -5,12 +5,12 @@
 #include <ncurses.h>
 #include <thread>
 
-#include "weapon.h"
-#include "bullet.h"
-#include "map.h"
-
 namespace game
 {
+    class Map;
+    class Bullet;
+    class Weapon;
+
     class Player
     {
     private:
@@ -19,7 +19,7 @@ namespace game
         bool running;
 
     public:
-        Player(std::vector<Bullet> &bullet_list, Map &map);
+        Player(std::vector<Bullet*> *bullet_list, Map *map);
         float get_hp();            // return hp
         bool set_hp(float new_hp); // true for alive, false for dead
         std::string get_char();    // depend on direction

@@ -4,9 +4,9 @@
 #include <iostream>
 #include <vector>
 
-#include "bullet.h"
-#include "player.h"
-#include "map.h"
+class Bullet;
+class Player;
+class Map;
 
 namespace game
 {
@@ -19,7 +19,7 @@ namespace game
         std::string character;
 
     public:
-        Zombie(std::vector<Bullet> &bullet_list, Map &map, Player &player);
+        Zombie(std::vector<Bullet *> &bullet_list, Map &map, Player &player);
         std::pair<int, int> get_xy();
         std::string get_char();
         float get_hp();

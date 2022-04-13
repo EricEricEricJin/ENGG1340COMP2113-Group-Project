@@ -1,0 +1,23 @@
+{
+    "type": "9mm",
+    "char": "*",
+    "speed": 1.1,
+    "trigger_obj": [
+        0,
+        [
+            "wall",
+            0
+        ],
+        [
+            "zombie",
+            0
+        ]
+    ],
+    "damage_expr": [
+        [
+            0,
+            1,
+            "10"
+        ]
+    ]
+}

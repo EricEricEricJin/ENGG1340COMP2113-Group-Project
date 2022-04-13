@@ -1,4 +1,6 @@
 #include "player.h"
+#include "weapon.h"
+#include "map.h"
 
 namespace game
 {
