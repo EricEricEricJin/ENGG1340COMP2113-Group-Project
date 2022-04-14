@@ -9,7 +9,6 @@ namespace game
 {
     class Map;
     class Bullet;
-    class Weapon;
 
     class Player
     {
@@ -24,7 +23,6 @@ namespace game
         bool set_hp(float new_hp); // true for alive, false for dead
         std::string get_char();    // depend on direction
         std::pair<int, int> get_xy();
-        Weapon *get_weapon();
         void run();
         void stop();
         // void set_hp(int new_hp); // set hp
