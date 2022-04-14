@@ -2,22 +2,12 @@
     "type": "9mm",
     "char": "*",
     "speed": 1.1,
-    "trigger_obj": [
-        0,
-        [
-            "wall",
-            0
-        ],
-        [
-            "zombie",
-            0
-        ]
+    "trig_mode": 0,
+    "trig_c": 0,
+    "trig_obj": [
+        "wall",
+        "zombie"
     ],
-    "damage_expr": [
-        [
-            0,
-            1,
-            "10"
-        ]
-    ]
+    "damage_dist": 1,
+    "damage_expr": "(distance * 20)"
 }

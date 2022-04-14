@@ -14,11 +14,11 @@ namespace game
     {
     }
 
-    int bulletManager::load_resource()
+    int bulletManager::load_resource(std::string resource_root)
     {
         using namespace std;
 
-        filesystem::path str(BUL_PATH);
+        filesystem::path str(resource_root + "/bullet/");
         if (filesystem::exists(str))
             return 0;
         filesystem::directory_entry entry(str);
@@ -30,7 +30,7 @@ namespace game
         {
             auto name = _name.path().filename().string();
             // open and parse file
-            ifstream f(BUL_PATH + name, fstream::in);
+            ifstream f(resource_root + "/bullet/" + name, fstream::in);
             if (f.fail())
                 continue;
             nlohmann::json json_data;
@@ -48,16 +48,17 @@ namespace game
 
             auto type = json_data["type"].get<string>();
 
-            char_dict[type] = json_data["char"].get<string>();
-            speed_dict[type] = json_data["speed"].get<float>();
+            bul_type_dict[type] = new bullet_t;
+            bul_type_dict[type]->speed = json_data["speed"].get<float>();
+            bul_type_dict[type]->chr = json_data["char"].get<string>();
+            bul_type_dict[type]->trig_mode = json_data["trig_mode"].get<int>();
+            bul_type_dict[type]->damage_dist = json_data["damage_dist"].get<int>();
 
-            // @TODO
-            auto a = new[](float distance, string obj)
-            {
+            for (auto &i : json_data["trig_obj"])
+                bul_type_dict[type]->trig_obj.push_back(i.get<string>());
 
-                te_eval("");
-            };
-            trigger_dict[type] = &a;
+            te_variable vars[] = {{"x", &temp_distance}};
+            bul_type_dict[type]->damage_func = te_compile(json_data["damage_expr"].get<string>().c_str(), vars, 1, nullptr);
         }
         return 1;
     }
@@ -75,8 +76,52 @@ namespace game
         // DO IT IN FUNCTION `run`
         while (running)
         {
-            // ...
+            int b_it = -1;
+            for (auto &bullet : bullet_list)
+            {
+                b_it++;
+                bullet_t *bullet_type = bul_type_dict[bullet->type];
+
+                if (bullet_type->trig_mode == TRIG_CONTACT)
+                {
+                    if (std::count(bullet_type->trig_obj.begin(), bullet_type->trig_obj.end(), "zombie"))
+                        for (auto &zombie : *zombie_list)
+                            if (pair_distance(zombie->get_xy(), bullet->xy) > bullet_type->trig_c)
+                                goto TRIGGERED;
+                }
+                else if (bullet_type->trig_mode == TRIG_TIMER && *timer - bullet->shoot_time >= bullet_type->trig_c)
+                    goto TRIGGERED;
+                continue;
+
+            TRIGGERED:
+                // Find all zombies in distance
+                for (auto &zombie : *zombie_list)
+                    if (pair_distance(zombie->get_xy(), bullet->xy) < bullet_type->damage_dist)
+                    {
+                        temp_distance = pair_distance(zombie->get_xy(), bullet->xy);
+                        float damage = te_eval(bullet_type->damage_func);
+                        zombie->set_hp(zombie->get_hp() - damage);
+                    }
+
+                // player
+                if (pair_distance(player->get_xy(), bullet->xy) <= bullet_type->damage_dist)
+                {
+                    temp_distance = pair_distance(player->get_xy(), bullet->xy);
+                    float damage = te_eval(bullet_type->damage_func);
+                    player->set_hp(player->get_hp() - damage);
+                }
+
+                // destroy bullet
+                delete bullet;
+                bullet_list.erase(bullet_list.begin() + b_it);
+            }
         }
+    }
+
+    void bulletManager::shoot(std::string name, int x, int y, int dir)
+    {
+        Bullet *b = new Bullet{name, *timer, {x, y}, dir};
+        bullet_list.push_back(b);
     }
 
     void bulletManager::pause()
@@ -89,7 +134,8 @@ namespace game
     void bulletManager::resume()
     {
         running = true;
-        thread_obj = new std::thread(_thread_loop);
+        thread_obj = new std::thread([=]
+                                     { _thread_loop(); });
+        // cannot call non-static member function directly
     }
-
 }
