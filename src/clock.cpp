@@ -1,4 +1,4 @@
-#include "timer.h"
+#include "clock.h"
 #include <unistd.h>
 
 namespace game
