@@ -26,11 +26,12 @@ namespace game
     private:
         std::string type;
         timer_t shoot_time;
-        std::pair<float, float> xy;
+        std::pair<float, float> yx;
         int dir;
+
     public:
-        Bullet(std::string type, timer_t timer, std::pair<float, float> xy, int dir);
-        std::pair<float, float> get_xy();
+        Bullet(std::string type, timer_t timer, std::pair<float, float> yx, int dir);
+        std::pair<float, float> get_yx();
         std::string get_type();
         std::string get_char();
         timer_t get_shoot_time();
@@ -76,13 +77,11 @@ namespace game
 
         void run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player);
 
-        void shoot(std::string name, int x, int y, int dir); // add bullet to loop
+        void shoot(std::string name, std::pair<int, int> yx, int dir); // add bullet to loop
 
         void pause();
         void resume();
 
-        std::string get_char();
-        std::pair<int, int> get_xy();
         std::vector<std::string> get_names();
 
         ~bulletManager();

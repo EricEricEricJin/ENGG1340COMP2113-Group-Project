@@ -27,9 +27,9 @@ namespace game
         return chr;
     }
 
-    std::pair<float, float> Player::get_xy()
+    std::pair<float, float> Player::get_yx()
     {
-        return {x, y};
+        return {y, x};
     }
 
     void Player::run()

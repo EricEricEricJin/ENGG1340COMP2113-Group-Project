@@ -3,17 +3,16 @@
 namespace game
 {
 
-    Wall::Wall(int _durability, int _x, int _y)
+    Wall::Wall(int _durability, int _y, int _x)
     {
         durability = _durability;
         x = _x;
         y = _y;
     }
 
-    std::pair<int, int> Wall::get_xy()
+    std::pair<int, int> Wall::get_yx()
     {
-        std::pair<int, int> ret = {x, y};
-        return ret;
+        return {y, x};
     }
 
     std::string Wall::get_char()
@@ -67,12 +66,18 @@ namespace game
         COLS = cols;
 
         // Load bitmap
-        map = (Wall ***)malloc(sizeof(Wall **) * lines); // ?
-        for (int i = 0; i < cols; i++)
-            map[i] = (Wall **)malloc(sizeof(Wall *) * cols);
+        // map = (Wall ***)malloc(sizeof(Wall **) * lines); // ?
+        // for (int i = 0; i < cols; i++)
+        //     map[i] = (Wall **)malloc(sizeof(Wall *) * cols);
+        map = new Wall **[lines];
+        for (int i = 0; i < lines; i++)
+            map[i] = new Wall *[cols];
+
+        bitmap = new char *[lines];
+        for (int i = 0; i < lines; i++)
+            bitmap[i] = new char[cols];
 
         int i, j;
-
         if (json_data["bitmap"].is_array())
         {
             i = 0;
@@ -85,9 +90,15 @@ namespace game
                     {
                         // std::cout << "in Map::load(): " << i << " " << j << std::endl;
                         if (chr == ' ')
+                        {
                             map[i][j] = NULL;
+                            bitmap[i][j] = 0;
+                        }
                         else if (chr == '#')
+                        {
                             map[i][j] = new Wall(-1, i, j);
+                            bitmap[i][j] = 1;
+                        }
                         j++;
                     }
                     i++;
@@ -152,7 +163,7 @@ namespace game
         return true;
     }
 
-    std::string Map::get_char(int x, int y)
+    std::string Map::get_char(int y, int x)
     {
         if (map[y][x] == NULL)
             return " ";
@@ -160,17 +171,17 @@ namespace game
             return map[y][x]->get_char();
     }
 
-    bool Map::add(int x, int y, int durability)
+    bool Map::add(int y, int x, int durability)
     {
         if (map[y][x] == NULL)
         {
-            map[y][x] = new Wall(durability, x, y);
+            map[y][x] = new Wall(durability, y, x);
             return true;
         }
         return false;
     }
 
-    bool Map::remove(int x, int y)
+    bool Map::remove(int y, int x)
     {
         if (map[y][x] == NULL)
             return false;
@@ -179,13 +190,18 @@ namespace game
         return true;
     }
 
-    std::pair<int, int> Map::zb_get_rand_ent_xy()
+    std::pair<int, int> Map::zb_get_rand_ent_yx()
     {
         std::cout << "Size: " << zb_ent_yx_list.size() << std::endl;
         std::random_device rd;
         int i = (int)((float)(rd() - rd.min()) / (float)(rd.max() - rd.min()) * zb_ent_yx_list.size());
         std::cout << "Rand: " << i << std::endl;
         return zb_ent_yx_list[i];
+    }
+
+    char **Map::get_map()
+    {
+        return bitmap;
     }
 
     int Map::columns()
@@ -200,7 +216,7 @@ namespace game
 
     Map::~Map()
     {
-        delete[] map;
+        delete map;
         // std::cout << "Map Dec" << std::endl;
     }
 

@@ -121,7 +121,7 @@ namespace game
                 {
                     if (std::count(bullet_type->trig_obj.begin(), bullet_type->trig_obj.end(), "zombie"))
                         for (auto &zombie : *zombie_list)
-                            if (pair_distance(zombie->get_xy(), bullet->get_xy()) > bullet_type->trig_c)
+                            if (pair_distance(zombie->get_yx(), bullet->get_yx()) > bullet_type->trig_c)
                             {
                                 triggered = true;
                                 break;
@@ -134,17 +134,17 @@ namespace game
                 {
                     // Find all zombies in distance
                     for (auto &zombie : *zombie_list)
-                        if (pair_distance(zombie->get_xy(), bullet->get_xy()) < bullet_type->damage_dist)
+                        if (pair_distance(zombie->get_yx(), bullet->get_yx()) < bullet_type->damage_dist)
                         {
-                            temp_distance = pair_distance(zombie->get_xy(), bullet->get_xy());
+                            temp_distance = pair_distance(zombie->get_yx(), bullet->get_yx());
                             float damage = te_eval(bullet_type->damage_func);
                             zombie->set_hp(zombie->get_hp() - damage);
                         }
 
                     // player
-                    if (pair_distance(player->get_xy(), bullet->get_xy()) <= bullet_type->damage_dist)
+                    if (pair_distance(player->get_yx(), bullet->get_yx()) <= bullet_type->damage_dist)
                     {
-                        temp_distance = pair_distance(player->get_xy(), bullet->get_xy());
+                        temp_distance = pair_distance(player->get_yx(), bullet->get_yx());
                         float damage = te_eval(bullet_type->damage_func);
                         player->set_hp(player->get_hp() - damage);
                     }
@@ -157,9 +157,9 @@ namespace game
         }
     }
 
-    void bulletManager::shoot(std::string name, int x, int y, int dir)
+    void bulletManager::shoot(std::string name, std::pair<int, int> yx, int dir)
     {
-        Bullet *b = new Bullet{name, *timer, {x, y}, dir};
+        Bullet *b = new Bullet{name, *timer, yx, dir};
         bullet_list.push_back(b);
     }
 
