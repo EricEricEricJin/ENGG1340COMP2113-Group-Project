@@ -3,21 +3,14 @@
 
 #include <iostream>
 #include <vector>
-#include <thread>
-#include <functional>
 #include <map>
+#include <thread>
 #include "tinyexpr.h"
-
-#define BUL_PATH "../resource/bullet/"
 
 #define TRIG_TIMER 1
 #define TRIG_CONTACT 0
 
-float pair_distance(auto p1, auto p2)
-{
-    return ((p1.first - p2.first) * (p1.first - p2.first) +
-            (p1.second - p2.second) * (p1.second - p2.second));
-}
+float pair_distance(std::pair<float, float> p1, std::pair<float, float> p2);
 
 namespace game
 {
@@ -28,20 +21,27 @@ namespace game
 
     typedef uint64_t timer_t;
 
-    struct Bullet
+    class Bullet
     {
+    private:
         std::string type;
         timer_t shoot_time;
         std::pair<float, float> xy;
         int dir;
+    public:
+        Bullet(std::string type, timer_t timer, std::pair<float, float> xy, int dir);
+        std::pair<float, float> get_xy();
+        std::string get_type();
+        std::string get_char();
+        timer_t get_shoot_time();
     };
 
-    struct bullet_t
+    struct bulletType
     {
         std::string chr;
         float speed;
         int trig_mode;
-        int damage_dist;
+        float damage_dist;
         int trig_c;
         std::vector<std::string> trig_obj;
 
@@ -55,9 +55,8 @@ namespace game
         std::vector<Zombie *> *zombie_list;
         Player *player;
 
+        std::map<std::string, bulletType *> bul_type_dict;
         std::vector<Bullet *> bullet_list;
-
-        std::map<std::string, bullet_t *> bul_type_dict;
         bool running;
 
         void _thread_loop();
@@ -71,6 +70,10 @@ namespace game
         bulletManager();
 
         int load_resource(std::string resource_root);
+        void print();
+
+        std::vector<Bullet *> *get_bullet_list();
+
         void run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player);
 
         void shoot(std::string name, int x, int y, int dir); // add bullet to loop

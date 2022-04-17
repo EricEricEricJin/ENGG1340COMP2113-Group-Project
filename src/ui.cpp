@@ -15,7 +15,7 @@ namespace game
         noecho();
     }
 
-    bool UI::homepage(int *map_id, int *difficulty)
+    bool UI::homepage(std::string* map_name, int *difficulty)
     {
         // This page: block input
         cbreak();
@@ -129,7 +129,7 @@ namespace game
         return true;
     }
 
-    void UI::start_game(Player *_player, std::vector<Zombie> *_zombie_list, Map *_map)
+    void UI::start_game(Player *_player, std::vector<Zombie*> *_zombie_list, Map *_map)
     {
         // set dependencies
         player = _player;

@@ -1,2 +1,2 @@
-bullet_test:
-	g++ -std=c++17 bullet_test.cpp ../src/bullet.cpp ../lib/tinyexpr.o -I ../include -I ../src -o bullet_test -lpthread
+bullet_test: bullet_test.cpp ../src/bullet.cpp ../src/zombie.cpp ../src/player.cpp ../lib/tinyexpr.o
+	g++ -std=c++17 $^ -I ../include -I ../src -o bullet_test -lpthread
