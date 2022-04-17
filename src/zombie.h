@@ -26,6 +26,7 @@ namespace game
         float y;
         float hp;
         float speed;
+        float damage;
         std::string character;
 
     public:
@@ -35,7 +36,7 @@ namespace game
         bool set_hp(float new_hp);
         std::pair<float, float> get_yx();
         void move(std::pair<float, float> new_yx);
-        int get_damage();
+        float get_damage();
         float get_speed();
         std::string get_char();
     };
@@ -52,6 +53,8 @@ namespace game
 
         bool running;
         void _thread_loop();
+
+        std::thread* thread_obj;
 
     public:
         zombieManager(std::vector<Bullet *> *_bullet_list, Map *_map, Player *_player);

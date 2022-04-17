@@ -15,10 +15,9 @@ namespace game
         type = _type;
     }
 
-    float Zombie::get_hp()
-    {
-        return hp;
-    }
+    int Zombie::get_type() { return type; }
+
+    float Zombie::get_hp() { return hp; }
 
     bool Zombie::set_hp(float new_hp)
     {
@@ -26,10 +25,7 @@ namespace game
         return (hp > 0);
     }
 
-    std::pair<float, float> Zombie::get_yx()
-    {
-        return {y, x};
-    }
+    std::pair<float, float> Zombie::get_yx() { return {y, x}; }
 
     void Zombie::move(std::pair<float, float> new_yx)
     {
@@ -37,10 +33,11 @@ namespace game
         x = new_yx.second;
     }
 
-    std::string Zombie::get_char()
-    {
-        return character;
-    }
+    float Zombie::get_damage() { return damage; }
+
+    float Zombie::get_speed() { return speed; }
+
+    std::string Zombie::get_char() { return character; }
 
     // Zombie Manager
     zombieManager::zombieManager(std::vector<Bullet *> *_bullet_list, Map *_map, Player *_player)
@@ -61,14 +58,22 @@ namespace game
             // TODO later
         }
     }
-    std::list<Zombie *> *zombieManager::get_zombie_list()
+    std::list<Zombie *> *zombieManager::get_zombie_list() { return zombie_list; }
+
+    int zombieManager::get_num() { return zombie_list->size(); }
+
+    void zombieManager::run()
     {
-        return zombie_list;
+        running = true;
+        thread_obj = new std::thread([=]
+                                     { _thread_loop(); });
     }
 
-    int zombieManager::get_num()
+    void zombieManager::stop()
     {
-        return zombie_list->size();
+        running = false;
+        thread_obj->join();
+        delete thread_obj;
     }
 
     void zombieManager::_thread_loop()
