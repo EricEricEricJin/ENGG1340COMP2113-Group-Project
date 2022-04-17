@@ -130,6 +130,12 @@ int solveMaze::search(char **_map, int _lines, int _cols, std::pair<int, int> so
             min_dir = dir;
         }
     }
-    free((char *)searched);
     return min_dir;
+}
+
+solveMaze::~solveMaze()
+{
+    // for (int i = 0; i < lines; i++)
+    //     delete searched[i];
+    delete searched;
 }
