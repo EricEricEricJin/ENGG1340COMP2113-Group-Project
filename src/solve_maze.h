@@ -18,6 +18,6 @@ private:
     bool valid(std::pair<int, int> p);
     int bfs_nstep(std::queue<std::pair<int, int>> *root);
 
-public:;
+public:
     int search(char **_map, int _lines, int _cols, std::pair<int, int> source_yx, std::pair<int, int> target_yx, char wall, char empty);
 };
