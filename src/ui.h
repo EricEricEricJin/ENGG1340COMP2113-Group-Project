@@ -62,11 +62,11 @@ namespace game
 
     public:
         UI();
-        bool homepage(int *map_id, int *difficulty); // return only when select map and mode
+        bool homepage(std::string* map_name, int *difficulty); // return only when select map and mode
         // parameter: [map list: Map]
         // return value: [map id: int], [# of players: int], [difficulty: int]
 
-        void start_game(Player *player, std::vector<Zombie> *_zombie_list, Map *_map);
+        void start_game(Player *player, std::vector<Zombie*> *_zombie_list, Map *_map);
         void stop_game();
         // THIS FUNC IS NON-BLOCK
         // Will start UI in new thread

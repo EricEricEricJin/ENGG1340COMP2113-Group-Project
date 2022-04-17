@@ -22,32 +22,37 @@
 #include <queue>
 #include <vector>
 
+#include "ui.h"
+#include "map.h"
+#include "bullet.h"
+
 float distance(std::pair<int, int> p1, std::pair<int, int> p2);
 
-std::vector<game::Zombie*> zombie_list;
-std::vector<std::pair<int, int>> zb_xy_list;
-
-std::queue<std::pair<void*, float>> trig_msg_queue; // <obj_ptr, damage>
+std::vector<game::Zombie *> zombie_list;
 
 void mainloop()
 {
     // Load map files, initialize UI, and inquire setting
-    auto maps = game::load_all_maps();
     game::UI ui;
-    int map_id, difficulty;
-    ui.homepage(maps, map_id, difficulty);
+
+    int difficulty;
+    std::string map_name;
+
+    // Change parameter type
+    ui.homepage(&map_name, &difficulty);
+
+    game::Map *map = new game::Map();
 
     // Initialize Map with selected map
-    game::Map map(LINES, COLS);
-    map.load(game::map_id_to_fp(map_id));
+    map->load(map_name);
 
-    // bullet list
-    std::vector<game::Bullet> bullet_list;
+    // bullet manager
+    game::bulletManager *bullet_manager = new game::bulletManager();
 
     // initialize player
-    game::Player player(bullet_list, map);
+    game::Player *player = new game::Player(bullet_manager->get_bullet_list(), map);
 
-    std::vector<game::Zombie> zombie_list;
+    std::vector<game::Zombie *> *zombie_list = new std::vector<game::Zombie *>;
 
     ui.start_game(player, zombie_list, map);
 

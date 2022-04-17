@@ -8,6 +8,12 @@
 
 #include "tinyexpr.h"
 
+float pair_distance(std::pair<float, float> p1, std::pair<float, float> p2)
+{
+    return ((p1.first - p2.first) * (p1.first - p2.first) +
+            (p1.second - p2.second) * (p1.second - p2.second));
+}
+
 namespace game
 {
     bulletManager::bulletManager()
@@ -18,9 +24,11 @@ namespace game
     {
         using namespace std;
 
-        filesystem::path str(resource_root + "/bullet/");
-        if (filesystem::exists(str))
+        filesystem::path str(resource_root + "bullet/");
+        cout << "fp: " << str << endl;
+        if (!filesystem::exists(str))
             return 0;
+        cout << "exist" << endl;
         filesystem::directory_entry entry(str);
         if (entry.status().type() != filesystem::file_type::directory)
             return 0;
@@ -29,6 +37,7 @@ namespace game
         for (auto &_name : list)
         {
             auto name = _name.path().filename().string();
+            cout << "name: " << name << endl;
             // open and parse file
             ifstream f(resource_root + "/bullet/" + name, fstream::in);
             if (f.fail())
@@ -48,11 +57,13 @@ namespace game
 
             auto type = json_data["type"].get<string>();
 
-            bul_type_dict[type] = new bullet_t;
+            bul_type_dict[type] = new bulletType;
             bul_type_dict[type]->speed = json_data["speed"].get<float>();
             bul_type_dict[type]->chr = json_data["char"].get<string>();
             bul_type_dict[type]->trig_mode = json_data["trig_mode"].get<int>();
-            bul_type_dict[type]->damage_dist = json_data["damage_dist"].get<int>();
+            bul_type_dict[type]->damage_dist = json_data["damage_dist"].get<float>();
+
+            bul_type_dict[type]->trig_c = json_data["trig_c"].get<float>();
 
             for (auto &i : json_data["trig_obj"])
                 bul_type_dict[type]->trig_obj.push_back(i.get<string>());
@@ -61,6 +72,25 @@ namespace game
             bul_type_dict[type]->damage_func = te_compile(json_data["damage_expr"].get<string>().c_str(), vars, 1, nullptr);
         }
         return 1;
+    }
+
+    void bulletManager::print()
+    {
+        using namespace std;
+        for (auto &bul_type : bul_type_dict)
+        {
+            cout << bul_type.first << ": " << endl;
+            cout << "character " << bul_type.second->chr << endl;
+            cout << "speed " << bul_type.second->speed << endl;
+            cout << "trig_mode " << bul_type.second->trig_mode << endl;
+            cout << "damage_dist " << bul_type.second->damage_dist << endl;
+            cout << "trig_c" << bul_type.second->trig_c << endl;
+
+            cout << "trig_obj ";
+            for (auto &obj : bul_type.second->trig_obj)
+                cout << obj << " ";
+            cout << endl;
+        }
     }
 
     void bulletManager::run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player)
@@ -74,46 +104,55 @@ namespace game
     {
         // DO NOT DO ANY INITIALIZE HERE
         // DO IT IN FUNCTION `run`
+        int b_it;
+        bool triggered;
+
         while (running)
         {
-            int b_it = -1;
+            b_it = -1;
+            triggered = false;
+
             for (auto &bullet : bullet_list)
             {
                 b_it++;
-                bullet_t *bullet_type = bul_type_dict[bullet->type];
+                bulletType *bullet_type = bul_type_dict[bullet->get_type()];
 
                 if (bullet_type->trig_mode == TRIG_CONTACT)
                 {
                     if (std::count(bullet_type->trig_obj.begin(), bullet_type->trig_obj.end(), "zombie"))
                         for (auto &zombie : *zombie_list)
-                            if (pair_distance(zombie->get_xy(), bullet->xy) > bullet_type->trig_c)
-                                goto TRIGGERED;
+                            if (pair_distance(zombie->get_xy(), bullet->get_xy()) > bullet_type->trig_c)
+                            {
+                                triggered = true;
+                                break;
+                            }
                 }
-                else if (bullet_type->trig_mode == TRIG_TIMER && *timer - bullet->shoot_time >= bullet_type->trig_c)
-                    goto TRIGGERED;
-                continue;
+                else if (bullet_type->trig_mode == TRIG_TIMER && *timer - bullet->get_shoot_time() >= bullet_type->trig_c)
+                    triggered = true;
 
-            TRIGGERED:
-                // Find all zombies in distance
-                for (auto &zombie : *zombie_list)
-                    if (pair_distance(zombie->get_xy(), bullet->xy) < bullet_type->damage_dist)
+                if (triggered)
+                {
+                    // Find all zombies in distance
+                    for (auto &zombie : *zombie_list)
+                        if (pair_distance(zombie->get_xy(), bullet->get_xy()) < bullet_type->damage_dist)
+                        {
+                            temp_distance = pair_distance(zombie->get_xy(), bullet->get_xy());
+                            float damage = te_eval(bullet_type->damage_func);
+                            zombie->set_hp(zombie->get_hp() - damage);
+                        }
+
+                    // player
+                    if (pair_distance(player->get_xy(), bullet->get_xy()) <= bullet_type->damage_dist)
                     {
-                        temp_distance = pair_distance(zombie->get_xy(), bullet->xy);
+                        temp_distance = pair_distance(player->get_xy(), bullet->get_xy());
                         float damage = te_eval(bullet_type->damage_func);
-                        zombie->set_hp(zombie->get_hp() - damage);
+                        player->set_hp(player->get_hp() - damage);
                     }
 
-                // player
-                if (pair_distance(player->get_xy(), bullet->xy) <= bullet_type->damage_dist)
-                {
-                    temp_distance = pair_distance(player->get_xy(), bullet->xy);
-                    float damage = te_eval(bullet_type->damage_func);
-                    player->set_hp(player->get_hp() - damage);
+                    // destroy bullet
+                    delete bullet;
+                    bullet_list.erase(bullet_list.begin() + b_it);
                 }
-
-                // destroy bullet
-                delete bullet;
-                bullet_list.erase(bullet_list.begin() + b_it);
             }
         }
     }
@@ -137,5 +176,9 @@ namespace game
         thread_obj = new std::thread([=]
                                      { _thread_loop(); });
         // cannot call non-static member function directly
+    }
+
+    bulletManager::~bulletManager()
+    {
     }
 }
