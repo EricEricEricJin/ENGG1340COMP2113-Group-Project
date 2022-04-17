@@ -1,23 +1,17 @@
+#ifndef _SOLVE_MAZE_H
+#define _SOLVE_MAZE_H
+
 #include <iostream>
-#include <queue>
-#include <string.h>
 
-class solveMaze
+enum 
 {
-private:
-    char **searched;
-    char **map;
-    std::pair<int, int> Dest;
-
-    int lines;
-    int cols;
-
-    char WALL;
-    char EMPTY;
-
-    bool valid(std::pair<int, int> p);
-    int bfs_nstep(std::queue<std::pair<int, int>> *root);
-
-public:
-    int search(char **_map, int _lines, int _cols, std::pair<int, int> source_yx, std::pair<int, int> target_yx, char wall, char empty);
+    SOLMAZ_UP,
+    SOLMAZ_DOWN,
+    SOLMAZ_LEFT,
+    SOLMAZ_RIGHT,
 };
+
+int solve_maze(char **map, int lines, int cols, std::pair<int, int> source_yx, std::pair<int, int> target_yx, char wall, char empty);
+
+
+#endif

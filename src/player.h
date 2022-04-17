@@ -44,7 +44,7 @@ namespace game
         float get_hp();            // return hp
         bool set_hp(float new_hp); // true for alive, false for dead
         std::string get_char();    // depend on direction
-        std::pair<float, float> get_xy();
+        std::pair<float, float> get_yx();
         void run();
         void stop();
         // void set_hp(int new_hp); // set hp

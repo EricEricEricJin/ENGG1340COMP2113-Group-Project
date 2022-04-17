@@ -33,7 +33,8 @@ int main()
     for (int i = 0; i < 21; i++)
         a[i] = map[i];
 
-    solveMaze solver;
-    cout << solver.search(a, 21, 78, {3, 2}, {4, 6}, '#', ' ') << endl;
+    // solveMaze solver;
+    // cout << solver.search(a, 21, 78, {3, 2}, {4, 6}, '#', ' ') << endl;
+    cout << solve_maze(a, 21, 78, {3, 2}, {4, 6}, '#', ' ') << endl;
     return 0;
 }
