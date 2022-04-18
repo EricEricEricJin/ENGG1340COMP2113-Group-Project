@@ -6,13 +6,13 @@
 
 namespace game
 {
-    typedef uint64_t timer_tick_t;
+    typedef uint64_t clock_tick_t;
 
     class Clock
     {
     private:
         float frequency;
-        timer_tick_t ticks;
+        clock_tick_t ticks;
         int period_us;
         void _thread_loop();
         bool running;
@@ -25,7 +25,7 @@ namespace game
         void reset();
         void set_freq(float freq);
         float get_freq();
-        timer_tick_t get_ticks();
+        clock_tick_t get_ticks();
         void wait(int _ticks);
         ~Clock();
     };

@@ -16,6 +16,22 @@ float pair_distance(std::pair<float, float> p1, std::pair<float, float> p2)
 
 namespace game
 {
+    Bullet::Bullet(std::string _type, clock_tick_t _shoot_time, std::pair<float, float> _yx, int _dir)
+    {
+        type = _type;
+        shoot_time = _shoot_time;
+        yx = _yx;
+        dir = _dir;
+    }
+
+    std::pair<float, float> Bullet::get_yx() { return yx; }
+
+    std::string Bullet::get_type() { return type; }
+
+    std::string Bullet::get_char() { return character; }
+
+    clock_tick_t Bullet::get_shoot_time() { return shoot_time; }
+
     bulletManager::bulletManager()
     {
     }
@@ -93,11 +109,13 @@ namespace game
         }
     }
 
-    void bulletManager::run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player)
+    void bulletManager::run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock)
     {
         map = _map;
         zombie_list = _zombie_list;
         player = _player;
+        clock = _clock;
+        resume();
     }
 
     void bulletManager::_thread_loop()
@@ -127,7 +145,7 @@ namespace game
                                 break;
                             }
                 }
-                else if (bullet_type->trig_mode == TRIG_TIMER && *timer - bullet->get_shoot_time() >= bullet_type->trig_c)
+                else if (bullet_type->trig_mode == TRIG_TIMER && clock->get_ticks() - bullet->get_shoot_time() >= bullet_type->trig_c)
                     triggered = true;
 
                 if (triggered)
@@ -154,12 +172,13 @@ namespace game
                     bullet_list.erase(bullet_list.begin() + b_it);
                 }
             }
+            clock->wait(1);
         }
     }
 
     void bulletManager::shoot(std::string name, std::pair<int, int> yx, int dir)
     {
-        Bullet *b = new Bullet{name, *timer, yx, dir};
+        Bullet *b = new Bullet{name, clock->get_ticks(), yx, dir};
         bullet_list.push_back(b);
     }
 

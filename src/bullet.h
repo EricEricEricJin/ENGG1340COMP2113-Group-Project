@@ -6,6 +6,7 @@
 #include <map>
 #include <thread>
 #include "tinyexpr.h"
+#include "clock.h"
 
 #define TRIG_TIMER 1
 #define TRIG_CONTACT 0
@@ -19,22 +20,23 @@ namespace game
     class Player;
     class Zombie;
 
-    typedef uint64_t timer_t;
 
     class Bullet
     {
     private:
         std::string type;
-        timer_t shoot_time;
+        clock_tick_t shoot_time;
         std::pair<float, float> yx;
         int dir;
 
+        std::string character;
+
     public:
-        Bullet(std::string type, timer_t timer, std::pair<float, float> yx, int dir);
+        Bullet(std::string _type, clock_tick_t _shoot_time, std::pair<float, float> _yx, int _dir);
         std::pair<float, float> get_yx();
         std::string get_type();
         std::string get_char();
-        timer_t get_shoot_time();
+        clock_tick_t get_shoot_time();
     };
 
     struct bulletType
@@ -65,7 +67,7 @@ namespace game
 
         float temp_distance; // pass to tiny expr
 
-        timer_t *timer;
+        Clock* clock;
 
     public:
         bulletManager();
@@ -75,7 +77,7 @@ namespace game
 
         std::vector<Bullet *> *get_bullet_list();
 
-        void run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player);
+        void run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock* _clock);
 
         void shoot(std::string name, std::pair<int, int> yx, int dir); // add bullet to loop
 

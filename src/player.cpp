@@ -4,7 +4,7 @@
 
 namespace game
 {
-    Player::Player(std::vector<Bullet *> *bullet_list, Map *map)
+    Player::Player(bulletManager *_bullet_manager, Map *_map, Clock *_clock)
     {
     }
 
@@ -45,27 +45,46 @@ namespace game
         while (running)
         {
             key = getch();
-            if (key == _KEY_UP)
-                direction = DIR_UP;
-            else if (key == _KEY_DOWN)
-                direction = DIR_DOWN;
-            else if (key == _KEY_LEFT)
-                direction = DIR_LEFT;
-            else if (key == _KEY_RIGHT)
-                direction = DIR_RIGHT;
-            else if (key == _KEY_STOP)
-                direction = DIR_STOP;
+            if (key == key_set->UP)
+                direction = PDIR_UP;
+            else if (key == key_set->DOWN)
+                direction = PDIR_DOWN;
+            else if (key == key_set->LEFT)
+                direction = PDIR_LEFT;
+            else if (key == key_set->RIGHT)
+                direction = PDIR_RIGHT;
+            else if (key == key_set->STOP)
+                direction = PDIR_STOP;
 
-            if (direction == DIR_UP)
-                y -= speed;
-            else if (direction == DIR_DOWN)
-                y += speed;
-            else if (direction == DIR_LEFT)
-                x -= speed;
-            else if (direction == DIR_RIGHT)
-                x += speed;
+            else if (key == key_set->FIRE)
+            {
+                bullet_manager->shoot(cur_bul_name, {y, x}, direction);
+            }
 
-            // sleep, using conditional variable 'wait()'
+            // Walk
+            float x_temp = x, y_temp = y;
+
+            if (direction == PDIR_UP)
+                y_temp -= speed;
+            else if (direction == PDIR_DOWN)
+                y_temp += speed;
+            else if (direction == PDIR_LEFT)
+                x_temp -= speed;
+            else if (direction == PDIR_RIGHT)
+                x_temp += speed;
+
+            if (map->get_map()[(int)y_temp][(int)x_temp] == 1)
+            {
+                // is wall cannot go
+                beep();
+            }
+            else
+            {
+                y = y_temp;
+                x = x_temp;
+            }
+
+            clock->wait(1);
         }
     }
 
