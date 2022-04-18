@@ -25,6 +25,9 @@
 #include "ui.h"
 #include "map.h"
 #include "bullet.h"
+#include "player.h"
+#include "zombie.h"
+#include "clock.h"
 
 float distance(std::pair<int, int> p1, std::pair<int, int> p2);
 
@@ -32,25 +35,31 @@ std::vector<game::Zombie *> zombie_list;
 
 void mainloop()
 {
-    // Load map files, initialize UI, and inquire setting
-    game::UI ui;
+    // Initialize map
+    game::Map *map = new game::Map();
+    map->load("../resource/map/");
+
+    // Initialize bullet
+    game::bulletManager *bullet_manager = new game::bulletManager();
+    bullet_manager->load_resource("../resource/");
+    
+    game::zombieManager* zombie_manager = new game::zombieManager();
+
+    // Initialize UI
+    game::UI* ui = new game::UI();
 
     int difficulty;
     std::string map_name;
+    ui->homepage(&map_name, &difficulty);
 
-    // Change parameter type
-    ui.homepage(&map_name, &difficulty);
-
-    game::Map *map = new game::Map();
 
     // Initialize Map with selected map
     map->load(map_name);
 
     // bullet manager
-    game::bulletManager *bullet_manager = new game::bulletManager();
 
     // initialize player
-    game::Player *player = new game::Player(bullet_manager->get_bullet_list(), map);
+    game::Player *player = new game::Player();
 
     std::vector<game::Zombie *> *zombie_list = new std::vector<game::Zombie *>;
 

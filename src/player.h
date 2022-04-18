@@ -36,12 +36,15 @@ namespace game
     {
     private:
         Map *map;
-        bulletManager* bullet_manager;
+        bulletManager *bullet_manager;
 
         Clock *clock;
 
         int direction;
+
         float speed;
+
+        std::string cur_bul_name;
 
         playerKeySet *key_set;
 
@@ -54,9 +57,10 @@ namespace game
         bool running;
 
     public:
-        Player(bulletManager *_bullet_manager, Map *_map, Clock *_clock);
+        Player();
+        void init(bulletManager *_bullet_manager, Map *_map, Clock *_clock);
 
-        void configure(int key_up, int key_down, int key_left, int key_right, int key_stop);
+        void configure(playerKeySet new_keyset);
 
         float get_hp();            // return hp
         bool set_hp(float new_hp); // true for alive, false for dead

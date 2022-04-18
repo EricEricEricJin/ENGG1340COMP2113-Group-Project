@@ -9,8 +9,7 @@
 #include <unistd.h>
 #include <sstream>
 
-// #include <experimental/filesystem>
-
+#include "clock.h"
 
 
 #define MAX_DIFF_LEVEL 10
@@ -47,12 +46,15 @@ namespace game
         std::vector<Zombie *> *zombie_list;
         std::vector<Bullet *> *bullet_list;
         Map *map;
+        Clock* clock;
 
         int status_val;
+        std::thread* thread_obj;
 
         void _game_thread_loop();
 
         void _game_menu();
+        void _bottom_mode();
 
         void _draw_walls();
         void _draw_players();
@@ -62,11 +64,12 @@ namespace game
 
     public:
         UI();
+        void init(Player *_player, std::vector<Zombie*> *_zombie_list, Map *_map, Clock* _clock);
         bool homepage(std::string* map_name, int *difficulty); // return only when select map and mode
         // parameter: [map list: Map]
         // return value: [map id: int], [# of players: int], [difficulty: int]
 
-        void start_game(Player *player, std::vector<Zombie*> *_zombie_list, Map *_map);
+        void start_game();
         void stop_game();
         // THIS FUNC IS NON-BLOCK
         // Will start UI in new thread

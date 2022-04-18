@@ -4,8 +4,23 @@
 
 namespace game
 {
-    Player::Player(bulletManager *_bullet_manager, Map *_map, Clock *_clock)
+    Player::Player()
     {
+    }
+
+    void Player::init(bulletManager *_bullet_manager, Map *_map, Clock *_clock)
+    {
+        bullet_manager = _bullet_manager;
+        map = _map;
+        clock = _clock;
+
+        // default keysey
+        key_set = new playerKeySet{'w', 's', 'a', 'd', 'e', ' '};
+    }
+
+    void Player::configure(playerKeySet new_keyset)
+    {
+        *key_set = new_keyset;
     }
 
     float Player::get_hp()
