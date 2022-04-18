@@ -5,49 +5,65 @@
 #include <ncurses.h>
 #include <thread>
 #include <vector>
+#include "clock.h"
+
+struct playerKeySet
+{
+    int UP;
+    int DOWN;
+    int LEFT;
+    int RIGHT;
+    int STOP;
+    int FIRE;
+};
 
 namespace game
 {
+    enum
+    {
+        PDIR_STOP,
+        PDIR_UP,
+        PDIR_DOWN,
+        PDIR_LEFT,
+        PDIR_RIGHT,
+    };
+
     class Map;
     class Bullet;
+    class bulletManager;
 
     class Player
     {
     private:
-        /* data */
+        Map *map;
+        bulletManager* bullet_manager;
 
-        const int DIR_STOP = 0;
-        const int DIR_UP = 1;
-        const int DIR_DOWN = 2;
-        const int DIR_LEFT = 3;
-        const int DIR_RIGHT = 4;
-
-        int _KEY_UP;
-        int _KEY_DOWN;
-        int _KEY_LEFT;
-        int _KEY_RIGHT;
-        int _KEY_STOP;
+        Clock *clock;
 
         int direction;
         float speed;
+
+        playerKeySet *key_set;
 
         float hp;
         std::string chr;
         float x, y;
 
         void _player_thread_loop();
-        std::thread* thread_obj;
+        std::thread *thread_obj;
         bool running;
 
     public:
-        Player(std::vector<Bullet *> *bullet_list, Map *map);
+        Player(bulletManager *_bullet_manager, Map *_map, Clock *_clock);
+
+        void configure(int key_up, int key_down, int key_left, int key_right, int key_stop);
+
         float get_hp();            // return hp
         bool set_hp(float new_hp); // true for alive, false for dead
         std::string get_char();    // depend on direction
         std::pair<float, float> get_yx();
         void run();
         void stop();
-        // void set_hp(int new_hp); // set hp
         ~Player();
     };
 

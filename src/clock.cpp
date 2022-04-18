@@ -32,7 +32,7 @@ namespace game
 
     float Clock::get_freq() { return frequency; }
 
-    timer_tick_t Clock::get_ticks() { return ticks; }
+    clock_tick_t Clock::get_ticks() { return ticks; }
 
     void Clock::wait(int _ticks) { usleep(period_us * _ticks); }
 
