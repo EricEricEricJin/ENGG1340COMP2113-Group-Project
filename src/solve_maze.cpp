@@ -1,3 +1,6 @@
+// Use BFS
+// Tested. Since map is small, speed is OK
+
 #include <iostream>
 #include <queue>
 #include <string.h>

@@ -4,8 +4,9 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include "clock.h"
 
-enum 
+enum
 {
     ZOMBIETYPE_ODNR,
     ZOMBIETYPE_KING
@@ -44,26 +45,28 @@ namespace game
     class zombieManager
     {
     private:
+        Clock *clock;
+
         std::vector<Bullet *> *bullet_list;
         Map *map;
         Player *player;
 
         // std::vector<Zombie *> *zombie_list;
-        std::list<Zombie*> *zombie_list;
+        std::list<Zombie *> *zombie_list;
 
         bool running;
         void _thread_loop();
 
-        std::thread* thread_obj;
+        std::thread *thread_obj;
 
     public:
-        zombieManager(std::vector<Bullet *> *_bullet_list, Map *_map, Player *_player);
+        zombieManager();
 
         void add(int type, std::pair<int, int> yx);
-        std::list<Zombie*> *get_zombie_list();
+        std::list<Zombie *> *get_zombie_list();
 
         int get_num(); // number of zombies alive
-        void run();
+        void run(std::vector<Bullet *> *_bullet_list, Map *_map, Player *_player);
         void stop();
         ~zombieManager();
     };

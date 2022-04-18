@@ -8,6 +8,15 @@ namespace game
 {
     UI::UI()
     {
+    }
+
+    void UI::init(Player *_player, std::vector<Zombie *> *_zombie_list, Map *_map, Clock *_clock)
+    {
+        player = _player;
+        zombie_list = _zombie_list;
+        map = _map;
+        clock = _clock;
+
         // init screen
         initscr();
         nocbreak();
@@ -15,7 +24,7 @@ namespace game
         noecho();
     }
 
-    bool UI::homepage(std::string* map_name, int *difficulty)
+    bool UI::homepage(std::string *map_name, int *difficulty)
     {
         // This page: block input
         cbreak();
@@ -101,11 +110,6 @@ namespace game
             move(LINES / 2 - 5, COLS / 2 + 5);
             addstr(std::to_string(_map_id + 1).c_str());
 
-            // move(LINES / 2 - 3, COLS / 2 - 10);
-            // addstr("# of Players:");
-            // move(LINES / 2 - 3, COLS / 2 + 5);
-            // addstr(std::to_string(_player_num).c_str());
-
             move(LINES / 2 - 1, COLS / 2 - 10);
             addstr("Difficulty:");
             move(LINES / 2 - 1, COLS / 2 + 5);
@@ -121,29 +125,27 @@ namespace game
                 break;
         }
 
-        *map_id = _map_id;
-        // player_num = _player_num;
+        *map_name = map_names[_map_id];
         *difficulty = _difficulty;
         nocbreak();
         timeout(0);
         return true;
     }
 
-    void UI::start_game(Player *_player, std::vector<Zombie*> *_zombie_list, Map *_map)
+    void UI::start_game()
     {
         // set dependencies
-        player = _player;
-        zombie_list = _zombie_list;
-        map = _map;
-
         status_val = 1;
-        std::thread(_game_thread_loop); // launch game loop
+        thread_obj = new std::thread([=]
+                                     { _game_thread_loop(); }); // launch game loop
         // stop when running become false
     }
 
     void UI::stop_game()
     {
         status_val = 0;
+        thread_obj->join();
+        delete thread_obj;
     }
 
     void UI::_game_thread_loop()
@@ -163,7 +165,7 @@ namespace game
             _draw_zombies();
             _draw_bullets();
             _show_info();
-            usleep(50'000); // 20Hz
+            clock->wait(1); // 20Hz
         }
     }
 
@@ -175,8 +177,16 @@ namespace game
     void UI::_game_menu()
     {
         status_val = STATUS_MENU;
-        while (true)
+
+        cbreak();
+        timeout(-1);
+
+        int key;
+        for (;;)
         {
+            key = getch();
+            if (key == 27)
+                _bottom_mode();
         }
         status_val = STATUS_RUNNING;
     }
@@ -198,7 +208,7 @@ namespace game
 
     void UI::_draw_players()
     {
-        move(player->get_xy().first, player->get_xy().second);
+        move(player->get_yx().first, player->get_yx().second);
         addstr(player->get_char().c_str());
     }
 
@@ -206,8 +216,8 @@ namespace game
     {
         for (auto &zombie : *zombie_list)
         {
-            move(zombie.get_xy().second, zombie.get_xy().first);
-            addstr(zombie.get_char().c_str());
+            move(zombie->get_yx().first, zombie->get_yx().second);
+            addstr(zombie->get_char().c_str());
         }
     }
 
@@ -215,8 +225,8 @@ namespace game
     {
         for (auto &bullet : *bullet_list)
         {
-            move(bullet.get_xy().second, bullet.get_xy().first);
-            addstr(bullet.get_char().c_str());
+            move(bullet->get_yx().first, bullet->get_yx().second);
+            addstr(bullet->get_char().c_str());
         }
     }
 
