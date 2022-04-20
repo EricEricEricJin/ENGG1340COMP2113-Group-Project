@@ -69,8 +69,7 @@ namespace game
         Clock *clock;
 
     public:
-        bulletManager();
-        void init(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock);
+        bulletManager(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock);
 
         int load_resource(std::string resource_root);
         void print();

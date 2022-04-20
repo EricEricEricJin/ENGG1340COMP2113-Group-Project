@@ -6,17 +6,16 @@
 
 namespace game
 {
-    UI::UI()
-    {
-    }
-
-    void UI::init(Player *_player, std::vector<Zombie *> *_zombie_list, Map *_map, Clock *_clock)
+    UI::UI(Player *_player, std::vector<Zombie *> *_zombie_list, Map *_map, Clock *_clock)
     {
         player = _player;
         zombie_list = _zombie_list;
         map = _map;
         clock = _clock;
+    }
 
+    void UI::init()
+    {
         // init screen
         initscr();
         nocbreak();

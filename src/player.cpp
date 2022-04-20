@@ -4,11 +4,7 @@
 
 namespace game
 {
-    Player::Player()
-    {
-    }
-
-    void Player::init(bulletManager *_bullet_manager, Map *_map, Clock *_clock)
+    Player::Player(bulletManager *_bullet_manager, Map *_map, Clock *_clock)
     {
         bullet_manager = _bullet_manager;
         map = _map;

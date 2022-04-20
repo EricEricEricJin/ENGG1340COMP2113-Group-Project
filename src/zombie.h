@@ -60,8 +60,7 @@ namespace game
         std::thread *thread_obj;
 
     public:
-        zombieManager();
-        void init(std::vector<Bullet *> *_bullet_list, Map *_map, Player *_player);
+        zombieManager(std::vector<Bullet *> *_bullet_list, Map *_map, Player *_player);
 
         void add(int type, std::pair<int, int> yx);
         std::list<Zombie *> *get_zombie_list();
