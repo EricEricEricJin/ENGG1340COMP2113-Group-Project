@@ -34,10 +34,13 @@ float distance(std::pair<int, int> p1, std::pair<int, int> p2);
 void mainloop()
 {
     game::Clock *clock = new game::Clock;
+    clock->set_freq(10);
+    clock->reset();
+    clock->start();
 
     // Initialize map
     game::Map *map = new game::Map();
-    map->load("../resource/map/");
+    map->load("resource/map/");
 
     // Initialize bullet
     game::bulletManager *bullet_manager;
@@ -46,9 +49,11 @@ void mainloop()
     game::Player *player;
 
     bullet_manager = new game::bulletManager(map, zombie_manager->get_zombie_list(), player, clock);
-    zombie_manager = new game::zombieManager(bullet_manager->get_bullet_list(), map, player);
+    zombie_manager = new game::zombieManager(bullet_manager->get_bullet_list(), map, player, clock);
     ui = new game::UI(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
     player = new game::Player(bullet_manager, map, clock);
+
+    bullet_manager->load_resource("resource/");
 
     std::string map_name;
     int difficulty;

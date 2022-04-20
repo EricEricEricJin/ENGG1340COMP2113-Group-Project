@@ -5,6 +5,7 @@
 #include <ncurses.h>
 #include <thread>
 #include <vector>
+#include <list>
 #include "clock.h"
 
 struct playerKeySet

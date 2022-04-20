@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 #include <thread>
+#include <list>
+
 #include "tinyexpr.h"
 #include "clock.h"
 

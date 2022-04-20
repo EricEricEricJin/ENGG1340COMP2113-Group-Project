@@ -4,6 +4,7 @@
 #include <iostream>
 #include <ncurses.h>
 #include <vector>
+#include <list>
 #include <thread>
 
 #include <unistd.h>

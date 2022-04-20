@@ -113,6 +113,11 @@ namespace game
         }
     }
 
+    std::list<Bullet*>* bulletManager::get_bullet_list()
+    {
+        return bullet_list;
+    }
+
     void bulletManager::run()
     {
         running = true;

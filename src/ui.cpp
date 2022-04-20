@@ -191,6 +191,8 @@ namespace game
         status_val = STATUS_RUNNING;
     }
 
+    void UI::_bottom_mode() {}
+
     void UI::_draw_walls()
     {
         for (int r = 0; r < map->lines(); r++)
