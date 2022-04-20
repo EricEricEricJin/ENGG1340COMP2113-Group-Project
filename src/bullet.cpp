@@ -32,16 +32,12 @@ namespace game
 
     clock_tick_t Bullet::get_shoot_time() { return shoot_time; }
 
-    bulletManager::bulletManager(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock)
+    bulletManager::bulletManager(Map *_map, std::list<Zombie *> *_zombie_list, Player *_player, Clock *_clock)
     {
         map = _map;
         zombie_list = _zombie_list;
         player = _player;
         clock = _clock;
-    }
-
-    void bulletManager::init()
-    {
     }
 
     int bulletManager::load_resource(std::string resource_root)
@@ -117,7 +113,7 @@ namespace game
         }
     }
 
-    void bulletManager::run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock)
+    void bulletManager::run()
     {
         running = true;
         thread_obj = new std::thread([=]
@@ -128,17 +124,16 @@ namespace game
     {
         // DO NOT DO ANY INITIALIZE HERE
         // DO IT IN FUNCTION `run`
-        int b_it;
+        std::list<Bullet *>::iterator bul_iter;
         bool triggered;
 
         while (running)
         {
-            b_it = -1;
             triggered = false;
 
-            for (auto &bullet : bullet_list)
+            for (auto bul_iter = bullet_list->begin(); bul_iter != bullet_list->end();)
             {
-                b_it++;
+                auto bullet = *bul_iter;
                 bulletType *bullet_type = bul_type_dict[bullet->get_type()];
 
                 if (bullet_type->trig_mode == TRIG_CONTACT)
@@ -175,8 +170,10 @@ namespace game
 
                     // destroy bullet
                     delete bullet;
-                    bullet_list.erase(bullet_list.begin() + b_it);
+                    bullet_list->erase(bul_iter);
                 }
+                else
+                    bul_iter++;
             }
             clock->wait(1);
         }
@@ -185,7 +182,7 @@ namespace game
     void bulletManager::shoot(std::string name, std::pair<int, int> yx, int dir)
     {
         Bullet *b = new Bullet{name, clock->get_ticks(), yx, dir};
-        bullet_list.push_back(b);
+        bullet_list->push_back(b);
     }
 
     void bulletManager::stop()

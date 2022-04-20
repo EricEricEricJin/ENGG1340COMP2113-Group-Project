@@ -31,92 +31,48 @@
 
 float distance(std::pair<int, int> p1, std::pair<int, int> p2);
 
-std::vector<game::Zombie *> zombie_list;
-
 void mainloop()
 {
+    game::Clock *clock = new game::Clock;
+
     // Initialize map
     game::Map *map = new game::Map();
     map->load("../resource/map/");
 
     // Initialize bullet
-    game::bulletManager *bullet_manager = new game::bulletManager();
-    bullet_manager->load_resource("../resource/");
-    
-    game::zombieManager* zombie_manager = new game::zombieManager();
+    game::bulletManager *bullet_manager;
+    game::zombieManager *zombie_manager;
+    game::UI *ui;
+    game::Player *player;
 
-    // Initialize UI
-    game::UI* ui = new game::UI();
+    bullet_manager = new game::bulletManager(map, zombie_manager->get_zombie_list(), player, clock);
+    zombie_manager = new game::zombieManager(bullet_manager->get_bullet_list(), map, player);
+    ui = new game::UI(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
+    player = new game::Player(bullet_manager, map, clock);
 
-    int difficulty;
     std::string map_name;
+    int difficulty;
     ui->homepage(&map_name, &difficulty);
-
-
-    // Initialize Map with selected map
     map->load(map_name);
+    ui->start_game();
 
-    // bullet manager
-
-    // initialize player
-    game::Player *player = new game::Player();
-
-    std::vector<game::Zombie *> *zombie_list = new std::vector<game::Zombie *>;
-
-    ui.start_game(player, zombie_list, map);
-
-    player.run();
+    bullet_manager->run();
+    player->run();
+    zombie_manager->run();
 
     int exit_code;
     while (true)
     {
         // if ui quit then break
-        if (ui.get_status() == UI_PAUSE)
+        if (ui->status() == UI_PAUSE)
         {
             continue;
         }
-        else if (ui.get_status() == UI_QUIT)
+        else if (ui->status() == UI_QUIT)
         {
             exit_code = 1;
             break;
         }
-
-        // monitor bullets
-        for (auto &bullet : bullet_list)
-        {
-            if (bullet.triggered())
-            {
-                // player
-                if (player.set_hp(player.get_hp() - bullet.damage(distance(player.get_xy(), bullet.get_xy()))) == false)
-                {
-                    // player dead
-                    exit_code = 0;
-                    goto EXIT_MAINLOOP;
-                }
-
-                // zombie
-                for (auto &zombie : zombie_list)
-                {
-                    if (zombie.set_hp(bullet.damage(distance(zombie.get_xy(), bullet.get_xy()))) == false)
-                    {
-                        // zombie dead
-                        delete &zombie;
-                        zombie_list.pop_back();
-                    }
-                }
-
-                // walls
-            }
-        }
-
-        // add zombies
-        for (int i = 0; i < 100 - zombie_list.size(); i++)
-        {
-            zombie_list.push_back(game::Zombie(bullet_list, map, player));
-            zombie_list.back().run();
-        }
+        clock->wait(1);
     }
-
-EXIT_MAINLOOP:
-    ui.exit_game();
 }

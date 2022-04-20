@@ -6,10 +6,11 @@
 
 namespace game
 {
-    UI::UI(Player *_player, std::vector<Zombie *> *_zombie_list, Map *_map, Clock *_clock)
+    UI::UI(Player *_player, std::list<Zombie *> *_zombie_list, std::list<Bullet *> *_bullet_list, Map *_map, Clock *_clock)
     {
         player = _player;
         zombie_list = _zombie_list;
+        bullet_list = _bullet_list;
         map = _map;
         clock = _clock;
     }

@@ -54,11 +54,11 @@ namespace game
     {
     private:
         Map *map;
-        std::vector<Zombie *> *zombie_list;
+        std::list<Zombie *> *zombie_list;
         Player *player;
 
         std::map<std::string, bulletType *> bul_type_dict;
-        std::vector<Bullet *> bullet_list;
+        std::list<Bullet *> *bullet_list;
         bool running;
 
         void _thread_loop();
@@ -69,12 +69,12 @@ namespace game
         Clock *clock;
 
     public:
-        bulletManager(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock);
+        bulletManager(Map *_map, std::list<Zombie *> *_zombie_list, Player *_player, Clock *_clock);
 
         int load_resource(std::string resource_root);
         void print();
 
-        std::vector<Bullet *> *get_bullet_list();
+        std::list<Bullet *> *get_bullet_list();
 
         void run();
 

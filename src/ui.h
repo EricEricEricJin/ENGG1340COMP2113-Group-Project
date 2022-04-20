@@ -43,8 +43,8 @@ namespace game
         char mode;
 
         Player *player;
-        std::vector<Zombie *> *zombie_list;
-        std::vector<Bullet *> *bullet_list;
+        std::list<Zombie *> *zombie_list;
+        std::list<Bullet *> *bullet_list;
         Map *map;
         Clock* clock;
 
@@ -63,7 +63,7 @@ namespace game
         void _show_info(); // Display score, weapon, etc
 
     public:
-        UI(Player *_player, std::vector<Zombie*> *_zombie_list, Map *_map, Clock* _clock);
+        UI(Player *_player, std::list<Zombie*> *_zombie_list, std::list<Bullet*> *_bullet_list, Map *_map, Clock* _clock);
         void init();
         bool homepage(std::string* map_name, int *difficulty); // return only when select map and mode
         // parameter: [map list: Map]
