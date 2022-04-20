@@ -40,7 +40,7 @@ namespace game
     std::string Zombie::get_char() { return character; }
 
     // Zombie Manager
-    zombieManager::zombieManager(std::vector<Bullet *> *_bullet_list, Map *_map, Player *_player)
+    zombieManager::zombieManager(std::list<Bullet *> *_bullet_list, Map *_map, Player *_player)
     {
         bullet_list = _bullet_list;
         map = _map;
@@ -80,7 +80,7 @@ namespace game
     {
         while (running)
         {
-            for (auto zombie_it = zombie_list->begin(); zombie_it != zombie_list->end(); zombie_it++)
+            for (auto zombie_it = zombie_list->begin(); zombie_it != zombie_list->end();)
             {
                 // If zombie dead, then remove
                 if ((*zombie_it)->get_hp() <= 0)
@@ -115,6 +115,7 @@ namespace game
                     // Shoot bullet
                     // Do later
                 }
+                zombie_it++;
             }
 
             clock->wait(1);

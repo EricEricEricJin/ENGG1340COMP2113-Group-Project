@@ -57,8 +57,7 @@ namespace game
         bool running;
 
     public:
-        Player();
-        void init(bulletManager *_bullet_manager, Map *_map, Clock *_clock);
+        Player(bulletManager *_bullet_manager, Map *_map, Clock *_clock);
 
         void configure(playerKeySet new_keyset);
 
