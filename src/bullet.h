@@ -76,7 +76,7 @@ namespace game
 
         std::vector<Bullet *> *get_bullet_list();
 
-        void run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock);
+        void run();
 
         void shoot(std::string name, std::pair<int, int> yx, int dir); // add bullet to loop
 
