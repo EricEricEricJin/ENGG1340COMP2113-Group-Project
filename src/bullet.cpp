@@ -44,7 +44,7 @@ namespace game
     {
         using namespace std;
 
-        filesystem::path str(resource_root + "bullet/");
+        filesystem::path str(resource_root + "bullet"); // Cannot have "/" at end
         cout << "fp: " << str << endl;
         if (!filesystem::exists(str))
             return 0;
@@ -113,7 +113,7 @@ namespace game
         }
     }
 
-    std::list<Bullet*>* bulletManager::get_bullet_list()
+    std::list<Bullet *> *bulletManager::get_bullet_list()
     {
         return bullet_list;
     }

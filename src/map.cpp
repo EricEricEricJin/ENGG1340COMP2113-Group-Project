@@ -23,17 +23,18 @@ namespace game
             return "0"; // with color
     }
 
-    Map::Map()
+    Map::Map(std::string map_dir_path)
     {
         // allocate map
         std::cout << "Map init" << std::endl;
+        map_dir = map_dir_path;
     }
 
     // Load map: load size and bitmap
-    bool Map::load(std::string fp)
+    bool Map::load(std::string map_name)
     {
         nlohmann::json json_data;
-        std::ifstream file_stream(fp, std::fstream::in);
+        std::ifstream file_stream(map_dir + map_name, std::fstream::in);
 
         // Open resource file
         try
@@ -227,7 +228,7 @@ namespace game
 
         vector<string> ret;
 
-        path str(MAP_PATH);
+        path str(map_dir);
         if (!exists(str))
             return ret;
         directory_entry entry(str);
@@ -245,7 +246,7 @@ namespace game
         std::vector<std::vector<std::string>> ret;
 
         nlohmann::json json_data;
-        std::ifstream file_stream(MAP_PATH + name, std::fstream::in);
+        std::ifstream file_stream(map_dir + name, std::fstream::in);
         try
         {
             file_stream >> json_data;
@@ -259,6 +260,12 @@ namespace game
         }
 
         // json_data["minimap"]
+        for (auto &line : json_data["minimap"])
+        {
+            auto line_vec = std::vector<std::string>(line.begin(), line.end());
+            ret.push_back(line_vec);
+        }
+
         return ret;
     }
 

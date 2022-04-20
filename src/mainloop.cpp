@@ -38,25 +38,30 @@ void mainloop()
     clock->reset();
     clock->start();
 
-    // Initialize map
-    game::Map *map = new game::Map();
-    map->load("resource/map/");
+    game::Map *map = new game::Map("resource/map/");
 
-    // Initialize bullet
     game::bulletManager *bullet_manager;
     game::zombieManager *zombie_manager;
     game::UI *ui;
     game::Player *player;
 
     bullet_manager = new game::bulletManager(map, zombie_manager->get_zombie_list(), player, clock);
+    std::cout << "Bullet initialized" << std::endl;
+
     zombie_manager = new game::zombieManager(bullet_manager->get_bullet_list(), map, player, clock);
+    std::cout << "Zombie initialized" << std::endl;
+
     ui = new game::UI(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
+    std::cout << "UI initialized" << std::endl;
+
     player = new game::Player(bullet_manager, map, clock);
+    std::cout << "Player initialized" << std::endl;
 
     bullet_manager->load_resource("resource/");
 
     std::string map_name;
     int difficulty;
+    ui->init();
     ui->homepage(&map_name, &difficulty);
     map->load(map_name);
     ui->start_game();
