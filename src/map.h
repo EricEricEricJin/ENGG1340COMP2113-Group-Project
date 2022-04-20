@@ -9,7 +9,6 @@
 #include <fstream>
 #include <experimental/filesystem>
 
-#define MAP_PATH "../resource/map/"
 
 // Load map file and add / delete walls.
 namespace game
@@ -32,15 +31,16 @@ namespace game
     {
     private:
         Wall ***map;
-        char** bitmap;
+        char **bitmap;
         int COLS;
         int LINES;
         std::pair<int, int> player_init_yx;
         std::vector<std::pair<int, int>> zb_ent_yx_list;
+        std::string map_dir;
 
     public:
-        Map();
-        bool load(std::string fp);              // Load map from file, return whether success
+        Map(std::string map_dir_path);
+        bool load(std::string map_name);        // Load map from file, return whether success
         std::string get_char(int y, int x);     // Get the content in xy, return the content
         bool add(int y, int x, int durability); // Put content in xy, return whether valid
         bool remove(int y, int x);              // Remove content in xy, return whether valid
@@ -48,14 +48,14 @@ namespace game
 
         std::pair<int, int> zb_get_rand_ent_yx();
 
-        char** get_map();
+        char **get_map();
 
         int columns();
         int lines();
         ~Map();
 
-        static std::vector<std::string> names_of_maps();
-        static std::vector<std::vector<std::string>> minimap(std::string name);
+        std::vector<std::string> names_of_maps();
+        std::vector<std::vector<std::string>> minimap(std::string name);
     };
 }
 #endif

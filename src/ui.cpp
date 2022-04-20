@@ -37,7 +37,10 @@ namespace game
 
         int key = 0;
         // ask user to select map, player number, and difficulty
-        auto map_names = Map::names_of_maps();
+        auto map_names = map->names_of_maps();
+
+        if (map_names.size() == 0)
+            return false;
 
         for (;;)
         {
@@ -45,23 +48,25 @@ namespace game
             for (;;)
             {
                 // show map
-                auto map = Map::minimap(map_names[_map_id]);
-                int map_height = map.size();
-                int map_width = map[0].size();
+                auto mapvec = map->minimap(map_names[_map_id]);
+                int map_height = mapvec.size();
+                int map_width = mapvec[0].size();
 
                 if ((LINES < map_height) || (COLS < map_width))
                     return false; // Window to small. Cannot display
 
-                int x_offset = (LINES - map_width) / 2;
-                int y_offset = (COLS - map_height) / 2;
+                int x_offset = (COLS - map_width) / 2;
+                int y_offset = (LINES - map_height) / 2;
 
                 // display minimap
+                clear();
+                refresh();
                 for (int y = 0; y < map_height; y++)
                 {
                     for (int x = 0; x < map_width; x++)
                     {
                         move(y + y_offset, x + x_offset);
-                        addstr(map[y][x].c_str());
+                        addstr(mapvec[y][x].c_str());
                     }
                 }
 

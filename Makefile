@@ -36,7 +36,7 @@ clock.o: src/clock.cpp src/clock.h
 	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
 
 main: bullet.o map.o player.o ui.o zombie.o mainloop.o main.o solve_maze.o clock.o lib/tinyexpr.o
-	g++ $^ -o main $(LINK_LIBS)
+	g++ $^ -g -o main $(LINK_LIBS)
 
 .PHONY: clean
 clean:
