@@ -32,16 +32,16 @@ namespace game
 
     clock_tick_t Bullet::get_shoot_time() { return shoot_time; }
 
-    bulletManager::bulletManager()
-    {
-    }
-
-    void bulletManager::init(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock)
+    bulletManager::bulletManager(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock)
     {
         map = _map;
         zombie_list = _zombie_list;
         player = _player;
         clock = _clock;
+    }
+
+    void bulletManager::init()
+    {
     }
 
     int bulletManager::load_resource(std::string resource_root)
