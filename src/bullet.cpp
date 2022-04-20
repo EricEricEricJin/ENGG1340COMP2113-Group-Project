@@ -36,6 +36,14 @@ namespace game
     {
     }
 
+    void bulletManager::init(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock)
+    {
+        map = _map;
+        zombie_list = _zombie_list;
+        player = _player;
+        clock = _clock;
+    }
+
     int bulletManager::load_resource(std::string resource_root)
     {
         using namespace std;
@@ -111,11 +119,9 @@ namespace game
 
     void bulletManager::run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock)
     {
-        map = _map;
-        zombie_list = _zombie_list;
-        player = _player;
-        clock = _clock;
-        resume();
+        running = true;
+        thread_obj = new std::thread([=]
+                                     { _thread_loop(); });
     }
 
     void bulletManager::_thread_loop()
@@ -182,21 +188,12 @@ namespace game
         bullet_list.push_back(b);
     }
 
-    void bulletManager::pause()
+    void bulletManager::stop()
     {
         running = false;
         thread_obj->join(); // block wait until thread complete
         delete thread_obj;
     }
-
-    void bulletManager::resume()
-    {
-        running = true;
-        thread_obj = new std::thread([=]
-                                     { _thread_loop(); });
-        // cannot call non-static member function directly
-    }
-
     bulletManager::~bulletManager()
     {
     }
