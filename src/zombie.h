@@ -61,12 +61,13 @@ namespace game
 
     public:
         zombieManager();
+        void init(std::vector<Bullet *> *_bullet_list, Map *_map, Player *_player);
 
         void add(int type, std::pair<int, int> yx);
         std::list<Zombie *> *get_zombie_list();
 
         int get_num(); // number of zombies alive
-        void run(std::vector<Bullet *> *_bullet_list, Map *_map, Player *_player);
+        void run();
         void stop();
         ~zombieManager();
     };

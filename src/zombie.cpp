@@ -44,6 +44,13 @@ namespace game
     {
     }
 
+    void zombieManager::init(std::vector<Bullet *> *_bullet_list, Map *_map, Player *_player)
+    {
+        bullet_list = _bullet_list;
+        map = _map;
+        player = _player;
+    }
+
     void zombieManager::add(int type, std::pair<int, int> yx)
     {
         if (type == ZOMBIETYPE_ODNR)
@@ -59,11 +66,8 @@ namespace game
 
     int zombieManager::get_num() { return zombie_list->size(); }
 
-    void zombieManager::run(std::vector<Bullet *> *_bullet_list, Map *_map, Player *_player)
+    void zombieManager::run()
     {
-        bullet_list = _bullet_list;
-        map = _map;
-        player = _player;
         running = true;
         thread_obj = new std::thread([=]
                                      { _thread_loop(); });

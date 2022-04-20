@@ -20,7 +20,6 @@ namespace game
     class Player;
     class Zombie;
 
-
     class Bullet
     {
     private:
@@ -67,22 +66,22 @@ namespace game
 
         float temp_distance; // pass to tiny expr
 
-        Clock* clock;
+        Clock *clock;
 
     public:
         bulletManager();
+        void init(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock);
 
         int load_resource(std::string resource_root);
         void print();
 
         std::vector<Bullet *> *get_bullet_list();
 
-        void run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock* _clock);
+        void run(Map *_map, std::vector<Zombie *> *_zombie_list, Player *_player, Clock *_clock);
 
         void shoot(std::string name, std::pair<int, int> yx, int dir); // add bullet to loop
 
-        void pause();
-        void resume();
+        void stop();
 
         std::vector<std::string> get_names();
 
