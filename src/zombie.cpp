@@ -46,6 +46,8 @@ namespace game
         map = _map;
         player = _player;
         clock = _clock;
+
+        zombie_list = new std::list<Zombie*>;
     }
 
     void zombieManager::add(int type, std::pair<int, int> yx)
