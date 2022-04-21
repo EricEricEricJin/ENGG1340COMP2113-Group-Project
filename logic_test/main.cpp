@@ -41,6 +41,8 @@ int main()
     zombie_manager->run();
     player->run(true);
 
+    bullet_manager->shoot("9mm", 1, 1, )
+
     int i;
 
     while (true)

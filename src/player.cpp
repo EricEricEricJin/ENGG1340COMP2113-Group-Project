@@ -80,6 +80,19 @@ namespace game
                 bullet_manager->shoot(cur_bul_name, {y, x}, direction);
             }
 
+            else if ('1' <= key <= '9')
+            {
+                // shift weapon
+                int bul_id = key - '1';
+                cur_bul_name = bullet_manager->get_names()[bul_id];
+            }
+
+            else if (key == 96) // ` key
+            {
+                // put wall
+                map->add(round(y), round(x), 100);
+            }
+
             // Walk
             float x_temp = x, y_temp = y;
 
@@ -114,5 +127,8 @@ namespace game
         delete thread_obj;
     }
 
-    Player::~Player() {}
+    Player::~Player()
+    {
+        delete key_set;
+    }
 }

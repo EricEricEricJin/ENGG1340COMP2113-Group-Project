@@ -23,6 +23,9 @@ namespace game
             return "0"; // with color
     }
 
+    int Wall::get_durability() { return durability; }
+    void Wall::set_durability(int new_durability) { durability = new_durability; }
+
     Map::Map(std::string map_dir_path)
     {
         // allocate map
@@ -198,6 +201,14 @@ namespace game
         delete map[y][x];
         map[y][x] = NULL;
         return true;
+    }
+
+    bool Map::damage(int y, int x, int dmg)
+    {
+        if (map[y][x] == nullptr)
+            return 0;
+        map[y][x]->set_durability(map[y][x]->get_durability() - dmg);
+        return 1;
     }
 
     std::pair<int, int> Map::zb_get_rand_ent_yx()
