@@ -26,6 +26,8 @@ namespace game
 
     std::pair<float, float> Bullet::get_yx() { return yx; }
 
+    int Bullet::get_dir() { return dir; }
+
     std::string Bullet::get_type() { return type; }
 
     std::string Bullet::get_char() { return character; }
@@ -145,6 +147,7 @@ namespace game
                 // Contact trigger
                 if (bullet_type->trig_mode == TRIG_CONTACT)
                 {
+                    // contact with zombie
                     if (std::count(bullet_type->trig_obj.begin(), bullet_type->trig_obj.end(), "zombie"))
                     {
                         for (auto &zombie : *zombie_list)
@@ -156,6 +159,8 @@ namespace game
                             }
                         }
                     }
+
+                    // contact with wall
                     if (std::count(bullet_type->trig_obj.begin(), bullet_type->trig_obj.end(), "wall"))
                     {
                         if (map->get_bit(round(bullet->get_yx().first), round(bullet->get_yx().second)) == 1)
@@ -191,6 +196,19 @@ namespace game
                         temp_distance = pair_distance(player->get_yx(), bullet->get_yx());
                         float damage = te_eval(bullet_type->damage_func);
                         player->set_hp(player->get_hp() - damage);
+                    }
+
+                    // wall
+                    for (int i = 0; i < map->lines(); i++)
+                    {
+                        for (int j = 0; j < map->columns(); j++)
+                        {
+                            if (map->get_bit(i, j) && pair_distance({i, j}, bullet->get_yx()) <= bullet_type->damage_dist)
+                            {
+                                temp_distance = pair_distance({i, j}, bullet->get_yx());
+                                map->damage(i, j, te_eval(bullet_type->damage_func));
+                            }
+                        }
                     }
 
                     // destroy bullet
@@ -233,5 +251,11 @@ namespace game
     }
     bulletManager::~bulletManager()
     {
+        stop();
+        for (auto &bul_type : bul_type_dict)
+            delete bul_type.second;
+
+        for (auto &bullet : *bullet_list)
+            delete bullet;
     }
 }

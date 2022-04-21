@@ -25,6 +25,8 @@ namespace game
         Wall(int _durability, int _y, int _x);
         std::pair<int, int> get_yx();
         std::string get_char();
+        int get_durability();
+        void set_durability(int new_durability);
     };
 
     class Map
@@ -45,8 +47,9 @@ namespace game
         bool get_bit(int y, int x);
         bool add(int y, int x, int durability); // Put content in xy, return whether valid
         bool remove(int y, int x);              // Remove content in xy, return whether valid
-        // int shortest_dir(int x0, int y0, int x1, int y1); // Return the direction to follow shortest path
-
+        
+        bool damage(int y, int x, int dmg);
+        
         std::pair<int, int> zb_get_rand_ent_yx();
 
         char **get_map();
