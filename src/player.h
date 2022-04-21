@@ -60,7 +60,7 @@ namespace game
         bool _debug;
 
     public:
-        Player(bulletManager *_bullet_manager, Map *_map, Clock *_clock);
+        Player(bulletManager *&_bullet_manager, Map *&_map, Clock *&_clock);
 
         void configure(playerKeySet new_keyset);
 

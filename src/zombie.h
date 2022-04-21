@@ -51,8 +51,8 @@ namespace game
         Map *map;
         Player *player;
 
-        // std::vector<Zombie *> *zombie_list;
         std::list<Zombie *> *zombie_list;
+        // std::vector<Zombie *> *zombie_list;
 
         bool running;
         void _thread_loop();
@@ -60,7 +60,7 @@ namespace game
         std::thread *thread_obj;
 
     public:
-        zombieManager(std::list<Bullet *> *_bullet_list, Map *_map, Player *_player, Clock* _clock);
+        zombieManager(std::list<Bullet *> *&_bullet_list, Map *&_map, Player *&_player, Clock *&_clock);
 
         void add(int type, std::pair<int, int> yx);
         std::list<Zombie *> *get_zombie_list();

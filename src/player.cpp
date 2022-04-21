@@ -4,7 +4,7 @@
 
 namespace game
 {
-    Player::Player(bulletManager *_bullet_manager, Map *_map, Clock *_clock)
+    Player::Player(bulletManager *&_bullet_manager, Map *&_map, Clock *&_clock)
     {
         bullet_manager = _bullet_manager;
         map = _map;
@@ -54,7 +54,7 @@ namespace game
 
     void Player::_player_thread_loop()
     {
-        int key;
+        int key = 0;
         while (running)
         {
             if (!_debug)
@@ -80,7 +80,7 @@ namespace game
                 bullet_manager->shoot(cur_bul_name, {y, x}, direction);
             }
 
-            else if ('1' <= key <= '9')
+            else if ('1' <= key && key <= '9')
             {
                 // shift weapon
                 int bul_id = key - '1';

@@ -207,8 +207,14 @@ namespace game
     {
         if (map[y][x] == nullptr)
             return 0;
-        map[y][x]->set_durability(map[y][x]->get_durability() - dmg);
-        return 1;
+        if (map[y][x]->get_durability() != -1)
+        {
+            map[y][x]->set_durability(map[y][x]->get_durability() - dmg);
+            if (map[y][x]->get_durability() <= 0)
+                remove(y, x);
+        }
+
+        return 0;
     }
 
     std::pair<int, int> Map::zb_get_rand_ent_yx()

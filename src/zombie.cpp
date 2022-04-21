@@ -40,7 +40,7 @@ namespace game
     std::string Zombie::get_char() { return character; }
 
     // Zombie Manager
-    zombieManager::zombieManager(std::list<Bullet *> *_bullet_list, Map *_map, Player *_player, Clock* _clock)
+    zombieManager::zombieManager(std::list<Bullet *> *&_bullet_list, Map *&_map, Player *&_player, Clock* &_clock)
     {
         bullet_list = _bullet_list;
         map = _map;

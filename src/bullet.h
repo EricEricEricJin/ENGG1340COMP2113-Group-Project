@@ -70,8 +70,8 @@ namespace game
         std::list<Zombie *> *zombie_list;
         Player *player;
 
-        std::map<std::string, bulletType *> bul_type_dict;
         std::list<Bullet *> *bullet_list;
+        std::map<std::string, bulletType *> bul_type_dict;
         bool running;
 
         void _thread_loop();
@@ -84,7 +84,7 @@ namespace game
         void _out_of_map(std::pair<float, float> yx);
 
     public:
-        bulletManager(Map *_map, std::list<Zombie *> *_zombie_list, Player *_player, Clock *_clock);
+        bulletManager(Map *&_map, std::list<Zombie *> *&_zombie_list, Player *&_player, Clock *&_clock);
 
         int load_resource(std::string resource_root);
         void print();
