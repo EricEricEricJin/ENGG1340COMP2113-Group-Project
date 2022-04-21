@@ -34,7 +34,9 @@ namespace game
 
     clock_tick_t Bullet::get_shoot_time() { return shoot_time; }
 
-    bulletManager::bulletManager(Map *_map, std::list<Zombie *> *_zombie_list, Player *_player, Clock *_clock)
+    void Bullet::move(std::pair<float, float> new_yx) { yx = new_yx; }
+
+    bulletManager::bulletManager(Map *&_map, std::list<Zombie *> *&_zombie_list, Player *&_player, Clock *&_clock)
     {
         map = _map;
         zombie_list = _zombie_list;
@@ -249,6 +251,15 @@ namespace game
         thread_obj->join(); // block wait until thread complete
         delete thread_obj;
     }
+
+    std::vector<std::string> bulletManager::get_names()
+    {
+        std::vector<std::string> ret;
+        for (auto &bt : bul_type_dict)
+            ret.push_back(bt.first);
+        return ret;
+    }
+
     bulletManager::~bulletManager()
     {
         stop();

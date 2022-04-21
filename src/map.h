@@ -9,7 +9,6 @@
 #include <fstream>
 #include <experimental/filesystem>
 
-
 // Load map file and add / delete walls.
 namespace game
 {
@@ -42,14 +41,14 @@ namespace game
 
     public:
         Map(std::string map_dir_path);
-        bool load(std::string map_name);        // Load map from file, return whether success
-        std::string get_char(int y, int x);     // Get the content in xy, return the content
+        bool load(std::string map_name);    // Load map from file, return whether success
+        std::string get_char(int y, int x); // Get the content in xy, return the content
         bool get_bit(int y, int x);
         bool add(int y, int x, int durability); // Put content in xy, return whether valid
         bool remove(int y, int x);              // Remove content in xy, return whether valid
-        
+
         bool damage(int y, int x, int dmg);
-        
+
         std::pair<int, int> zb_get_rand_ent_yx();
 
         char **get_map();
