@@ -10,12 +10,12 @@
 
 struct playerKeySet
 {
-    int UP;
-    int DOWN;
-    int LEFT;
-    int RIGHT;
-    int STOP;
-    int FIRE;
+    int UP = 1;
+    int DOWN = 2;
+    int LEFT = 3;
+    int RIGHT = 4;
+    int STOP = 0;
+    int FIRE = 5;
 };
 
 namespace game
@@ -57,6 +57,8 @@ namespace game
         std::thread *thread_obj;
         bool running;
 
+        bool _debug;
+
     public:
         Player(bulletManager *_bullet_manager, Map *_map, Clock *_clock);
 
@@ -66,7 +68,7 @@ namespace game
         bool set_hp(float new_hp); // true for alive, false for dead
         std::string get_char();    // depend on direction
         std::pair<float, float> get_yx();
-        void run();
+        void run(bool debug = false);
         void stop();
         ~Player();
     };

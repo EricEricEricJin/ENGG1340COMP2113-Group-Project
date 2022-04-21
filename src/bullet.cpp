@@ -38,6 +38,8 @@ namespace game
         zombie_list = _zombie_list;
         player = _player;
         clock = _clock;
+
+        bullet_list = new std::list<Bullet *>;
     }
 
     int bulletManager::load_resource(std::string resource_root)
@@ -135,36 +137,54 @@ namespace game
         while (running)
         {
             triggered = false;
-
             for (auto bul_iter = bullet_list->begin(); bul_iter != bullet_list->end();)
             {
                 auto bullet = *bul_iter;
                 bulletType *bullet_type = bul_type_dict[bullet->get_type()];
 
+                // Contact trigger
                 if (bullet_type->trig_mode == TRIG_CONTACT)
                 {
                     if (std::count(bullet_type->trig_obj.begin(), bullet_type->trig_obj.end(), "zombie"))
+                    {
                         for (auto &zombie : *zombie_list)
-                            if (pair_distance(zombie->get_yx(), bullet->get_yx()) > bullet_type->trig_c)
+                        {
+                            if (pair_distance(zombie->get_yx(), bullet->get_yx()) < bullet_type->trig_c)
                             {
                                 triggered = true;
                                 break;
                             }
+                        }
+                    }
+                    if (std::count(bullet_type->trig_obj.begin(), bullet_type->trig_obj.end(), "wall"))
+                    {
+                        if (map->get_bit(round(bullet->get_yx().first), round(bullet->get_yx().second)) == 1)
+                        {
+                            // Is wall
+                            triggered = true;
+                        }
+                    }
                 }
+                // Timer trigger
                 else if (bullet_type->trig_mode == TRIG_TIMER && clock->get_ticks() - bullet->get_shoot_time() >= bullet_type->trig_c)
+                    triggered = true;
+
+                // Out-of-map
+                if (map->get_bit(bullet->get_yx().first, bullet->get_yx().second) == -1)
                     triggered = true;
 
                 if (triggered)
                 {
                     // Find all zombies in distance
                     for (auto &zombie : *zombie_list)
+                    {
                         if (pair_distance(zombie->get_yx(), bullet->get_yx()) < bullet_type->damage_dist)
                         {
                             temp_distance = pair_distance(zombie->get_yx(), bullet->get_yx());
                             float damage = te_eval(bullet_type->damage_func);
                             zombie->set_hp(zombie->get_hp() - damage);
                         }
-
+                    }
                     // player
                     if (pair_distance(player->get_yx(), bullet->get_yx()) <= bullet_type->damage_dist)
                     {
@@ -175,10 +195,25 @@ namespace game
 
                     // destroy bullet
                     delete bullet;
-                    bullet_list->erase(bul_iter);
+                    bullet_list->erase(bul_iter++);
+                    /*
+                        list iterator: cannot have something like {erase(it); it++;}
+                    */
                 }
                 else
+                {
+                    // bullet move
+                    if (bullet->get_dir() == BDIR_UP)
+                        bullet->move({bullet->get_yx().second - 1, bullet->get_yx().first});
+                    else if (bullet->get_dir() == BDIR_DOWN)
+                        bullet->move({bullet->get_yx().second + 1, bullet->get_yx().first});
+                    else if (bullet->get_dir() == BDIR_LEFT)
+                        bullet->move({bullet->get_yx().second, bullet->get_yx().first - 1});
+                    else if (bullet->get_dir() == BDIR_RIGHT)
+                        bullet->move({bullet->get_yx().second, bullet->get_yx().first + 1});
+
                     bul_iter++;
+                }
             }
             clock->wait(1);
         }

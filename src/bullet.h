@@ -17,6 +17,15 @@ float pair_distance(std::pair<float, float> p1, std::pair<float, float> p2);
 
 namespace game
 {
+    enum
+    {
+        BDIR_STOP,
+        BDIR_UP,
+        BDIR_DOWN,
+        BDIR_LEFT,
+        BDIR_RIGHT,
+    };
+
     class Map;
     class Wall;
     class Player;
@@ -35,9 +44,11 @@ namespace game
     public:
         Bullet(std::string _type, clock_tick_t _shoot_time, std::pair<float, float> _yx, int _dir);
         std::pair<float, float> get_yx();
+        int get_dir();
         std::string get_type();
         std::string get_char();
         clock_tick_t get_shoot_time();
+        void move(std::pair<float, float> new_yx);
     };
 
     struct bulletType
@@ -69,6 +80,8 @@ namespace game
         float temp_distance; // pass to tiny expr
 
         Clock *clock;
+
+        void _out_of_map(std::pair<float, float> yx);
 
     public:
         bulletManager(Map *_map, std::list<Zombie *> *_zombie_list, Player *_player, Clock *_clock);

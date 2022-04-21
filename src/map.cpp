@@ -172,6 +172,15 @@ namespace game
             return map[y][x]->get_char();
     }
 
+    bool Map::get_bit(int y, int x)
+    {
+        if (y < 0 || y >= LINES || x < 0 || x >= COLS)
+            return -1;
+        if (map[y][x] == nullptr)
+            return 0;
+        return 1;
+    }
+
     bool Map::add(int y, int x, int durability)
     {
         if (map[y][x] == NULL)

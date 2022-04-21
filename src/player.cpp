@@ -12,6 +12,7 @@ namespace game
 
         // default keysey
         key_set = new playerKeySet{'w', 's', 'a', 'd', 'e', ' '};
+        speed = 0.5;
     }
 
     void Player::configure(playerKeySet new_keyset)
@@ -43,9 +44,10 @@ namespace game
         return {y, x};
     }
 
-    void Player::run()
+    void Player::run(bool debug)
     {
         running = true;
+        _debug = debug;
         thread_obj = new std::thread([=]
                                      { _player_thread_loop(); });
     }
@@ -55,7 +57,13 @@ namespace game
         int key;
         while (running)
         {
-            key = getch();
+            if (!_debug)
+                key = getch();
+            else
+            {
+                // std::cout << "Player key value: ";
+                // std::cin >> key;
+            }
             if (key == key_set->UP)
                 direction = PDIR_UP;
             else if (key == key_set->DOWN)
@@ -84,9 +92,9 @@ namespace game
             else if (direction == PDIR_RIGHT)
                 x_temp += speed;
 
-            if (map->get_map()[(int)y_temp][(int)x_temp] == 1)
+            if (map->get_bit(y_temp, x_temp))
             {
-                // is wall cannot go
+                // is wall or out-of-map, cannot go
                 beep();
             }
             else

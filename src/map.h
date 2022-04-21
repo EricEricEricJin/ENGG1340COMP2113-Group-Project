@@ -42,6 +42,7 @@ namespace game
         Map(std::string map_dir_path);
         bool load(std::string map_name);        // Load map from file, return whether success
         std::string get_char(int y, int x);     // Get the content in xy, return the content
+        bool get_bit(int y, int x);
         bool add(int y, int x, int durability); // Put content in xy, return whether valid
         bool remove(int y, int x);              // Remove content in xy, return whether valid
         // int shortest_dir(int x0, int y0, int x1, int y1); // Return the direction to follow shortest path
