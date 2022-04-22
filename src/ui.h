@@ -12,7 +12,6 @@
 
 #include "clock.h"
 
-
 #define MAX_DIFF_LEVEL 10
 
 #define UI_PAUSE 0
@@ -47,10 +46,10 @@ namespace game
         std::list<Zombie *> *zombie_list;
         std::list<Bullet *> *bullet_list;
         Map *map;
-        Clock* clock;
+        Clock *clock;
 
         int status_val;
-        std::thread* thread_obj;
+        std::thread *thread_obj;
 
         void _game_thread_loop();
 
@@ -64,24 +63,20 @@ namespace game
         void _show_info(); // Display score, weapon, etc
 
     public:
-        UI(Player *_player, std::list<Zombie*> *_zombie_list, std::list<Bullet*> *_bullet_list, Map *_map, Clock* _clock);
+        UI(Player *_player, std::list<Zombie *> *_zombie_list, std::list<Bullet *> *_bullet_list, Map *_map, Clock *_clock);
         void init();
-        bool homepage(std::string* map_name, int *difficulty); // return only when select map and mode
+        bool homepage(std::string *map_name, int *difficulty); // return only when select map and mode
         // parameter: [map list: Map]
         // return value: [map id: int], [# of players: int], [difficulty: int]
 
         void start_game();
         void stop_game();
-        // THIS FUNC IS NON-BLOCK
-        // Will start UI in new thread
 
         int get_status();
 
         int status();
-        // modify parameters with pointer
 
         void exit_game();
-        // Force stop the game threading
 
         ~UI();
     };

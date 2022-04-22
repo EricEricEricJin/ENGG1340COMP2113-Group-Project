@@ -10,7 +10,7 @@
 
 float pair_distance(std::pair<float, float> p1, std::pair<float, float> p2)
 {
-    return ((p1.first - p2.first) * (p1.first - p2.first) +
+    return sqrt((p1.first - p2.first) * (p1.first - p2.first) +
             (p1.second - p2.second) * (p1.second - p2.second));
 }
 
@@ -193,6 +193,7 @@ namespace game
                         {
                             temp_distance = pair_distance(zombie->get_yx(), bullet->get_yx());
                             float damage = te_eval(bullet_type->damage_func);
+                            std::cout << "Distance: " << temp_distance << " Damage: " << damage << std::endl;
                             zombie->set_hp(zombie->get_hp() - damage);
                         }
                     }
