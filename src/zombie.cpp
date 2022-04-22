@@ -13,6 +13,10 @@ namespace game
         y = yx.first;
         x = yx.second;
         type = _type;
+
+        speed = 1;
+        damage = 10;
+        hp = 100;
     }
 
     int Zombie::get_type() { return type; }
@@ -40,14 +44,17 @@ namespace game
     std::string Zombie::get_char() { return character; }
 
     // Zombie Manager
-    zombieManager::zombieManager(std::list<Bullet *> *&_bullet_list, Map *&_map, Player *&_player, Clock* &_clock)
+    zombieManager::zombieManager()
+    {
+        zombie_list = new std::list<Zombie *>;
+    }
+
+    void zombieManager::init(std::list<Bullet *> *_bullet_list, Map *_map, Player *_player, Clock *_clock)
     {
         bullet_list = _bullet_list;
         map = _map;
         player = _player;
         clock = _clock;
-
-        zombie_list = new std::list<Zombie*>;
     }
 
     void zombieManager::add(int type, std::pair<int, int> yx)
@@ -92,6 +99,7 @@ namespace game
                     continue;
                 }
 
+                std::cout << "In zombie, player: " << player << std::endl;
                 // Move zombie
                 int dir = solve_maze(map->get_map(), map->lines(), map->columns(), (*zombie_it)->get_yx(), player->get_yx(), 1, 0);
                 if (dir == SOLMAZ_UP)

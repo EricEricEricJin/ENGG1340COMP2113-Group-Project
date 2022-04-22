@@ -4,7 +4,11 @@
 
 namespace game
 {
-    Player::Player(bulletManager *&_bullet_manager, Map *&_map, Clock *&_clock)
+    Player::Player()
+    {
+    }
+
+    void Player::init(bulletManager *_bullet_manager, Map *_map, Clock *_clock)
     {
         bullet_manager = _bullet_manager;
         map = _map;
@@ -13,6 +17,8 @@ namespace game
         // default keysey
         key_set = new playerKeySet{'w', 's', 'a', 'd', 'e', ' '};
         speed = 0.5;
+
+        hp = 100;
     }
 
     void Player::configure(playerKeySet new_keyset)
@@ -46,6 +52,12 @@ namespace game
 
     void Player::run(bool debug)
     {
+        if (x < 0 || y < 0)
+        {
+            y = map->player_get_init_yx().first;
+            x = map->player_get_init_yx().second;
+        }
+
         running = true;
         _debug = debug;
         thread_obj = new std::thread([=]

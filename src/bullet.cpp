@@ -36,14 +36,17 @@ namespace game
 
     void Bullet::move(std::pair<float, float> new_yx) { yx = new_yx; }
 
-    bulletManager::bulletManager(Map *&_map, std::list<Zombie *> *&_zombie_list, Player *&_player, Clock *&_clock)
+    bulletManager::bulletManager()
+    {
+        bullet_list = new std::list<Bullet *>;
+    }
+
+    void bulletManager::init(Map *_map, std::list<Zombie *> *_zombie_list, Player *_player, Clock *_clock)
     {
         map = _map;
         zombie_list = _zombie_list;
         player = _player;
         clock = _clock;
-
-        bullet_list = new std::list<Bullet *>;
     }
 
     int bulletManager::load_resource(std::string resource_root)
@@ -182,6 +185,7 @@ namespace game
 
                 if (triggered)
                 {
+                    std::cout << "TRIGGERED" << std::endl;
                     // Find all zombies in distance
                     for (auto &zombie : *zombie_list)
                     {
@@ -224,13 +228,13 @@ namespace game
                 {
                     // bullet move
                     if (bullet->get_dir() == BDIR_UP)
-                        bullet->move({bullet->get_yx().second - 1, bullet->get_yx().first});
+                        bullet->move({bullet->get_yx().first - 1, bullet->get_yx().second});
                     else if (bullet->get_dir() == BDIR_DOWN)
-                        bullet->move({bullet->get_yx().second + 1, bullet->get_yx().first});
+                        bullet->move({bullet->get_yx().first + 1, bullet->get_yx().second});
                     else if (bullet->get_dir() == BDIR_LEFT)
-                        bullet->move({bullet->get_yx().second, bullet->get_yx().first - 1});
+                        bullet->move({bullet->get_yx().first, bullet->get_yx().second - 1});
                     else if (bullet->get_dir() == BDIR_RIGHT)
-                        bullet->move({bullet->get_yx().second, bullet->get_yx().first + 1});
+                        bullet->move({bullet->get_yx().first, bullet->get_yx().second + 1});
 
                     bul_iter++;
                 }

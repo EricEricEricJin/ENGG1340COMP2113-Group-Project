@@ -51,7 +51,7 @@ namespace game
 
         float hp;
         std::string chr;
-        float x, y;
+        float x = -1, y = -1;
 
         void _player_thread_loop();
         std::thread *thread_obj;
@@ -60,7 +60,8 @@ namespace game
         bool _debug;
 
     public:
-        Player(bulletManager *&_bullet_manager, Map *&_map, Clock *&_clock);
+        Player();
+        void init(bulletManager *_bullet_manager, Map *_map, Clock *_clock);
 
         void configure(playerKeySet new_keyset);
 

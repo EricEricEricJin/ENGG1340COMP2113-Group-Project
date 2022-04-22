@@ -226,6 +226,11 @@ namespace game
         return zb_ent_yx_list[i];
     }
 
+    std::pair<int, int> Map::player_get_init_yx()
+    {
+        return player_init_yx;
+    }
+
     char **Map::get_map()
     {
         return bitmap;
