@@ -7,7 +7,7 @@
 int main()
 {
     game::Clock *clock = new game::Clock;
-    clock->set_freq(2);
+    clock->set_freq(5);
     clock->reset();
     clock->start();
 
@@ -32,7 +32,7 @@ int main()
     player->run(true);
 
     zombie_manager->add(ZOMBIETYPE_ODNR, {10, 1});
-    bullet_manager->shoot("9mm", {1, 1}, game::BDIR_DOWN);
+    bullet_manager->shoot("9mm", player->get_yx(), game::BDIR_LEFT);
 
     // print map
     for (int i = 0; i < map->lines(); i++)

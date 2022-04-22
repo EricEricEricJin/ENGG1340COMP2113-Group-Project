@@ -3,11 +3,11 @@
     "char": "*",
     "speed": 1.1,
     "trig_mode": 0,
-    "trig_c": 0,
+    "trig_c": 1.4,
     "trig_obj": [
         "wall",
         "zombie"
     ],
-    "damage_dist": 1,
-    "damage_expr": "(distance * 20)"
+    "damage_dist": 2,
+    "damage_expr": "(40 - x * 20)"
 }
