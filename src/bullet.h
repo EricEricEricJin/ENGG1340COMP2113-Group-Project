@@ -84,7 +84,8 @@ namespace game
         void _out_of_map(std::pair<float, float> yx);
 
     public:
-        bulletManager(Map *&_map, std::list<Zombie *> *&_zombie_list, Player *&_player, Clock *&_clock);
+        bulletManager();
+        void init(Map *_map, std::list<Zombie *> *_zombie_list, Player *_player, Clock *_clock);
 
         int load_resource(std::string resource_root);
         void print();

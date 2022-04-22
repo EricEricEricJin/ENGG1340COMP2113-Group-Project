@@ -50,6 +50,7 @@ namespace game
         bool damage(int y, int x, int dmg);
 
         std::pair<int, int> zb_get_rand_ent_yx();
+        std::pair<int, int> player_get_init_yx();
 
         char **get_map();
 

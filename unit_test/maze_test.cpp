@@ -35,6 +35,6 @@ int main()
 
     // solveMaze solver;
     // cout << solver.search(a, 21, 78, {3, 2}, {4, 6}, '#', ' ') << endl;
-    cout << solve_maze(a, 21, 78, {3, 2}, {4, 6}, '#', ' ') << endl;
+    cout << solve_maze(a, 21, 78, {12, 1}, {12, 39}, '#', ' ') << endl;
     return 0;
 }
