@@ -82,7 +82,7 @@ namespace game
             }
 
             // player
-            mvwaddstr(game_win, player->get_yx().first + 1, player->get_yx().second + 1, player->get_char().c_str());
+            mvwaddstr(game_win, round(player->get_yx().first + 1), round(player->get_yx().second + 1), player->get_char().c_str());
 
             // zombie
             for (auto &zombie : *zombie_list)
@@ -99,7 +99,7 @@ namespace game
             // HP and bullet
             wclear(status_win);
             box(status_win, 0, 0);
-            mvwprintw(status_win, 1, 1, "%d", player->get_hp());
+            mvwprintw(status_win, 1, 1, "%d", (int)(player->get_hp()));
 
             wrefresh(game_win);
             wrefresh(status_win);
