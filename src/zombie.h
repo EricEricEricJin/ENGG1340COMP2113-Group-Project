@@ -31,7 +31,10 @@ namespace game
         std::string character = "*";
 
     public:
-        Zombie(std::pair<int, int> yx, int _type);
+        int last_dmg_time;
+        int dmg_delay;
+
+        Zombie(std::pair<int, int> yx, int _type, int _dmg_delay);
         int get_type();
         float get_hp();
         bool set_hp(float new_hp);
@@ -62,7 +65,6 @@ namespace game
     public:
         zombieManager();
         void init(std::list<Bullet *> *_bullet_list, Map *_map, Player *_player, Clock *_clock);
-
 
         void add(int type, std::pair<int, int> yx);
         std::list<Zombie *> *get_zombie_list();
