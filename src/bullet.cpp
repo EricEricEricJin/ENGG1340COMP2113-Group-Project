@@ -16,12 +16,13 @@ float pair_distance(std::pair<float, float> p1, std::pair<float, float> p2)
 
 namespace game
 {
-    Bullet::Bullet(std::string _type, clock_tick_t _shoot_time, std::pair<float, float> _yx, int _dir)
+    Bullet::Bullet(std::string _type, clock_tick_t _shoot_time, std::pair<float, float> _yx, int _dir, std::string _character)
     {
         type = _type;
         shoot_time = _shoot_time;
         yx = _yx;
         dir = _dir;
+        character = _character;
     }
 
     std::pair<float, float> Bullet::get_yx() { return yx; }
@@ -94,8 +95,9 @@ namespace game
 
             bul_type_dict[type]->trig_c = json_data["trig_c"].get<float>();
 
-            for (auto &i : json_data["trig_obj"])
-                bul_type_dict[type]->trig_obj.push_back(i.get<string>());
+            if (bul_type_dict[type]->trig_mode == TRIG_CONTACT)
+                for (auto &i : json_data["trig_obj"])
+                    bul_type_dict[type]->trig_obj.push_back(i.get<string>());
 
             te_variable vars[] = {{"x", &temp_distance}};
             bul_type_dict[type]->damage_func = te_compile(json_data["damage_expr"].get<string>().c_str(), vars, 1, nullptr);
@@ -246,7 +248,7 @@ namespace game
 
     void bulletManager::shoot(std::string name, std::pair<int, int> yx, int dir)
     {
-        Bullet *b = new Bullet{name, clock->get_ticks(), yx, dir};
+        Bullet *b = new Bullet{name, clock->get_ticks(), yx, dir, bul_type_dict[name]->chr};
         bullet_list->push_back(b);
     }
 
