@@ -8,15 +8,18 @@ namespace game
     {
     }
 
-    void Player::init(bulletManager *_bullet_manager, Map *_map, Clock *_clock)
+    void Player::init(bulletManager *_bullet_manager, Map *_map, Clock *_clock, int *_key_ptr)
     {
         bullet_manager = _bullet_manager;
         map = _map;
         clock = _clock;
 
+        key_ptr = _key_ptr;
+
         // default keysey
         key_set = new playerKeySet{'w', 's', 'a', 'd', 'e', ' '};
         speed = 0.5;
+        direction = PDIR_RIGHT;
 
         hp = 100;
     }
@@ -70,13 +73,13 @@ namespace game
         while (running)
         {
             if (!_debug)
-                key = getch();
+                key = *key_ptr;
             else
             {
                 // std::cout << "Player key value: ";
                 // std::cin >> key;
             }
-            mvprintw(LINES - 2, 1, "%d", direction);
+            // mvprintw(LINES - 2, 1, "%d", direction);
             if (key == key_set->UP)
                 direction = PDIR_UP;
             else if (key == key_set->DOWN)

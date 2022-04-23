@@ -88,7 +88,7 @@ int solve_maze(char **map, int lines, int cols, std::pair<int, int> source_yx, s
             _source_yx.second++;
 
         int temp_step = bfs(map, lines, cols, _source_yx, target_yx, wall, empty);
-        std::cout << temp_step << std::endl;
+        // std::cout << temp_step << std::endl;
         if (temp_step != -1 && temp_step < min_step)
         {
             min_step = temp_step;

@@ -143,9 +143,9 @@ namespace game
 
         while (running)
         {
-            triggered = false;
             for (auto bul_iter = bullet_list->begin(); bul_iter != bullet_list->end();)
             {
+                triggered = false;
                 auto bullet = *bul_iter;
                 bulletType *bullet_type = bul_type_dict[bullet->get_type()];
 

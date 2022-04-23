@@ -39,7 +39,7 @@ namespace game
         std::pair<float, float> yx;
         int dir;
 
-        std::string character;
+        std::string character = "%";
 
     public:
         Bullet(std::string _type, clock_tick_t _shoot_time, std::pair<float, float> _yx, int _dir);

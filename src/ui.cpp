@@ -28,11 +28,13 @@ namespace game
         map = _map;
         clock = _clock;
 
+        initscr();
         noecho();
         nocbreak();
         timeout(0);
-        initscr();
     }
+
+    int *UI::get_key_ptr() { return &key; }
 
     bool UI::homepage(std::string *map_name, int *difficulty)
     {
@@ -65,6 +67,8 @@ namespace game
         // draw and refresh screen
         while (status_val == 1)
         {
+            key = getch();
+
             wclear(game_win);
             box(game_win, 0, 0);
 
