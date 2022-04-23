@@ -76,6 +76,7 @@ namespace game
                 // std::cout << "Player key value: ";
                 // std::cin >> key;
             }
+            mvprintw(LINES - 2, 1, "%d", direction);
             if (key == key_set->UP)
                 direction = PDIR_UP;
             else if (key == key_set->DOWN)
@@ -117,7 +118,7 @@ namespace game
             else if (direction == PDIR_RIGHT)
                 x_temp += speed;
 
-            if (map->get_bit(y_temp, x_temp))
+            if (map->get_bit((int)round(y_temp), (int)round(x_temp)))
             {
                 // is wall or out-of-map, cannot go
                 beep();

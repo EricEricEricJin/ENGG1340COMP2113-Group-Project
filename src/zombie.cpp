@@ -133,4 +133,11 @@ namespace game
         }
     }
 
+    zombieManager::~zombieManager()
+    {
+        for (auto& zombie : *zombie_list)
+            delete zombie;
+        delete zombie_list;
+    }
+
 }

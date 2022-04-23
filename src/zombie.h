@@ -28,7 +28,7 @@ namespace game
         float hp;
         float speed;
         float damage;
-        std::string character;
+        std::string character = "*";
 
     public:
         Zombie(std::pair<int, int> yx, int _type);
