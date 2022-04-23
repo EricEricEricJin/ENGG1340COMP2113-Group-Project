@@ -30,6 +30,11 @@ namespace game
         period_us = 1'000'000 / frequency;
     }
 
+    int Clock::get_period_us()
+    {
+        return period_us;
+    }
+
     float Clock::get_freq() { return frequency; }
 
     clock_tick_t Clock::get_ticks() { return ticks; }

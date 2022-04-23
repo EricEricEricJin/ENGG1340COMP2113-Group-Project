@@ -43,8 +43,9 @@ void mainloop()
     game::bulletManager *bullet_manager = new game::bulletManager();
     game::zombieManager *zombie_manager = new game::zombieManager();
     game::Player *player = new game::Player();
+    game::UI* ui = new game::UI();
 
-    player->init(bullet_manager, map, clock);
+    player->init(bullet_manager, map, clock, ui->get_key_ptr());
     std::cout << "Player initialized" << std::endl;
     bullet_manager->init(map, zombie_manager->get_zombie_list(), player, clock);
     std::cout << "Bullet initialized" << std::endl;
@@ -57,7 +58,6 @@ void mainloop()
     bullet_manager->run();
     zombie_manager->run();
 
-    game::UI* ui = new game::UI();
     ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
 
     player->run();

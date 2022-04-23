@@ -41,6 +41,8 @@ namespace game
 
         Clock *clock;
 
+        int* key_ptr;
+
         int direction;
 
         float speed;
@@ -61,7 +63,7 @@ namespace game
 
     public:
         Player();
-        void init(bulletManager *_bullet_manager, Map *_map, Clock *_clock);
+        void init(bulletManager *_bullet_manager, Map *_map, Clock *_clock, int* _key_ptr);
 
         void configure(playerKeySet new_keyset);
 

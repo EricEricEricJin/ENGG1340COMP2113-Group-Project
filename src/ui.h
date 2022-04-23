@@ -36,6 +36,8 @@ namespace game
         WINDOW *game_win;
         WINDOW *status_win;
 
+        int key;
+
         void _game_thread_loop();
         void _game_menu();
 
@@ -44,6 +46,7 @@ namespace game
     public:
         UI();
         void init(Player *_player, std::list<Zombie *> *_zombie_list, std::list<Bullet *> *_bullet_list, Map *_map, Clock *_clock);
+        int* get_key_ptr();
         bool homepage(std::string *map_name, int *difficulty); // return only when select map and mode
         // parameter: [map list: Map]
         // return value: [map id: int], [# of players: int], [difficulty: int]

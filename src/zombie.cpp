@@ -99,7 +99,7 @@ namespace game
                     continue;
                 }
 
-                std::cout << "In zombie, player: " << player << std::endl;
+                // std::cout << "In zombie, player: " << player << std::endl;
                 // Move zombie
                 int dir = solve_maze(map->get_map(), map->lines(), map->columns(), (*zombie_it)->get_yx(), player->get_yx(), 1, 0);
                 if (dir == SOLMAZ_UP)
