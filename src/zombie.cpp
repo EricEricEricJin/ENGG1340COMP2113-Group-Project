@@ -14,7 +14,7 @@ namespace game
         x = yx.second;
         type = _type;
 
-        speed = 1;
+        speed = 0.2;
         damage = 10;
         hp = 100;
     }
@@ -101,7 +101,7 @@ namespace game
 
                 // std::cout << "In zombie, player: " << player << std::endl;
                 // Move zombie
-                int dir = solve_maze(map->get_map(), map->lines(), map->columns(), (*zombie_it)->get_yx(), player->get_yx(), 1, 0);
+                int dir = solve_maze(map->get_map(), map->lines(), map->columns(), {round((*zombie_it)->get_yx().first), round((*zombie_it)->get_yx().second)}, player->get_yx(), 1, 0);
                 if (dir == SOLMAZ_UP)
                     (*zombie_it)->move({(*zombie_it)->get_yx().first - (*zombie_it)->get_speed(), (*zombie_it)->get_yx().second});
                 else if (dir == SOLMAZ_DOWN)

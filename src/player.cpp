@@ -18,7 +18,7 @@ namespace game
 
         // default keysey
         key_set = new playerKeySet{'w', 's', 'a', 'd', 'e', ' '};
-        speed = 0.5;
+        speed = 0.8;
         direction = PDIR_RIGHT;
 
         hp = 100;
@@ -121,7 +121,7 @@ namespace game
             else if (direction == PDIR_RIGHT)
                 x_temp += speed;
 
-            if (map->get_bit((int)round(y_temp), (int)round(x_temp)))
+            if (map->get_bit(round(y_temp), round(x_temp)))
             {
                 // is wall or out-of-map, cannot go
                 beep();
