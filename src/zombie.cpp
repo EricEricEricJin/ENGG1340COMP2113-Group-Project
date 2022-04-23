@@ -8,7 +8,7 @@
 namespace game
 {
     // Zombie object:
-    Zombie::Zombie(std::pair<int, int> yx, int _type)
+    Zombie::Zombie(std::pair<int, int> yx, int _type, int _dmg_delay)
     {
         y = yx.first;
         x = yx.second;
@@ -17,6 +17,9 @@ namespace game
         speed = 0.2;
         damage = 10;
         hp = 100;
+
+        last_dmg_time = -9999;
+        dmg_delay = _dmg_delay; // Should be read from config file. Implement later
     }
 
     int Zombie::get_type() { return type; }
@@ -61,7 +64,7 @@ namespace game
     {
         if (type == ZOMBIETYPE_ODNR)
         {
-            zombie_list->push_back(new Zombie(yx, ZOMBIETYPE_ODNR));
+            zombie_list->push_back(new Zombie(yx, ZOMBIETYPE_ODNR, 2));
         }
         else if (type == ZOMBIETYPE_KING)
         {
@@ -116,8 +119,11 @@ namespace game
                 {
                     if (pair_distance(player->get_yx(), (*zombie_it)->get_yx()) < 1.6) // smaller than sqrt(2)
                     {
-                        // damage player
-                        player->set_hp(player->get_hp() - (*zombie_it)->get_damage());
+                        if ((*zombie_it)->last_dmg_time + (*zombie_it)->dmg_delay >= clock->get_ticks())
+                        { // damage player
+                            player->set_hp(player->get_hp() - (*zombie_it)->get_damage());
+                            (*zombie_it)->last_dmg_time = clock->get_ticks();
+                        }
                     }
                 }
                 else
@@ -135,7 +141,7 @@ namespace game
 
     zombieManager::~zombieManager()
     {
-        for (auto& zombie : *zombie_list)
+        for (auto &zombie : *zombie_list)
             delete zombie;
         delete zombie_list;
     }
