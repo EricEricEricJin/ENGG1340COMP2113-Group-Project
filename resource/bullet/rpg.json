@@ -1,0 +1,9 @@
+{
+    "type": "rpg",
+    "char": "&",
+    "speed": 0.8,
+    "trig_mode": 1,
+    "trig_c": 15,
+    "damage_dist": 8,
+    "damage_expr": "(80 - x * 10)"
+}
