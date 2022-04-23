@@ -50,7 +50,7 @@ namespace game
         playerKeySet *key_set;
 
         float hp;
-        std::string chr;
+        std::string chr = "P";
         float x = -1, y = -1;
 
         void _player_thread_loop();

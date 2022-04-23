@@ -95,7 +95,7 @@ namespace game
                         // std::cout << "in Map::load(): " << i << " " << j << std::endl;
                         if (chr == ' ')
                         {
-                            map[i][j] = NULL;
+                            map[i][j] = nullptr;
                             bitmap[i][j] = 0;
                         }
                         else if (chr == '#')
@@ -178,7 +178,7 @@ namespace game
     bool Map::get_bit(int y, int x)
     {
         if (y < 0 || y >= LINES || x < 0 || x >= COLS)
-            return -1;
+            return 1;
         if (map[y][x] == nullptr)
             return 0;
         return 1;

@@ -3,6 +3,7 @@
 #include "player.h"
 #include "zombie.h"
 #include "clock.h"
+#include "ui.h"
 
 int main()
 {

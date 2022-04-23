@@ -11,7 +11,7 @@
 float pair_distance(std::pair<float, float> p1, std::pair<float, float> p2)
 {
     return sqrt((p1.first - p2.first) * (p1.first - p2.first) +
-            (p1.second - p2.second) * (p1.second - p2.second));
+                (p1.second - p2.second) * (p1.second - p2.second));
 }
 
 namespace game
@@ -273,5 +273,6 @@ namespace game
 
         for (auto &bullet : *bullet_list)
             delete bullet;
+        delete bullet_list;
     }
 }
