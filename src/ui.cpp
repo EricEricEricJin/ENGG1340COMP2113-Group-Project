@@ -36,11 +36,161 @@ namespace game
 
     int *UI::get_key_ptr() { return &key; }
 
-    bool UI::homepage(std::string *map_name, int *difficulty)
+    bool UI::homepage(std::string *ret_string, int *ret_kind)
     {
         // setting
+        cbreak();
+        timeout(-1);
+
+        WIN_OFFSET_Y = (LINES - WIN_HEIGHT) / 2;
+        WIN_OFFSET_X = (COLS - WIN_WIDTH) / 2;
+        WINDOW *home_win = newwin(24, 80, WIN_OFFSET_Y, WIN_OFFSET_X);
+        box(home_win, 0, 0);
+
+        std::array<std::string, 5> items = {"New game", "Load saving", "Setting", "Edit map", "Exit"};
+        int current_item = 0;
+
+        while (true)
+        {
+            wclear(home_win);
+
+            // display menu
+            for (int i = 0; i < items.size(); i++)
+            {
+                if (current_item == i)
+                    wattron(home_win, A_REVERSE);
+                mvwaddstr(home_win, WIN_HEIGHT / items.size() * i + 1, WIN_WIDTH / 2 + 1, items[i].c_str());
+
+                if (current_item == i)
+                    wattroff(home_win, A_REVERSE);
+            }
+            wrefresh(home_win);
+
+            int _key = getch();
+            if (_key == 'j')
+                current_item++;
+            else if (_key == 'k')
+                current_item--;
+            else if (_key == '\n')
+            {
+                if (current_item == HOMEPAGE_NEWG)
+                {
+                    bool _ret = _new_game_page(ret_string);
+                    if (_ret)
+                    {
+                        *ret_kind = HOMEPAGE_NEWG;
+                        break;
+                    }
+                }
+                else if (current_item == HOMEPAGE_LOAD)
+                {
+                    *ret_string = _load_saving_page();
+                    *ret_kind = HOMEPAGE_LOAD;
+                }
+                else if (current_item == HOMEPAGE_SETT)
+                {
+                    _setting_page();
+                    *ret_kind = HOMEPAGE_SETT;
+                }
+                else if (current_item == HOMEPAGE_EDIT)
+                {
+                    _edit_map_page();
+                    *ret_kind = HOMEPAGE_EDIT;
+                }
+                else if (current_item == HOMEPAGE_EXIT)
+                {
+                    *ret_kind = HOMEPAGE_EXIT;
+                };
+            }
+
+            if (current_item < 0)
+                current_item = items.size();
+            else if (current_item >= items.size())
+                current_item = 0;
+        }
+
+        delwin(home_win);
         return false;
     }
+
+    bool UI::_new_game_page(std::string *map_name)
+    {
+        clear();
+        // select map
+        WINDOW *list_win = newwin(WIN_HEIGHT, 12, WIN_OFFSET_Y, WIN_OFFSET_X);
+        box(list_win, 0, 0);
+        WINDOW *preview_win = nullptr;
+
+        auto map_names = map->names_of_maps();
+        int map_idx = 0;
+
+        bool ret;
+
+        while (true)
+        {
+            // display name list
+            for (int i = 0; i < map_names.size(); i++)
+            {
+                if (map_idx == i)
+                    wattron(list_win, A_REVERSE);
+                mvwaddstr(list_win, i + 1, 1, map_names[i].c_str());
+                if (map_idx == i)
+                    wattroff(list_win, A_REVERSE);
+            }
+            wrefresh(list_win);
+
+            // draw minimap
+            auto minimap = map->minimap(map_names[map_idx]);
+            if (preview_win != nullptr)
+                delwin(preview_win);
+            preview_win = newwin(minimap.size() + 2, minimap[0].length() + 2, WIN_OFFSET_Y, WIN_OFFSET_X + 12);
+            box(preview_win, 0, 0);
+
+            int x, y = 1;
+            for (auto &line : minimap)
+            {
+                x = 1;
+                for (auto &chr : line)
+                {
+                    mvwaddch(preview_win, y, x, chr);
+                    x++;
+                }
+                y++;
+            }
+            wrefresh(preview_win);
+
+            int _key = getch();
+            if (_key == 'j')
+                map_idx++;
+            else if (_key == 'k')
+                map_idx--;
+            else if (_key == '\n')
+            {
+                ret = true;
+                break;
+            }
+            else if (_key == 'q')
+            {
+                ret = false;
+                break;
+            }
+
+            if (map_idx < 0)
+                map_idx = map_names.size() - 1;
+            else if (map_idx >= map_names.size())
+                map_idx = 0;
+        }
+
+        delwin(preview_win);
+        delwin(list_win);
+        *map_name = map_names[map_idx];
+        return ret;
+    }
+
+    std::string UI::_load_saving_page() {}
+
+    void UI::_setting_page() {}
+    void UI::_edit_map_page() {}
 
     void UI::start_game()
     {

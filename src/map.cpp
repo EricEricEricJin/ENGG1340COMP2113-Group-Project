@@ -271,10 +271,10 @@ namespace game
         return ret;
     }
 
-    std::vector<std::vector<std::string>> Map::minimap(std::string name)
+    std::vector<std::string> Map::minimap(std::string name)
     {
 
-        std::vector<std::vector<std::string>> ret;
+        std::vector<std::string> ret;
 
         nlohmann::json json_data;
         std::ifstream file_stream(map_dir + name, std::fstream::in);
@@ -293,8 +293,7 @@ namespace game
         // json_data["minimap"]
         for (auto &line : json_data["minimap"])
         {
-            auto line_vec = std::vector<std::string>(line.begin(), line.end());
-            ret.push_back(line_vec);
+            ret.push_back(line.get<std::string>());
         }
 
         return ret;

@@ -14,6 +14,15 @@
 
 namespace game
 {
+    enum
+    {
+        HOMEPAGE_NEWG = 0,
+        HOMEPAGE_LOAD = 1,
+        HOMEPAGE_SETT = 2,
+        HOMEPAGE_EDIT = 3,
+        HOMEPAGE_EXIT = 4
+    };
+
     class Player;
     class Zombie;
     class Map;
@@ -22,6 +31,9 @@ namespace game
     class UI
     {
     private:
+        const int WIN_WIDTH = 80, WIN_HEIGHT = 24;
+        int WIN_OFFSET_Y, WIN_OFFSET_X;
+
         char mode;
 
         Player *player;
@@ -41,13 +53,17 @@ namespace game
         void _game_thread_loop();
         void _game_menu();
 
+        bool _new_game_page(std::string *map_name);    // map name
+        std::string _load_saving_page(); // saving name
+        void _setting_page();
+        void _edit_map_page();
         // void _bottom_mode();
 
     public:
         UI();
         void init(Player *_player, std::list<Zombie *> *_zombie_list, std::list<Bullet *> *_bullet_list, Map *_map, Clock *_clock);
-        int* get_key_ptr();
-        bool homepage(std::string *map_name, int *difficulty); // return only when select map and mode
+        int *get_key_ptr();
+        bool homepage(std::string *ret_string, int *ret_kind); // return only when select map and mode
         // parameter: [map list: Map]
         // return value: [map id: int], [# of players: int], [difficulty: int]
 
