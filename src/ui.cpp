@@ -66,7 +66,7 @@ namespace game
             }
             wrefresh(home_win);
 
-            int _key = getch();
+            int _key = wgetch(home_win);
             if (_key == 'j')
                 current_item++;
             else if (_key == 'k')
@@ -100,6 +100,7 @@ namespace game
                 else if (current_item == HOMEPAGE_EXIT)
                 {
                     *ret_kind = HOMEPAGE_EXIT;
+                    break;
                 };
             }
 
@@ -110,6 +111,8 @@ namespace game
         }
 
         delwin(home_win);
+        nocbreak();
+        timeout(0);
         return false;
     }
 
@@ -159,7 +162,7 @@ namespace game
             }
             wrefresh(preview_win);
 
-            int _key = getch();
+            int _key = wgetch(list_win);
             if (_key == 'j')
                 map_idx++;
             else if (_key == 'k')
@@ -199,13 +202,9 @@ namespace game
         int x_0 = (COLS - width) / 2;
 
         status_win = newwin(3, width, y_0, x_0);
-        box(status_win, 0, 0);
-        wrefresh(status_win);
 
         game_win = newwin(map->lines() + 2, width, y_0 + 3, x_0);
-        box(game_win, 0, 0);
-        wrefresh(game_win);
-
+        
         // start thread...
         status_val = 1;
         thread_obj = new std::thread([=]
@@ -217,7 +216,6 @@ namespace game
         // draw and refresh screen
         while (status_val == 1)
         {
-            key = getch();
 
             wclear(game_win);
             box(game_win, 0, 0);
@@ -246,12 +244,15 @@ namespace game
                 mvwaddstr(game_win, bullet->get_yx().first + 1, bullet->get_yx().second + 1, bullet->get_char().c_str());
             }
 
+            wrefresh(game_win);
+            // key = wgetch(game_win);
+            key = getch();
+
             // HP and bullet
             wclear(status_win);
             box(status_win, 0, 0);
             mvwprintw(status_win, 1, 1, "%d", (int)(player->get_hp()));
 
-            wrefresh(game_win);
             wrefresh(status_win);
             clock->wait(1);
         }
