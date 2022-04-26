@@ -59,7 +59,7 @@ namespace game
         ~Map();
 
         std::vector<std::string> names_of_maps();
-        std::vector<std::vector<std::string>> minimap(std::string name);
+        std::vector<std::string> minimap(std::string name);
     };
 }
 #endif

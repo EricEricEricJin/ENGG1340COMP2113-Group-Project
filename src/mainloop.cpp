@@ -28,11 +28,24 @@
 #include "player.h"
 #include "zombie.h"
 #include "clock.h"
+#include "setting.hpp"
 
 float distance(std::pair<int, int> p1, std::pair<int, int> p2);
 
 void mainloop()
 {
+    // game::Setting *setting = new game::Setting();
+    // if (setting->load())
+    // {
+    //     // config file exists
+    //     std::string map_dir = setting->query<std::string>("map_dir");
+    //     std::string bullet_dir = setting->query<std::string>("bullet_dir");
+    // }
+    // else
+    // {
+    //     // default values
+    // }
+
     game::Clock *clock = new game::Clock;
     clock->set_freq(10);
     clock->reset();
@@ -43,7 +56,7 @@ void mainloop()
     game::bulletManager *bullet_manager = new game::bulletManager();
     game::zombieManager *zombie_manager = new game::zombieManager();
     game::Player *player = new game::Player();
-    game::UI* ui = new game::UI();
+    game::UI *ui = new game::UI();
 
     player->init(bullet_manager, map, clock, ui->get_key_ptr());
     std::cout << "Player initialized" << std::endl;
@@ -53,12 +66,20 @@ void mainloop()
     std::cout << "Zombie initialized" << std::endl;
 
     bullet_manager->load_resource("resource/");
-    std::cout << "map load " << map->load("0.json") << std::endl;
 
     bullet_manager->run();
     zombie_manager->run();
 
     ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
+
+    std::string homepage_ret_string;
+    int homepage_ret_kind;
+    ui->homepage(&homepage_ret_string, &homepage_ret_kind);
+
+    if (homepage_ret_kind == game::HOMEPAGE_NEWG)
+        std::cout << "map load " << map->load(homepage_ret_string) << std::endl;
+
+    std::cout << "HA" << std::endl;
 
     player->run();
     ui->start_game();
@@ -69,6 +90,6 @@ void mainloop()
         clock->wait(1);
     }
     ui->stop_game();
-    
+
     endwin();
 }
