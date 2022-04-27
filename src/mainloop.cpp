@@ -67,8 +67,6 @@ void mainloop()
 
     bullet_manager->load_resource("resource/");
 
-    bullet_manager->run();
-    zombie_manager->run();
 
     ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
 
@@ -81,15 +79,22 @@ void mainloop()
 
     std::cout << "HA" << std::endl;
 
+    bullet_manager->run();
+    zombie_manager->run();
     player->run();
     ui->start_game();
-    zombie_manager->add(ZOMBIETYPE_ODNR, map->zb_get_rand_ent_yx());
 
-    for (int i = 0; i < 200; i++)
+    while (player->get_hp() > 0)
     {
         clock->wait(1);
     }
     ui->stop_game();
+
+    delete zombie_manager;
+    delete player;
+    delete bullet_manager;
+    delete map;
+    delete ui;
 
     endwin();
 }
