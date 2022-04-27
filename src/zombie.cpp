@@ -133,10 +133,10 @@ namespace game
                 for (auto z = zombie_list->begin(); z != zombie_list->end(); z++)
                 {
                     if (z != zombie_it)
-                        zombie_map[(int)round((*z)->get_yx().first)][(int)round((*z)->get_yx().second)] = 1;
+                        zombie_map[(int)((*z)->get_yx().first)][(int)((*z)->get_yx().second)] = 1;
                 }
 
-                int dir = solve_maze(zombie_map, map->lines(), map->columns(), {round((*zombie_it)->get_yx().first), round((*zombie_it)->get_yx().second)}, player->get_yx(), 1, 0);
+                int dir = solve_maze(zombie_map, map->lines(), map->columns(), {(int)((*zombie_it)->get_yx().first), (int)((*zombie_it)->get_yx().second)}, player->get_yx(), 1, 0);
                 if (dir == SOLMAZ_UP)
                     (*zombie_it)->move({(*zombie_it)->get_yx().first - (*zombie_it)->get_speed(), (*zombie_it)->get_yx().second});
                 else if (dir == SOLMAZ_DOWN)

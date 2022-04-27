@@ -9,7 +9,7 @@ int main()
     string user_folder = getenv("HOME");
     cout << user_folder << endl;
 
-    ifstream f("~/testfile.txt"); 
+    ifstream f("HOME/testfile.txt"); 
     if (f.fail())
     {
         cout << "Error" << endl;
