@@ -31,10 +31,10 @@ namespace game
         std::string character = "*";
 
     public:
-        int last_dmg_time;
-        int dmg_delay;
+        clock_tick_t last_dmg_time;
+        clock_tick_t dmg_delay;
 
-        Zombie(std::pair<int, int> yx, int _type, int _dmg_delay);
+        Zombie(std::pair<int, int> yx, int _type, clock_tick_t _dmg_delay);
         int get_type();
         float get_hp();
         bool set_hp(float new_hp);
