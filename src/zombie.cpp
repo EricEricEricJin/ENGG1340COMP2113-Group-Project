@@ -91,8 +91,23 @@ namespace game
 
     void zombieManager::_thread_loop()
     {
+        // Add zombies
+
+        char **zombie_map = new char *[map->lines()];
+        for (int i = 0; i < map->lines(); i++)
+            zombie_map[i] = new char[map->columns()];
+
+        const int add_zombie_delay = 5;
+        int add_zombie_time = -1;
+
         while (running)
         {
+            if (get_num() < 4 && clock->get_ticks() > add_zombie_time + add_zombie_delay)
+            {
+                add(ZOMBIETYPE_ODNR, map->zb_get_rand_ent_yx());
+                add_zombie_time = clock->get_ticks();
+            }
+
             for (auto zombie_it = zombie_list->begin(); zombie_it != zombie_list->end();)
             {
                 // If zombie dead, then remove
@@ -104,7 +119,24 @@ namespace game
 
                 // std::cout << "In zombie, player: " << player << std::endl;
                 // Move zombie
-                int dir = solve_maze(map->get_map(), map->lines(), map->columns(), {round((*zombie_it)->get_yx().first), round((*zombie_it)->get_yx().second)}, player->get_yx(), 1, 0);
+
+                // TODO: copy map and modify zombie position
+
+                char **map_map = map->get_map();
+                for (int i = 0; i < map->lines(); i++)
+                {
+                    for (int j = 0; j < map->columns(); j++)
+                    {
+                        zombie_map[i][j] = map_map[i][j];
+                    }
+                }
+                for (auto z = zombie_list->begin(); z != zombie_list->end(); z++)
+                {
+                    if (z != zombie_it)
+                        zombie_map[(int)round((*z)->get_yx().first)][(int)round((*z)->get_yx().second)] = 1;
+                }
+
+                int dir = solve_maze(zombie_map, map->lines(), map->columns(), {round((*zombie_it)->get_yx().first), round((*zombie_it)->get_yx().second)}, player->get_yx(), 1, 0);
                 if (dir == SOLMAZ_UP)
                     (*zombie_it)->move({(*zombie_it)->get_yx().first - (*zombie_it)->get_speed(), (*zombie_it)->get_yx().second});
                 else if (dir == SOLMAZ_DOWN)
@@ -137,6 +169,7 @@ namespace game
 
             clock->wait(1);
         }
+        delete zombie_map;
     }
 
     zombieManager::~zombieManager()
