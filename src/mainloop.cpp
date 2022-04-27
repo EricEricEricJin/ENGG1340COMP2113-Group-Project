@@ -87,6 +87,7 @@ void mainloop()
     while (player->get_hp() > 0)
     {
         clock->wait(1);
+        // std::cout << "clock tick " << clock->get_ticks() << std::endl;
     }
     ui->stop_game();
 

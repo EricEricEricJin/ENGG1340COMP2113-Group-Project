@@ -8,7 +8,7 @@
 namespace game
 {
     // Zombie object:
-    Zombie::Zombie(std::pair<int, int> yx, int _type, int _dmg_delay)
+    Zombie::Zombie(std::pair<int, int> yx, int _type, clock_tick_t _dmg_delay)
     {
         y = yx.first;
         x = yx.second;
@@ -18,7 +18,7 @@ namespace game
         damage = 10;
         hp = 100;
 
-        last_dmg_time = -9999;
+        last_dmg_time = 0;
         dmg_delay = _dmg_delay; // Should be read from config file. Implement later
     }
 
@@ -64,7 +64,7 @@ namespace game
     {
         if (type == ZOMBIETYPE_ODNR)
         {
-            zombie_list->push_back(new Zombie(yx, ZOMBIETYPE_ODNR, 2));
+            zombie_list->push_back(new Zombie(yx, ZOMBIETYPE_ODNR, 3));
         }
         else if (type == ZOMBIETYPE_KING)
         {
@@ -136,7 +136,7 @@ namespace game
                         zombie_map[(int)((*z)->get_yx().first)][(int)((*z)->get_yx().second)] = 1;
                 }
 
-                int dir = solve_maze(zombie_map, map->lines(), map->columns(), {(int)((*zombie_it)->get_yx().first), (int)((*zombie_it)->get_yx().second)}, player->get_yx(), 1, 0);
+                int dir = solve_maze(zombie_map, map->lines(), map->columns(), {(int)round((*zombie_it)->get_yx().first), (int)round((*zombie_it)->get_yx().second)}, {(int)round(player->get_yx().first), (int)round(player->get_yx().second)}, 1, 0);
                 if (dir == SOLMAZ_UP)
                     (*zombie_it)->move({(*zombie_it)->get_yx().first - (*zombie_it)->get_speed(), (*zombie_it)->get_yx().second});
                 else if (dir == SOLMAZ_DOWN)
@@ -151,7 +151,9 @@ namespace game
                 {
                     if (pair_distance(player->get_yx(), (*zombie_it)->get_yx()) < 1.6) // smaller than sqrt(2)
                     {
-                        if ((*zombie_it)->last_dmg_time + (*zombie_it)->dmg_delay >= clock->get_ticks())
+                        // std::cout << "tick " << clock->get_ticks() << " last_t " << (*zombie_it)->last_dmg_time << " delay " << (*zombie_it)->dmg_delay << std::endl;
+                        // std::cout << "True? " << ((clock->get_ticks()) > ((*zombie_it)->last_dmg_time + (*zombie_it)->dmg_delay)) << std::endl;
+                        if (clock->get_ticks() > (*zombie_it)->last_dmg_time + (*zombie_it)->dmg_delay)
                         { // damage player
                             player->set_hp(player->get_hp() - (*zombie_it)->get_damage());
                             (*zombie_it)->last_dmg_time = clock->get_ticks();
@@ -164,6 +166,7 @@ namespace game
                     // Shoot bullet
                     // Do later
                 }
+
                 zombie_it++;
             }
 
