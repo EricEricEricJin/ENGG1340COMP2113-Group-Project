@@ -32,6 +32,9 @@ namespace game
         noecho();
         nocbreak();
         timeout(0);
+
+        // box(stdscr, 0, 0);
+        // refresh();
     }
 
     int *UI::get_key_ptr() { return &key; }
@@ -45,7 +48,6 @@ namespace game
         WIN_OFFSET_Y = (LINES - WIN_HEIGHT) / 2;
         WIN_OFFSET_X = (COLS - WIN_WIDTH) / 2;
         WINDOW *home_win = newwin(24, 80, WIN_OFFSET_Y, WIN_OFFSET_X);
-        box(home_win, 0, 0);
 
         std::array<std::string, 5> items = {"New game", "Load saving", "Setting", "Edit map", "Exit"};
         int current_item = 0;
@@ -53,6 +55,7 @@ namespace game
         while (true)
         {
             wclear(home_win);
+            box(home_win, 0, 0);
 
             // display menu
             for (int i = 0; i < items.size(); i++)
@@ -73,6 +76,8 @@ namespace game
                 current_item--;
             else if (_key == '\n')
             {
+                wclear(home_win);
+                wrefresh(home_win);
                 if (current_item == HOMEPAGE_NEWG)
                 {
                     bool _ret = _new_game_page(ret_string);
@@ -118,7 +123,6 @@ namespace game
 
     bool UI::_new_game_page(std::string *map_name)
     {
-        clear();
         // select map
         WINDOW *list_win = newwin(WIN_HEIGHT, 12, WIN_OFFSET_Y, WIN_OFFSET_X);
         box(list_win, 0, 0);
@@ -204,7 +208,7 @@ namespace game
         status_win = newwin(3, width, y_0, x_0);
 
         game_win = newwin(map->lines() + 2, width, y_0 + 3, x_0);
-        
+
         // start thread...
         status_val = 1;
         thread_obj = new std::thread([=]
