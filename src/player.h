@@ -73,6 +73,7 @@ namespace game
         std::pair<float, float> get_yx();
         void run(bool debug = false);
         void stop();
+        std::string get_cur_bul_name();
         ~Player();
     };
 

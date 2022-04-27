@@ -143,6 +143,8 @@ namespace game
         delete thread_obj;
     }
 
+    std::string Player::get_cur_bul_name() { return cur_bul_name; }
+
     Player::~Player()
     {
         delete key_set;

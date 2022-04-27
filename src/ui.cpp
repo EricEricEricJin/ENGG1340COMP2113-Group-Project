@@ -255,8 +255,13 @@ namespace game
             // HP and bullet
             wclear(status_win);
             box(status_win, 0, 0);
-            mvwprintw(status_win, 1, 1, "%d", (int)(player->get_hp()));
 
+            wattron(status_win, A_REVERSE);
+            mvwprintw(status_win, 1, 1, "HP        ");
+            mvwprintw(status_win, 1, 21, "WEAPON    ");
+            wattroff(status_win, A_REVERSE);
+            mvwprintw(status_win, 1, 11, "%d", (int)(player->get_hp()));
+            mvwprintw(status_win, 1, 31, player->get_cur_bul_name().c_str());
             wrefresh(status_win);
             clock->wait(1);
         }
