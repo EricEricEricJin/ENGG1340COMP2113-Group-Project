@@ -210,7 +210,7 @@ namespace game
         game_win = newwin(map->lines() + 2, width, y_0 + 3, x_0);
 
         // start thread...
-        status_val = 1;
+        status_val = USTATUS_RUNNING;
         thread_obj = new std::thread([=]
                                      { _game_thread_loop(); });
     }
@@ -218,7 +218,7 @@ namespace game
     void UI::_game_thread_loop()
     {
         // draw and refresh screen
-        while (status_val == 1)
+        while (status_val == USTATUS_RUNNING)
         {
 
             wclear(game_win);
@@ -263,21 +263,89 @@ namespace game
             mvwprintw(status_win, 1, 11, "%d", (int)(player->get_hp()));
             mvwprintw(status_win, 1, 31, player->get_cur_bul_name().c_str());
             wrefresh(status_win);
+
+            // deal with menu
+            if (key == 'p')
+            {
+                status_val = USTATUS_PAUSE;
+                wclear(game_win);
+                wrefresh(game_win);
+                wclear(status_win);
+                wrefresh(status_win);
+
+                if (auto menu_ret = _game_menu(); menu_ret == 0) // resume
+                {
+                    status_val = USTATUS_RUNNING;
+                }
+                else if (menu_ret == 1) // save
+                {
+                    // saving stuff
+                    break;
+                }
+                else if (menu_ret == 2) // exit
+                {
+                    status_val = USTATUS_EXIT;
+                    break;
+                }
+            }
+
             clock->wait(1);
         }
+        delwin(game_win);
+        delwin(status_win);
     }
 
-    void UI::_game_menu()
+    int UI::_game_menu()
     {
-        // WINDOW* menu_win = newwin()
+        cbreak();
+        timeout(-1);
+
+        WINDOW *menu_win = newwin(WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
+
+        std::array<std::string, 3> items = {"Resume", "Save", "Exit"};
+        int current_item = 0;
+
+        // display
+        while (true)
+        {
+            wclear(menu_win);
+            box(menu_win, 0, 0);
+            for (int i = 0; i < items.size(); i++)
+            {
+                if (i == current_item)
+                    wattron(menu_win, A_REVERSE);
+                mvwaddstr(menu_win, WIN_HEIGHT / items.size() * i + 1, WIN_WIDTH / 2 + 1, items[i].c_str());
+                if (i == current_item)
+                    wattroff(menu_win, A_REVERSE);
+            }
+
+            wrefresh(menu_win);
+            int key = getch();
+            if (key == 'j')
+                current_item++;
+            else if (key == 'k')
+                current_item--;
+            else if (key == '\n')
+                break;
+
+            if (current_item < 0)
+                current_item = items.size() - 1;
+            else if (current_item >= items.size())
+                current_item = 0;
+        }
+
+        delwin(menu_win);
+        nocbreak();
+        timeout(0);
+        return current_item;
     }
 
     void UI::stop_game()
     {
-        status_val = 0;
-        thread_obj->join();
-        delwin(game_win);
-        delwin(status_win);
+        status_val = USTATUS_EXIT;
+        if (thread_obj->joinable())
+            thread_obj->join();
+
         delete thread_obj;
     }
 

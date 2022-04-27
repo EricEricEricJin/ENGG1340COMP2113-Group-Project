@@ -24,6 +24,11 @@ namespace game
 
     void Clock::reset() { ticks = 0; }
 
+    void Clock::set_ticks(clock_tick_t _ticks)
+    {
+        ticks = _ticks;
+    }
+
     void Clock::set_freq(float freq)
     {
         frequency = freq;

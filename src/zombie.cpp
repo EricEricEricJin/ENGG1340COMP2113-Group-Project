@@ -60,6 +60,16 @@ namespace game
         clock = _clock;
     }
 
+    void zombieManager::load_saved(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<float> zombie_hps)
+    {
+        for (int i = 0; i < zombie_types.size(); i++)
+        {
+            auto zombie = new Zombie(zombie_yxs[i], zombie_types[i], zombie_dmg_delay);
+            zombie->set_hp(zombie_hps[i]);
+            zombie_list->push_back(zombie);
+        }
+    }
+
     void zombieManager::add(int type, std::pair<int, int> yx)
     {
         if (type == ZOMBIETYPE_ODNR)
