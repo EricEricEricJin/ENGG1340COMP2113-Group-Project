@@ -87,12 +87,16 @@ int solve_maze(char **map, int lines, int cols, std::pair<int, int> source_yx, s
         else if (dir == SOLMAZ_RIGHT)
             _source_yx.second++;
 
-        int temp_step = bfs(map, lines, cols, _source_yx, target_yx, wall, empty);
-        // std::cout << temp_step << std::endl;
-        if (temp_step != -1 && temp_step < min_step)
+        if ((_source_yx.first >= 0 && _source_yx.first < lines && _source_yx.second >= 0 && _source_yx.second < cols) && map[_source_yx.first][_source_yx.second] != wall)
         {
-            min_step = temp_step;
-            min_dir = dir;
+            // valid
+            int temp_step = bfs(map, lines, cols, _source_yx, target_yx, wall, empty);
+            // std::cout << temp_step << std::endl;
+            if (temp_step != -1 && temp_step < min_step)
+            {
+                min_step = temp_step;
+                min_dir = dir;
+            }
         }
     }
     return min_dir;
