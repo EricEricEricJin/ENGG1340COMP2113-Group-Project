@@ -13,15 +13,23 @@ namespace game
         bullet_manager = _bullet_manager;
         map = _map;
         clock = _clock;
-
         key_ptr = _key_ptr;
 
         // default keysey
         key_set = new playerKeySet{'w', 's', 'a', 'd', 'e', ' '};
         speed = 0.8;
-        direction = PDIR_RIGHT;
 
+        direction = PDIR_RIGHT;
         hp = 100;
+    }
+
+    void Player::load_saved(std::pair<int, int> _yx, int _hp, int _dir, std::string _cur_bul_name)
+    {
+        y = _yx.first;
+        x = _yx.second;
+        hp= _hp;
+        direction = _dir;
+        cur_bul_name = _cur_bul_name;
     }
 
     void Player::configure(playerKeySet new_keyset)

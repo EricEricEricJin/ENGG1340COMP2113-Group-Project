@@ -42,6 +42,9 @@ namespace game
     public:
         Map(std::string map_dir_path);
         bool load(std::string map_name);    // Load map from file, return whether success
+
+        void load_saved(std::string map_name, std::vector<std::vector<int>> wall_durabilitys);
+
         std::string get_char(int y, int x); // Get the content in xy, return the content
         bool get_bit(int y, int x);
         bool add(int y, int x, int durability); // Put content in xy, return whether valid

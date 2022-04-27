@@ -15,6 +15,8 @@ enum
 namespace game
 {
 
+    const int zombie_dmg_delay = 2;
+
     class Bullet;
     class Player;
     class Map;
@@ -65,6 +67,9 @@ namespace game
     public:
         zombieManager();
         void init(std::list<Bullet *> *_bullet_list, Map *_map, Player *_player, Clock *_clock);
+
+        void load_saved(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<float> zombie_hps);
+
         void add(int type, std::pair<int, int> yx);
         std::list<Zombie *> *get_zombie_list();
 

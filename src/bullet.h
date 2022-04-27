@@ -88,6 +88,8 @@ namespace game
         void init(Map *_map, std::list<Zombie *> *_zombie_list, Player *_player, Clock *_clock);
 
         int load_resource(std::string resource_root);
+        void load_saved(std::vector<std::string> types, std::vector<int> shoot_times, std::vector<std::pair<int, int>> yxs, std::vector<int> dirs);
+
         void print();
 
         std::list<Bullet *> *get_bullet_list();

@@ -167,6 +167,19 @@ namespace game
         return true;
     }
 
+    void Map::load_saved(std::string map_name, std::vector<std::vector<int>> wall_durabilitys)
+    {
+        load(map_name);
+        for (int i = 0; i < LINES; i++)
+        {
+            for (int j = 0; j < COLS; j++)
+            {
+                if (wall_durabilitys[i][j] != 0 && map[i][j] == nullptr)
+                    add(i, j, wall_durabilitys[i][j]);
+            }
+        }
+    }
+
     std::string Map::get_char(int y, int x)
     {
         if (map[y][x] == NULL)
@@ -189,6 +202,7 @@ namespace game
         if (map[y][x] == NULL)
         {
             map[y][x] = new Wall(durability, y, x);
+            bitmap[y][x] = 1;
             return true;
         }
         return false;
@@ -219,10 +233,10 @@ namespace game
 
     std::pair<int, int> Map::zb_get_rand_ent_yx()
     {
-        std::cout << "Size: " << zb_ent_yx_list.size() << std::endl;
+        // std::cout << "Size: " << zb_ent_yx_list.size() << std::endl;
         std::random_device rd;
         int i = (int)((float)(rd() - rd.min()) / (float)(rd.max() - rd.min()) * zb_ent_yx_list.size());
-        std::cout << "Rand: " << i << std::endl;
+        // std::cout << "Rand: " << i << std::endl;
         return zb_ent_yx_list[i];
     }
 

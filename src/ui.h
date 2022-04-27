@@ -14,6 +14,12 @@
 
 namespace game
 {
+    enum 
+    {
+        USTATUS_RUNNING = 0,
+        USTATUS_PAUSE = 1,
+        USTATUS_EXIT = 2
+    };
     enum
     {
         HOMEPAGE_NEWG = 0,
@@ -51,7 +57,7 @@ namespace game
         int key;
 
         void _game_thread_loop();
-        void _game_menu();
+        int _game_menu();
 
         bool _new_game_page(std::string *map_name);    // map name
         std::string _load_saving_page(); // saving name

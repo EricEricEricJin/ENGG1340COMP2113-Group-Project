@@ -105,6 +105,15 @@ namespace game
         return 1;
     }
 
+    void bulletManager::load_saved(std::vector<std::string> types, std::vector<int> shoot_times, std::vector<std::pair<int, int>> yxs, std::vector<int> dirs)
+    {
+        for (int i = 0; i < types.size(); i++)
+        {
+            auto bullet = new Bullet(types[i], shoot_times[i], yxs[i], dirs[i], bul_type_dict[types[i]]->chr);
+            bullet_list->push_back(bullet);
+        }
+    }
+
     void bulletManager::print()
     {
         using namespace std;

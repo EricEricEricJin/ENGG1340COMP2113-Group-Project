@@ -32,14 +32,6 @@ namespace game
 
         auto player_j = json_data["player"];
 
-        zombieManager* zombie_manager;
-        bulletManager* bullet_manager;
-        Player* player;
-        Map* map;
-        Clock* clock;
-
-        zombie_manager->init(bullet_manager->get_bullet_list(), map, player, clock);
-        bullet_manager->init(map, zombie_manager->get_zombie_list(), player, clock);
         // Do later
 
 

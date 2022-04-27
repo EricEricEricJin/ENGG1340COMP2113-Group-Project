@@ -23,6 +23,7 @@ namespace game
         void start();
         void stop();
         void reset();
+        void set_ticks(clock_tick_t _ticks);
         void set_freq(float freq);
         float get_freq();
         int get_period_us();
