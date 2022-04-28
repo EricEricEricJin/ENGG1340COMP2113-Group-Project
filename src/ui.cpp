@@ -217,6 +217,7 @@ namespace game
 
     void UI::_game_thread_loop()
     {
+
         // draw and refresh screen
         while (status_val == USTATUS_RUNNING)
         {
@@ -229,7 +230,36 @@ namespace game
             {
                 for (int j = 0; j < map->columns(); j++)
                 {
-                    mvwaddstr(game_win, i + 1, j + 1, map->get_char(i, j).c_str());
+                    if (map->get_bit(i, j))
+                    {
+                        chtype wall_chr;
+                        int srding = (map->get_bit(i - 1, j) << 3) | (map->get_bit(i + 1, j) << 2) | (map->get_bit(i, j - 1) << 1) | map->get_bit(i, j + 1);
+
+                        if ((srding & 0b1100) && !(srding & 0b0011))
+                            wall_chr = ACS_VLINE;
+                        else if ((srding & 0b0011) && !(srding & 0b1100))
+                            wall_chr = ACS_HLINE;
+                        else if (srding == 0b0101)
+                            wall_chr = ACS_ULCORNER;
+                        else if (srding == 0b0110)
+                            wall_chr = ACS_URCORNER;
+                        else if (srding == 0b1001)
+                            wall_chr = ACS_LLCORNER;
+                        else if (srding == 0b1010)
+                            wall_chr = ACS_LRCORNER;
+                        else if (srding == 0b1101)
+                            wall_chr = ACS_LTEE;
+                        else if (srding == 0b1110)
+                            wall_chr = ACS_RTEE;
+                        else if (srding == 0b0111)
+                            wall_chr = ACS_TTEE;
+                        else if (srding == 0b1011)
+                            wall_chr = ACS_BTEE;
+                        else if (srding == 0b1111)
+                            wall_chr = ACS_PLUS;
+
+                        mvwaddch(game_win, i + 1, j + 1, wall_chr);
+                    }
                 }
             }
 
@@ -257,9 +287,10 @@ namespace game
             box(status_win, 0, 0);
 
             wattron(status_win, A_REVERSE);
-            mvwprintw(status_win, 1, 1, "HP        ");
-            mvwprintw(status_win, 1, 21, "WEAPON    ");
+            mvwprintw(status_win, 1, 1, "    HP    ");
+            mvwprintw(status_win, 1, 21, "  WEAPON  ");
             wattroff(status_win, A_REVERSE);
+            // mvwvline(status_win, 1, 20, 0, 1);
             mvwprintw(status_win, 1, 11, "%d", (int)(player->get_hp()));
             mvwprintw(status_win, 1, 31, player->get_cur_bul_name().c_str());
             wrefresh(status_win);

@@ -14,9 +14,6 @@ map.o: src/map.cpp src/map.h
 player.o: src/player.cpp src/player.h src/map.h src/bullet.h
 	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
 
-# setting.o: src/setting.cpp src/setting.h 
-# 	$(CC) -c $(COMPILE_FLAGS) $< -I src
-
 ui.o: src/ui.cpp src/ui.h src/player.h src/map.h src/zombie.h src/bullet.h
 	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
 
@@ -41,6 +38,6 @@ setting.o: src/setting.cpp src/setting.h
 main: bullet.o map.o player.o ui.o zombie.o mainloop.o main.o solve_maze.o clock.o lib/tinyexpr.o setting.o
 	g++ $^ -g -o main $(LINK_LIBS)
 
-.PHONY: clean
+.PHONY: clean install uninstall
 clean:
 	rm bullet.o map.o player.o ui.o zombie.o mainloop.o main.o clock.o solve_maze.o

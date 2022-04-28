@@ -96,7 +96,7 @@ namespace game
 
         void run();
 
-        void shoot(std::string name, std::pair<int, int> yx, int dir); // add bullet to loop
+        void shoot(std::string name, std::pair<float, float> yx, int dir); // add bullet to loop
 
         void stop();
 
