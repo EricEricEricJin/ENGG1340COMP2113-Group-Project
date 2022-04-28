@@ -10,19 +10,16 @@ namespace game
     class Setting
     {
     private:
-        std::string boxheadrc_path;
         nlohmann::json *json_data;
 
     public:
         Setting()
         {
             // hard-coded boxheadrc path
-            boxheadrc_path = getenv("HOME");
-            boxheadrc_path += "/.config/boxhead/init.bh";
             json_data = nullptr;
         }
 
-        bool load()
+        bool load(std::string boxheadrc_path)
         {
             // Hard coded config file
             std::ifstream f(boxheadrc_path);
