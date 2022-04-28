@@ -50,11 +50,11 @@ namespace game
         clock = _clock;
     }
 
-    int bulletManager::load_resource(std::string resource_root)
+    int bulletManager::load_resource(std::string resource_path)
     {
         using namespace std;
 
-        filesystem::path str(resource_root + "bullet"); // Cannot have "/" at end
+        filesystem::path str(resource_path); // Must have "/" at end
         cout << "fp: " << str << endl;
         if (!filesystem::exists(str))
             return 0;
@@ -69,7 +69,7 @@ namespace game
             auto name = _name.path().filename().string();
             cout << "name: " << name << endl;
             // open and parse file
-            ifstream f(resource_root + "/bullet/" + name, fstream::in);
+            ifstream f(resource_path + name, fstream::in);
             if (f.fail())
                 continue;
             nlohmann::json json_data;

@@ -87,7 +87,7 @@ namespace game
         bulletManager();
         void init(Map *_map, std::list<Zombie *> *_zombie_list, Player *_player, Clock *_clock);
 
-        int load_resource(std::string resource_root);
+        int load_resource(std::string resource_path);
         void load_saved(std::vector<std::string> types, std::vector<int> shoot_times, std::vector<std::pair<int, int>> yxs, std::vector<int> dirs);
 
         void print();

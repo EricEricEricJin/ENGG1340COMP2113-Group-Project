@@ -19,7 +19,6 @@ namespace game
             // hard-coded boxheadrc path
             boxheadrc_path = getenv("HOME");
             boxheadrc_path += "/.config/boxhead/init.bh";
-
             json_data = nullptr;
         }
 
@@ -53,24 +52,37 @@ namespace game
             return true;
         }
 
-        bool save()
+        std::string get_resource_path()
         {
-            // todo
+            try
+            {
+                return (*json_data)["resource_path"].get<std::string>();
+            }
+            catch (const std::exception &e)
+            {
+                return "";
+            }
         }
 
-        template <typename T>
-        T query(std::string key)
+        int get_clock_frequency()
         {
-            return (*json_data)[key].get<T>();
+            try
+            {
+                return (*json_data)["clock_frequency"].get<int>();
+            }
+            catch (const std::exception &e)
+            {
+                return -1;
+            }
         }
 
-        template <typename T>
-        bool modify(std::string key, T val)
-        {
-            // @TODO: compare type
-            (*json_data)[key] = val;
-            return true;
-        }
+        // template <typename T>
+        // bool modify(std::string key, T val)
+        // {
+        //     // @TODO: compare type
+        //     (*json_data)[key] = val;
+        //     return true;
+        // }
 
         ~Setting()
         {
