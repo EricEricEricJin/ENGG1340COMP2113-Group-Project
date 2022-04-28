@@ -288,11 +288,12 @@ namespace game
 
             wattron(status_win, A_REVERSE);
             mvwprintw(status_win, 1, 1, "    HP    ");
-            mvwprintw(status_win, 1, 21, "  WEAPON  ");
+            mvwprintw(status_win, 1, 26, "  WEAPON  ");
+            mvwprintw(status_win, 1, 51, "   SCORE  ");
             wattroff(status_win, A_REVERSE);
-            // mvwvline(status_win, 1, 20, 0, 1);
-            mvwprintw(status_win, 1, 11, "%d", (int)(player->get_hp()));
-            mvwprintw(status_win, 1, 31, player->get_cur_bul_name().c_str());
+            mvwprintw(status_win, 1, 11, "  %d", (int)(player->get_hp()));
+            mvwprintw(status_win, 1, 36, "  %s", player->get_cur_bul_name().c_str());
+            mvwprintw(status_win, 1, 61, "  %ld", clock->get_ticks());
             wrefresh(status_win);
 
             // deal with menu
