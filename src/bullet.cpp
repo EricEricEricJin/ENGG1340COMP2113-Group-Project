@@ -196,7 +196,7 @@ namespace game
 
                 if (triggered)
                 {
-                    std::cout << "TRIGGERED" << std::endl;
+                    // std::cout << "TRIGGERED" << std::endl;
                     // Find all zombies in distance
                     for (auto &zombie : *zombie_list)
                     {
@@ -204,7 +204,7 @@ namespace game
                         {
                             temp_distance = pair_distance(zombie->get_yx(), bullet->get_yx());
                             float damage = te_eval(bullet_type->damage_func);
-                            std::cout << "Distance: " << temp_distance << " Damage: " << damage << std::endl;
+                            // std::cout << "Distance: " << temp_distance << " Damage: " << damage << std::endl;
                             zombie->set_hp(zombie->get_hp() - damage);
                         }
                     }
@@ -255,7 +255,7 @@ namespace game
         }
     }
 
-    void bulletManager::shoot(std::string name, std::pair<int, int> yx, int dir)
+    void bulletManager::shoot(std::string name, std::pair<float, float> yx, int dir)
     {
         Bullet *b = new Bullet{name, clock->get_ticks(), yx, dir, bul_type_dict[name]->chr};
         bullet_list->push_back(b);

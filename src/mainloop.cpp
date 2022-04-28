@@ -29,7 +29,7 @@
 #include "player.h"
 #include "zombie.h"
 #include "clock.h"
-#include "setting.hpp"
+#include "setting.h"
 
 float distance(std::pair<int, int> p1, std::pair<int, int> p2);
 
