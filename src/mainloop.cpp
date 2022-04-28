@@ -84,7 +84,7 @@ void mainloop()
     }
 
     game::Setting *setting = new game::Setting();
-    if (setting->load())
+    if (setting->load(boxheadrc_path))
     {
         resource_path = setting->get_resource_path();
         if (resource_path == "")
