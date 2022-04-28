@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <json.hpp>
+#include <vector>
 
 namespace game
 {
@@ -70,6 +71,26 @@ namespace game
             catch (const std::exception &e)
             {
                 return -1;
+            }
+        }
+
+        std::vector<int> get_keyset()
+        {
+            try
+            {
+                std::vector<int> ret(6);
+                ret[0] = (*json_data)["keyset"]["up"].get<int>();
+                ret[1] = (*json_data)["keyset"]["down"].get<int>();
+                ret[2] = (*json_data)["keyset"]["left"].get<int>();
+                ret[3] = (*json_data)["keyset"]["right"].get<int>();
+                ret[4] = (*json_data)["keyset"]["stop"].get<int>();
+                ret[5] = (*json_data)["keyset"]["fire"].get<int>();
+                return ret;
+            }
+            catch (const std::exception &e)
+            {
+                std::cout << "Get Keyset Error" << std::endl;
+                return {};
             }
         }
 

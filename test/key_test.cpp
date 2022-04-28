@@ -15,14 +15,11 @@ int main()
     timeout(20);
 
     int key = 0;
-    vector<int> key_list = {0, 0}; 
-    while (key_list[0] != '\n')
+    while (key != '\n')
     {
-        key_list = {0, 0};
-        for (auto& k : key_list)
-            k = getch();
+        key = getch();
         clear();   
-        addstr((to_string(key_list[0]) + " " + to_string(key_list[1])).c_str());
+        mvprintw(2, 2, "%d", key);
     }
 
     endwin();

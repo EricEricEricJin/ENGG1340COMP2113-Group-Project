@@ -70,33 +70,34 @@ void mainloop()
         endif
     */
 
-    std::string boxheadrc_path;
-    std::string resource_path;
+    std::string boxheadrc_path = std::string(getenv("HOME")) + "/.boxhead/bh.init";
+    std::string resource_path = std::string(getenv("HOME")) + "/.boxhead/resource/";
+    int clock_frequency = 12;
 
-    int clock_frequency;
+    game::playerKeySet keyset{'w', 's', 'a', 'd', 'e', ' '};
 
     if (getenv("BOXHEADRC") != nullptr)
         boxheadrc_path = getenv("BOXHEADRC");
-    else
-    {
-        boxheadrc_path = getenv("HOME");
-        boxheadrc_path += "/.boxhead/bh.init";
-    }
 
     game::Setting *setting = new game::Setting();
     if (setting->load(boxheadrc_path))
     {
-        resource_path = setting->get_resource_path();
-        if (resource_path == "")
-            resource_path = std::string(getenv("HOME")) + "/.boxhead/resource/";
-        clock_frequency = setting->get_clock_frequency();
-        if (clock_frequency < 0)
-            clock_frequency = 12;
-    }
-    else
-    {
-        resource_path = std::string(getenv("HOME")) + "/.boxhead/resource/";
-        clock_frequency = 12;
+        if (setting->get_resource_path() != "")
+            resource_path = setting->get_resource_path();
+        
+        if (setting->get_clock_frequency() > 0)
+            clock_frequency = setting->get_clock_frequency();
+        
+        auto setting_keyset = setting->get_keyset();
+        if (setting_keyset.size() == 6)
+        {
+            keyset.UP = setting_keyset[0];
+            keyset.DOWN = setting_keyset[1];
+            keyset.LEFT = setting_keyset[2];
+            keyset.RIGHT = setting_keyset[3];
+            keyset.STOP = setting_keyset[4];
+            keyset.FIRE = setting_keyset[5];
+        }
     }
 
     game::Clock *clock = new game::Clock;
@@ -119,6 +120,7 @@ void mainloop()
     std::cout << "Zombie initialized" << std::endl;
 
     bullet_manager->load_resource(resource_path + "bullet/");
+    player->configure(keyset);
 
     ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
 

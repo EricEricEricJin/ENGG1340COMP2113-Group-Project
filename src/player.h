@@ -8,18 +8,18 @@
 #include <list>
 #include "clock.h"
 
-struct playerKeySet
-{
-    int UP = 1;
-    int DOWN = 2;
-    int LEFT = 3;
-    int RIGHT = 4;
-    int STOP = 0;
-    int FIRE = 5;
-};
-
 namespace game
 {
+    struct playerKeySet
+    {
+        int UP = 1;
+        int DOWN = 2;
+        int LEFT = 3;
+        int RIGHT = 4;
+        int STOP = 0;
+        int FIRE = 5;
+    };
+
     enum
     {
         PDIR_STOP,
@@ -41,7 +41,7 @@ namespace game
 
         Clock *clock;
 
-        int* key_ptr;
+        int *key_ptr;
 
         int direction;
 
@@ -63,7 +63,7 @@ namespace game
 
     public:
         Player();
-        void init(bulletManager *_bullet_manager, Map *_map, Clock *_clock, int* _key_ptr);
+        void init(bulletManager *_bullet_manager, Map *_map, Clock *_clock, int *_key_ptr);
         void load_saved(std::pair<int, int> _yx, int _hp, int _dir, std::string _cur_bul_name);
 
         void configure(playerKeySet new_keyset);

@@ -26,7 +26,7 @@ solve_maze.o: src/solve_maze.cpp src/solve_maze.h
 zombie.o: src/zombie.cpp src/zombie.h src/bullet.h src/player.h src/map.h src/solve_maze.h
 	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
 
-mainloop.o: src/mainloop.cpp src/mainloop.h src/ui.h src/map.h src/bullet.h src/player.h src/zombie.h src/clock.h
+mainloop.o: src/mainloop.cpp src/mainloop.h src/ui.h src/map.h src/bullet.h src/player.h src/zombie.h src/clock.h src/setting.hpp
 	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
 
 main.o: src/main.cpp src/mainloop.h

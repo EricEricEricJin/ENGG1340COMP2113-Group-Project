@@ -15,8 +15,8 @@ namespace game
         clock = _clock;
         key_ptr = _key_ptr;
 
-        // default keysey
-        key_set = new playerKeySet{'w', 's', 'a', 'd', 'e', ' '};
+        key_set = new playerKeySet;
+        
         speed = 0.8;
 
         direction = PDIR_RIGHT;
