@@ -21,6 +21,7 @@
 #include "mainloop.h"
 #include <queue>
 #include <vector>
+#include <filesystem>
 
 #include "ui.h"
 #include "map.h"
@@ -46,12 +47,64 @@ void mainloop()
     //     // default values
     // }
 
+    /*
+
+
+        if have $BOXHEADRC env then
+            boxheadrc_path = getenv("BOXHEADRC")
+        else
+            boxheadrc_path = getenv("HOME") + "/.boxhead/bh.init"
+        endif
+
+        if file exist then
+            load file
+            laod settings
+        else
+            use default setting
+        endif
+
+        if resource_path loaded then
+            load resources
+        else
+            load from $HOME/.boxhead
+        endif
+    */
+
+    std::string boxheadrc_path;
+    std::string resource_path;
+
+    int clock_frequency;
+
+    if (getenv("BOXHEADRC") != nullptr)
+        boxheadrc_path = getenv("BOXHEADRC");
+    else
+    {
+        boxheadrc_path = getenv("HOME");
+        boxheadrc_path += "/.boxhead/bh.init";
+    }
+
+    game::Setting *setting = new game::Setting();
+    if (setting->load())
+    {
+        resource_path = setting->get_resource_path();
+        if (resource_path == "")
+            resource_path = std::string(getenv("HOME")) + "/.boxhead/resource/";
+        clock_frequency = setting->get_clock_frequency();
+        if (clock_frequency < 0)
+            clock_frequency = 12;
+    }
+    else
+    {
+        resource_path = std::string(getenv("HOME")) + "/.boxhead/resource/";
+        clock_frequency = 12;
+    }
+
     game::Clock *clock = new game::Clock;
-    clock->set_freq(10);
+    clock->set_freq(clock_frequency);
     clock->reset();
     clock->start();
 
-    game::Map *map = new game::Map("resource/map/");
+    game::Map *map = new game::Map(resource_path + "map/");
 
     game::bulletManager *bullet_manager = new game::bulletManager();
     game::zombieManager *zombie_manager = new game::zombieManager();
@@ -65,8 +118,7 @@ void mainloop()
     zombie_manager->init(bullet_manager->get_bullet_list(), map, player, clock);
     std::cout << "Zombie initialized" << std::endl;
 
-    bullet_manager->load_resource("resource/");
-
+    bullet_manager->load_resource(resource_path + "bullet/");
 
     ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
 
