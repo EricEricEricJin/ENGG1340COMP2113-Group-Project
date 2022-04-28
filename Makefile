@@ -26,7 +26,7 @@ solve_maze.o: src/solve_maze.cpp src/solve_maze.h
 zombie.o: src/zombie.cpp src/zombie.h src/bullet.h src/player.h src/map.h src/solve_maze.h
 	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
 
-mainloop.o: src/mainloop.cpp src/mainloop.h src/ui.h src/map.h src/bullet.h src/player.h src/zombie.h src/clock.h src/setting.hpp
+mainloop.o: src/mainloop.cpp src/mainloop.h src/ui.h src/map.h src/bullet.h src/player.h src/zombie.h src/clock.h
 	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
 
 main.o: src/main.cpp src/mainloop.h
@@ -35,7 +35,10 @@ main.o: src/main.cpp src/mainloop.h
 clock.o: src/clock.cpp src/clock.h
 	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
 
-main: bullet.o map.o player.o ui.o zombie.o mainloop.o main.o solve_maze.o clock.o lib/tinyexpr.o
+setting.o: src/setting.cpp src/setting.h
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
+
+main: bullet.o map.o player.o ui.o zombie.o mainloop.o main.o solve_maze.o clock.o lib/tinyexpr.o setting.o
 	g++ $^ -g -o main $(LINK_LIBS)
 
 .PHONY: clean
