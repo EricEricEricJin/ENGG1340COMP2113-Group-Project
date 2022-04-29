@@ -16,7 +16,7 @@ namespace game
         key_ptr = _key_ptr;
 
         key_set = new playerKeySet;
-        
+
         speed = 0.8;
 
         direction = PDIR_RIGHT;
@@ -27,7 +27,7 @@ namespace game
     {
         y = _yx.first;
         x = _yx.second;
-        hp= _hp;
+        hp = _hp;
         direction = _dir;
         cur_bul_name = _cur_bul_name;
     }
@@ -101,14 +101,15 @@ namespace game
 
             else if (key == key_set->FIRE)
             {
-                bullet_manager->shoot(cur_bul_name, {y, x}, direction);
+                if (!cur_bul_name.empty())
+                    bullet_manager->shoot(cur_bul_name, {y, x}, direction);
             }
 
             else if ('1' <= key && key <= '9')
             {
                 // shift weapon
-                int bul_id = key - '1';
-                cur_bul_name = bullet_manager->get_names()[bul_id];
+                if (int bul_id = key - '1'; bul_id >= 0 && bul_id < bullet_manager->get_names().size())
+                    cur_bul_name = bullet_manager->get_names()[bul_id];
             }
 
             else if (key == 96) // ` key
