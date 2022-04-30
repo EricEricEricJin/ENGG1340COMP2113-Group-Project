@@ -14,10 +14,10 @@ int main()
 
     timeout(20);
 
-    int key = 0;
+    int key = 20;
     while (key != '\n')
     {
-        key = getch();
+        // key = getch();
         clear();   
         mvprintw(2, 2, "%d", key);
     }

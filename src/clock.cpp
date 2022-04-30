@@ -44,7 +44,7 @@ namespace game
 
     clock_tick_t Clock::get_ticks() { return ticks; }
 
-    void Clock::wait(int _ticks) { usleep(period_us * _ticks); }
+    void Clock::wait(float _ticks) { usleep(period_us * _ticks); }
 
     void Clock::_thread_loop()
     {
