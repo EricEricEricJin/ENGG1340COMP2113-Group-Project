@@ -3,11 +3,11 @@
 namespace game
 {
 
-    Wall::Wall(int _durability, int _y, int _x)
+    Wall::Wall(int durability, int y, int x)
     {
-        durability = _durability;
-        x = _x;
-        y = _y;
+        this->durability = durability;
+        this->x = x;
+        this->y = y;
     }
 
     std::pair<int, int> Wall::get_yx()

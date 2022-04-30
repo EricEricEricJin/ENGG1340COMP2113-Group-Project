@@ -8,18 +8,18 @@
 namespace game
 {
     // Zombie object:
-    Zombie::Zombie(std::pair<int, int> yx, int _type, clock_tick_t _dmg_delay)
+    Zombie::Zombie(std::pair<int, int> yx, int type, clock_tick_t dmg_delay)
     {
-        y = yx.first;
-        x = yx.second;
-        type = _type;
+        this->y = yx.first;
+        this->x = yx.second;
+        this->type = type;
 
         speed = 0.2;
         damage = 10;
         hp = 100;
 
         last_dmg_time = 0;
-        dmg_delay = _dmg_delay; // Should be read from config file. Implement later
+        this->dmg_delay = dmg_delay; // Should be read from config file. Implement later
     }
 
     int Zombie::get_type() { return type; }
@@ -52,12 +52,12 @@ namespace game
         zombie_list = new std::list<Zombie *>;
     }
 
-    void zombieManager::init(std::list<Bullet *> *_bullet_list, Map *_map, Player *_player, Clock *_clock)
+    void zombieManager::init(std::list<Bullet *> *bullet_list, Map *map, Player *player, Clock *clock)
     {
-        bullet_list = _bullet_list;
-        map = _map;
-        player = _player;
-        clock = _clock;
+        this->bullet_list = bullet_list;
+        this->map = map;
+        this->player = player;
+        this->clock = clock;
     }
 
     void zombieManager::load_saved(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<float> zombie_hps)

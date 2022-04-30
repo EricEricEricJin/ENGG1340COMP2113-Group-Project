@@ -20,13 +20,13 @@ namespace game
 {
     UI::UI() {}
 
-    void UI::init(Player *_player, std::list<Zombie *> *_zombie_list, std::list<Bullet *> *_bullet_list, Map *_map, Clock *_clock, uiKeySet keyset)
+    void UI::init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock, uiKeySet keyset)
     {
-        player = _player;
-        zombie_list = _zombie_list;
-        bullet_list = _bullet_list;
-        map = _map;
-        clock = _clock;
+        this->player = player;
+        this->zombie_list = zombie_list;
+        this->bullet_list = bullet_list;
+        this->map = map;
+        this->clock = clock;
 
         this->keyset = keyset;
 

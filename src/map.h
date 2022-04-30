@@ -21,7 +21,7 @@ namespace game
         int y;
 
     public:
-        Wall(int _durability, int _y, int _x);
+        Wall(int durability, int y, int x);
         std::pair<int, int> get_yx();
         std::string get_char();
         int get_durability();

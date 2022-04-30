@@ -23,12 +23,12 @@ namespace game
         void start();
         void stop();
         void reset();
-        void set_ticks(clock_tick_t _ticks);
+        void set_ticks(clock_tick_t ticks);
         void set_freq(float freq);
         float get_freq();
         int get_period_us();
         clock_tick_t get_ticks();
-        void wait(float _ticks);
+        void wait(float ticks);
         ~Clock();
     };
 }

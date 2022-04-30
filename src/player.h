@@ -63,8 +63,8 @@ namespace game
 
     public:
         Player();
-        void init(bulletManager *_bullet_manager, Map *_map, Clock *_clock, int *_key_ptr);
-        void load_saved(std::pair<int, int> _yx, int _hp, int _dir, std::string _cur_bul_name);
+        void init(bulletManager *bullet_manager, Map *map, Clock *clock, int *key_ptr);
+        void load_saved(std::pair<int, int> yx, int hp, int dir, std::string cur_bul_name);
 
         void configure(playerKeySet new_keyset);
 

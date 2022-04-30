@@ -75,7 +75,7 @@ namespace game
 
     public:
         UI();
-        void init(Player *_player, std::list<Zombie *> *_zombie_list, std::list<Bullet *> *_bullet_list, Map *_map, Clock *_clock, uiKeySet keyset);
+        void init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock, uiKeySet keyset);
         int *get_key_ptr();
         bool homepage(std::string *ret_string, int *ret_kind); // return only when select map and mode
         // parameter: [map list: Map]
