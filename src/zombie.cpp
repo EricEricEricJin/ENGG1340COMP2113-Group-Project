@@ -187,6 +187,7 @@ namespace game
 
     zombieManager::~zombieManager()
     {
+        stop();
         for (auto &zombie : *zombie_list)
             delete zombie;
         delete zombie_list;

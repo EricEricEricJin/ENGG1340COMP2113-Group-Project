@@ -61,6 +61,11 @@ namespace game
         std::vector<std::string> trig_obj;
 
         te_expr *damage_func;
+
+        ~bulletType()
+        {
+            delete damage_func;
+        }
     };
 
     class bulletManager
