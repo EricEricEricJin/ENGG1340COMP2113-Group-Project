@@ -14,7 +14,7 @@
 
 namespace game
 {
-    enum 
+    enum
     {
         USTATUS_RUNNING = 0,
         USTATUS_PAUSE = 1,
@@ -29,6 +29,13 @@ namespace game
         HOMEPAGE_EXIT = 4
     };
 
+    struct uiKeySet
+    {
+        int key_up;
+        int key_down;
+        int key_enter;
+    };
+
     class Player;
     class Zombie;
     class Map;
@@ -41,6 +48,7 @@ namespace game
         int WIN_OFFSET_Y, WIN_OFFSET_X;
 
         char mode;
+        uiKeySet keyset;
 
         Player *player;
         std::list<Zombie *> *zombie_list;
@@ -59,15 +67,15 @@ namespace game
         void _game_thread_loop();
         int _game_menu();
 
-        bool _new_game_page(std::string *map_name);    // map name
-        std::string _load_saving_page(); // saving name
+        bool _new_game_page(std::string *map_name); // map name
+        std::string _load_saving_page();            // saving name
         void _setting_page();
         void _edit_map_page();
         // void _bottom_mode();
 
     public:
         UI();
-        void init(Player *_player, std::list<Zombie *> *_zombie_list, std::list<Bullet *> *_bullet_list, Map *_map, Clock *_clock);
+        void init(Player *_player, std::list<Zombie *> *_zombie_list, std::list<Bullet *> *_bullet_list, Map *_map, Clock *_clock, uiKeySet keyset);
         int *get_key_ptr();
         bool homepage(std::string *ret_string, int *ret_kind); // return only when select map and mode
         // parameter: [map list: Map]
