@@ -32,6 +32,7 @@ namespace game
         noecho();
         nocbreak();
         timeout(0);
+        curs_set(0);
 
         // box(stdscr, 0, 0);
         // refresh();
@@ -279,8 +280,8 @@ namespace game
             }
 
             wrefresh(game_win);
-            // key = wgetch(game_win);
             key = getch();
+            
 
             // HP and bullet
             wclear(status_win);

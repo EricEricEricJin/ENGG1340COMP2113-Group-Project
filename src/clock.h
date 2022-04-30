@@ -28,7 +28,7 @@ namespace game
         float get_freq();
         int get_period_us();
         clock_tick_t get_ticks();
-        void wait(int _ticks);
+        void wait(float _ticks);
         ~Clock();
     };
 }
