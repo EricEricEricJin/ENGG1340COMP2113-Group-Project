@@ -16,13 +16,13 @@ float pair_distance(std::pair<float, float> p1, std::pair<float, float> p2)
 
 namespace game
 {
-    Bullet::Bullet(std::string _type, clock_tick_t _shoot_time, std::pair<float, float> _yx, int _dir, std::string _character)
+    Bullet::Bullet(std::string type, clock_tick_t shoot_time, std::pair<float, float> yx, int dir, std::string character)
     {
-        type = _type;
-        shoot_time = _shoot_time;
-        yx = _yx;
-        dir = _dir;
-        character = _character;
+        this->type = type;
+        this->shoot_time = shoot_time;
+        this->yx = yx;
+        this->dir = dir;
+        this->character = character;
     }
 
     std::pair<float, float> Bullet::get_yx() { return yx; }
@@ -42,12 +42,12 @@ namespace game
         bullet_list = new std::list<Bullet *>;
     }
 
-    void bulletManager::init(Map *_map, std::list<Zombie *> *_zombie_list, Player *_player, Clock *_clock)
+    void bulletManager::init(Map *map, std::list<Zombie *> *zombie_list, Player *player, Clock *clock)
     {
-        map = _map;
-        zombie_list = _zombie_list;
-        player = _player;
-        clock = _clock;
+        this->map = map;
+        this->zombie_list = zombie_list;
+        this->player = player;
+        this->clock = clock;
     }
 
     int bulletManager::load_resource(std::string resource_path)

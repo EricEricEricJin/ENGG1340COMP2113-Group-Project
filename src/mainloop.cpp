@@ -74,7 +74,9 @@ void mainloop()
     std::string resource_path = std::string(getenv("HOME")) + "/.boxhead/resource/";
     int clock_frequency = 12;
 
-    game::playerKeySet keyset{'w', 's', 'a', 'd', 'e', ' '};
+    game::playerKeySet player_keyset{'w', 's', 'a', 'd', 'e', ' '};
+
+    game::uiKeySet ui_keyset {'k', 'j', '\n'};
 
     if (getenv("BOXHEADRC") != nullptr)
         boxheadrc_path = getenv("BOXHEADRC");
@@ -91,12 +93,12 @@ void mainloop()
         auto setting_keyset = setting->get_keyset();
         if (setting_keyset.size() == 6)
         {
-            keyset.UP = setting_keyset[0];
-            keyset.DOWN = setting_keyset[1];
-            keyset.LEFT = setting_keyset[2];
-            keyset.RIGHT = setting_keyset[3];
-            keyset.STOP = setting_keyset[4];
-            keyset.FIRE = setting_keyset[5];
+            player_keyset.UP = setting_keyset[0];
+            player_keyset.DOWN = setting_keyset[1];
+            player_keyset.LEFT = setting_keyset[2];
+            player_keyset.RIGHT = setting_keyset[3];
+            player_keyset.STOP = setting_keyset[4];
+            player_keyset.FIRE = setting_keyset[5];
         }
     }
 
@@ -120,9 +122,9 @@ void mainloop()
     std::cout << "Zombie initialized" << std::endl;
 
     bullet_manager->load_resource(resource_path + "bullet/");
-    player->configure(keyset);
+    player->configure(player_keyset);
 
-    ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
+    ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock, ui_keyset);
 
     std::string homepage_ret_string;
     int homepage_ret_kind;

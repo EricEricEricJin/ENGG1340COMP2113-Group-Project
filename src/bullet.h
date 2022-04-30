@@ -42,7 +42,7 @@ namespace game
         std::string character;
 
     public:
-        Bullet(std::string _type, clock_tick_t _shoot_time, std::pair<float, float> _yx, int _dir, std::string _character);
+        Bullet(std::string type, clock_tick_t shoot_time, std::pair<float, float> yx, int dir, std::string character);
         std::pair<float, float> get_yx();
         int get_dir();
         std::string get_type();
@@ -90,7 +90,7 @@ namespace game
 
     public:
         bulletManager();
-        void init(Map *_map, std::list<Zombie *> *_zombie_list, Player *_player, Clock *_clock);
+        void init(Map *map, std::list<Zombie *> *zombie_list, Player *player, Clock *clock);
 
         int load_resource(std::string resource_path);
         void load_saved(std::vector<std::string> types, std::vector<int> shoot_times, std::vector<std::pair<int, int>> yxs, std::vector<int> dirs);

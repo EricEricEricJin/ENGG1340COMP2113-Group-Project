@@ -24,9 +24,9 @@ namespace game
 
     void Clock::reset() { ticks = 0; }
 
-    void Clock::set_ticks(clock_tick_t _ticks)
+    void Clock::set_ticks(clock_tick_t ticks)
     {
-        ticks = _ticks;
+        this->ticks = ticks;
     }
 
     void Clock::set_freq(float freq)
@@ -35,16 +35,13 @@ namespace game
         period_us = 1'000'000 / frequency;
     }
 
-    int Clock::get_period_us()
-    {
-        return period_us;
-    }
+    int Clock::get_period_us() { return period_us; }
 
     float Clock::get_freq() { return frequency; }
 
     clock_tick_t Clock::get_ticks() { return ticks; }
 
-    void Clock::wait(float _ticks) { usleep(period_us * _ticks); }
+    void Clock::wait(float ticks) { usleep(period_us * ticks); }
 
     void Clock::_thread_loop()
     {

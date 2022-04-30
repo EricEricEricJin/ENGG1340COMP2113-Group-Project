@@ -8,12 +8,12 @@ namespace game
     {
     }
 
-    void Player::init(bulletManager *_bullet_manager, Map *_map, Clock *_clock, int *_key_ptr)
+    void Player::init(bulletManager *bullet_manager, Map *map, Clock *clock, int *key_ptr)
     {
-        bullet_manager = _bullet_manager;
-        map = _map;
-        clock = _clock;
-        key_ptr = _key_ptr;
+        this->bullet_manager = bullet_manager;
+        this->map = map;
+        this->clock = clock;
+        this->key_ptr = key_ptr;
 
         key_set = new playerKeySet;
 
@@ -23,13 +23,13 @@ namespace game
         hp = 100;
     }
 
-    void Player::load_saved(std::pair<int, int> _yx, int _hp, int _dir, std::string _cur_bul_name)
+    void Player::load_saved(std::pair<int, int> yx, int hp, int dir, std::string cur_bul_name)
     {
-        y = _yx.first;
-        x = _yx.second;
-        hp = _hp;
-        direction = _dir;
-        cur_bul_name = _cur_bul_name;
+        this->y = yx.first;
+        this->x = yx.second;
+        this->hp = hp;
+        this->direction = dir;
+        this->cur_bul_name = cur_bul_name;
     }
 
     void Player::configure(playerKeySet new_keyset)

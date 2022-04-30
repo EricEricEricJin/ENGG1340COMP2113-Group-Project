@@ -36,7 +36,7 @@ namespace game
         clock_tick_t last_dmg_time;
         clock_tick_t dmg_delay;
 
-        Zombie(std::pair<int, int> yx, int _type, clock_tick_t _dmg_delay);
+        Zombie(std::pair<int, int> yx, int type, clock_tick_t dmg_delay);
         int get_type();
         float get_hp();
         bool set_hp(float new_hp);
@@ -66,7 +66,7 @@ namespace game
 
     public:
         zombieManager();
-        void init(std::list<Bullet *> *_bullet_list, Map *_map, Player *_player, Clock *_clock);
+        void init(std::list<Bullet *> *bullet_list, Map *map, Player *player, Clock *clock);
 
         void load_saved(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<float> zombie_hps);
 

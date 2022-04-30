@@ -20,13 +20,15 @@ namespace game
 {
     UI::UI() {}
 
-    void UI::init(Player *_player, std::list<Zombie *> *_zombie_list, std::list<Bullet *> *_bullet_list, Map *_map, Clock *_clock)
+    void UI::init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock, uiKeySet keyset)
     {
-        player = _player;
-        zombie_list = _zombie_list;
-        bullet_list = _bullet_list;
-        map = _map;
-        clock = _clock;
+        this->player = player;
+        this->zombie_list = zombie_list;
+        this->bullet_list = bullet_list;
+        this->map = map;
+        this->clock = clock;
+
+        this->keyset = keyset;
 
         initscr();
         noecho();
@@ -71,11 +73,11 @@ namespace game
             wrefresh(home_win);
 
             int _key = wgetch(home_win);
-            if (_key == 'j')
+            if (_key == keyset.key_down)
                 current_item++;
-            else if (_key == 'k')
+            else if (_key == keyset.key_up)
                 current_item--;
-            else if (_key == '\n')
+            else if (_key == keyset.key_enter)
             {
                 wclear(home_win);
                 wrefresh(home_win);
@@ -168,11 +170,11 @@ namespace game
             wrefresh(preview_win);
 
             int _key = wgetch(list_win);
-            if (_key == 'j')
+            if (_key == keyset.key_down)
                 map_idx++;
-            else if (_key == 'k')
+            else if (_key == keyset.key_up)
                 map_idx--;
-            else if (_key == '\n')
+            else if (_key == keyset.key_enter)
             {
                 ret = true;
                 break;
@@ -354,11 +356,11 @@ namespace game
 
             wrefresh(menu_win);
             int key = getch();
-            if (key == 'j')
+            if (key == keyset.key_down)
                 current_item++;
-            else if (key == 'k')
+            else if (key == keyset.key_up)
                 current_item--;
-            else if (key == '\n')
+            else if (key == keyset.key_enter)
                 break;
 
             if (current_item < 0)
@@ -380,6 +382,9 @@ namespace game
             thread_obj->join();
 
         delete thread_obj;
+
+        // how to stop?
+
     }
 
     int UI::get_status() { return status_val; }
