@@ -156,6 +156,7 @@ namespace game
 
     Player::~Player()
     {
+        stop();
         delete key_set;
     }
 }

@@ -55,6 +55,9 @@ namespace game
         }
     }
 
-    Clock::~Clock() {}
+    Clock::~Clock()
+    {
+        stop();
+    }
 
 }

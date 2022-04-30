@@ -264,7 +264,8 @@ namespace game
     void bulletManager::stop()
     {
         running = false;
-        thread_obj->join(); // block wait until thread complete
+        if (thread_obj->joinable())
+            thread_obj->join(); // block wait until thread complete
         delete thread_obj;
     }
 
@@ -281,7 +282,6 @@ namespace game
         stop();
         for (auto &bul_type : bul_type_dict)
             delete bul_type.second;
-
         for (auto &bullet : *bullet_list)
             delete bullet;
         delete bullet_list;

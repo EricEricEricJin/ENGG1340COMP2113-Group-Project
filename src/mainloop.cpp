@@ -145,11 +145,11 @@ void mainloop()
     }
     ui->stop_game();
 
+    delete ui;
     delete zombie_manager;
     delete player;
     delete bullet_manager;
     delete map;
-    delete ui;
-
+    delete clock;
     endwin();
 }
