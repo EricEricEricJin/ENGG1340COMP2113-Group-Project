@@ -2,6 +2,9 @@ CC = g++
 COMPILE_FLAGS = -g -std=c++17
 INCLUDE_FLAGS = -I src/ -I include/
 LINK_LIBS = -lncurses -lpthread
+
+INSTALL_DIR = ~/.local/bin
+RESOURCE_DIR = ~
 # abs_path = $(shell pwd)
 
 # NOTE: dependencies of object files below are not complete
@@ -41,3 +44,12 @@ main: bullet.o map.o player.o ui.o zombie.o mainloop.o main.o solve_maze.o clock
 .PHONY: clean install uninstall
 clean:
 	rm bullet.o map.o player.o ui.o zombie.o mainloop.o main.o clock.o solve_maze.o
+
+install: main
+	cp main $(INSTALL_DIR)/boxhead; \
+	mkdir $(RESOURCE_DIR)/.boxhead; \
+	cp -r local_resource $(RESOURCE_DIR)/.boxhead/resource;
+
+uninstall:
+	rm -r $(INSTALL_DIR)/boxhead; \
+	rm -r $(RESOURCE_DIR)/.boxhead;
