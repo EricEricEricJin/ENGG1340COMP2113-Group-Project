@@ -121,7 +121,7 @@ void mainloop()
     player->configure(player_keyset);
 
     ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
-    ui->configure(ui_keyset, game::UTHEME_DARK | game::UTHEME_BORD);
+    ui->configure(ui_keyset, game::UTHEME_LIGHT | game::UTHEME_BORD);
 
     std::string homepage_ret_string;
     int homepage_ret_kind;

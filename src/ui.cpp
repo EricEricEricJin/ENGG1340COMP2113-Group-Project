@@ -265,13 +265,13 @@ namespace game
 
     void UI::start_game()
     {
-        int y_0 = (LINES - map->lines() - 5) / 2;
+        int y_0 = (LINES - map->lines() - 3) / 2;
         int width = (map->columns() + 2);
         int x_0 = (COLS - width) / 2;
 
-        status_win = newwin(3, width, y_0, x_0);
+        status_win = newwin(1, width, y_0, x_0);
         wbkgd(status_win, COLOR_PAIR(UCOLOR_MENU));
-        game_win = newwin(map->lines() + 2, width, y_0 + 3, x_0);
+        game_win = newwin(map->lines() + 2, width, y_0 + 1, x_0);
         wbkgd(game_win, COLOR_PAIR(UCOLOR_WALL));
 
         // start thread...
@@ -282,12 +282,14 @@ namespace game
 
     void UI::_game_thread_loop()
     {
+        // keypad(game_win, true);
+        // keypad(stdscr, true);
 
         // draw and refresh screen
         while (status_val == USTATUS_RUNNING)
         {
 
-            wclear(game_win);
+            werase(game_win);
 
             wattron(game_win, COLOR_PAIR(UCOLOR_WALL));
             // this is wall
@@ -298,6 +300,7 @@ namespace game
             wattroff(game_win, COLOR_PAIR(UCOLOR_WALL));
 
             // map
+            // goto DRAW_MAP_END;
             wattron(game_win, COLOR_PAIR(UCOLOR_WALL));
             for (int i = 0; i < map->lines(); i++)
             {
@@ -341,7 +344,7 @@ namespace game
                 }
             }
             wattroff(game_win, COLOR_PAIR(UCOLOR_WALL));
-
+            
             // player
             wattron(game_win, COLOR_PAIR(UCOLOR_PLAYER));
             mvwaddstr(game_win, (int)round(player->get_yx().first + 1), (int)round(player->get_yx().second + 1), player->get_char().c_str());
@@ -364,24 +367,19 @@ namespace game
             wattroff(game_win, COLOR_PAIR(UCOLOR_BULLET));
 
             wrefresh(game_win);
-            key = getch();
 
             // HP and bullet
-            wclear(status_win);
-
-            wattron(status_win, COLOR_PAIR(UCOLOR_BOX));
-            box(status_win, 0, 0);
-            wattroff(status_win, COLOR_PAIR(UCOLOR_BOX));
+            werase(status_win);
 
             wattron(status_win, COLOR_PAIR(UCOLOR_MENU) | A_REVERSE);
-            mvwprintw(status_win, 1, 1, "    HP    ");
-            mvwprintw(status_win, 1, 26, "  WEAPON  ");
-            mvwprintw(status_win, 1, 51, "   SCORE  ");
+            mvwprintw(status_win, 0, 0, "    HP    ");
+            mvwprintw(status_win, 0, 25, "  WEAPON  ");
+            mvwprintw(status_win, 0, 50, "   SCORE  ");
             wattroff(status_win, COLOR_PAIR(UCOLOR_MENU) | A_REVERSE);
 
             wattron(status_win, COLOR_PAIR(UCOLOR_MENU));
-            mvwprintw(status_win, 1, 36, "  %s", player->get_cur_bul_name().c_str());
-            mvwprintw(status_win, 1, 61, "  %ld", clock->get_ticks());
+            mvwprintw(status_win, 0, 35, "  %s", player->get_cur_bul_name().c_str());
+            mvwprintw(status_win, 0, 60, "  %ld", clock->get_ticks());
             wattroff(status_win, COLOR_PAIR(UCOLOR_MENU));
 
             int hp_color;
@@ -393,7 +391,7 @@ namespace game
                 hp_color = COLOR_PAIR(UCOLOR_HP_L);
 
             wattron(status_win, hp_color);
-            mvwprintw(status_win, 1, 11, "  %d", (int)(player->get_hp()));
+            mvwprintw(status_win, 0, 10, "  %d", (int)(player->get_hp()));
             wattroff(status_win, hp_color);
 
             wrefresh(status_win);
@@ -423,7 +421,9 @@ namespace game
                 }
             }
 
+            // key = wgetch(game_win);
             clock->wait(1);
+            key = getch();
         }
         delwin(game_win);
         delwin(status_win);
@@ -484,8 +484,8 @@ namespace game
     void UI::stop_game()
     {
         status_val = USTATUS_EXIT;
-        if (thread_obj->joinable())
-            thread_obj->join();
+        // if (thread_obj->joinable())
+        thread_obj->join();
 
         delete thread_obj;
 
