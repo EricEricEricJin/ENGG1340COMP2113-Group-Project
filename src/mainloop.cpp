@@ -76,7 +76,7 @@ void mainloop()
 
     game::playerKeySet player_keyset{'w', 's', 'a', 'd', 'e', ' '};
 
-    game::uiKeySet ui_keyset {'k', 'j', '\n'};
+    game::uiKeySet ui_keyset{'k', 'j', '\n'};
 
     if (getenv("BOXHEADRC") != nullptr)
         boxheadrc_path = getenv("BOXHEADRC");
@@ -86,10 +86,10 @@ void mainloop()
     {
         if (setting->get_resource_path() != "")
             resource_path = setting->get_resource_path();
-        
+
         if (setting->get_clock_frequency() > 0)
             clock_frequency = setting->get_clock_frequency();
-        
+
         auto setting_keyset = setting->get_keyset();
         if (setting_keyset.size() == 6)
         {
@@ -102,12 +102,19 @@ void mainloop()
         }
     }
 
+    game::Map *map = new game::Map(resource_path + "map/");
+    if (map->names_of_maps().empty())
+    {
+        std::cout << "Error: Map resource not found!" << std::endl;
+        delete setting;
+        delete map;
+        return;
+    }
+
     game::Clock *clock = new game::Clock;
     clock->set_freq(clock_frequency);
     clock->reset();
     clock->start();
-
-    game::Map *map = new game::Map(resource_path + "map/");
 
     game::bulletManager *bullet_manager = new game::bulletManager();
     game::zombieManager *zombie_manager = new game::zombieManager();
@@ -115,13 +122,21 @@ void mainloop()
     game::UI *ui = new game::UI();
 
     player->init(bullet_manager, map, clock, ui->get_key_ptr());
-    std::cout << "Player initialized" << std::endl;
     bullet_manager->init(map, zombie_manager->get_zombie_list(), player, clock);
-    std::cout << "Bullet initialized" << std::endl;
     zombie_manager->init(bullet_manager->get_bullet_list(), map, player, clock);
-    std::cout << "Zombie initialized" << std::endl;
 
     bullet_manager->load_resource(resource_path + "bullet/");
+    if (bullet_manager->get_names().empty())
+    {
+        std::cout << "Error: Bullet resource not found!" << std::endl;
+        delete map;
+        delete clock;
+        delete bullet_manager;
+        delete zombie_manager;
+        delete player;
+        delete ui;
+    }
+
     player->configure(player_keyset);
 
     ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock, ui_keyset);
