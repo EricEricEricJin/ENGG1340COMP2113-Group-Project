@@ -60,13 +60,23 @@ namespace game
         this->clock = clock;
     }
 
-    void zombieManager::load_saved(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<float> zombie_hps)
+    void zombieManager::set_variables(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<int> zombie_hps)
     {
         for (int i = 0; i < zombie_types.size(); i++)
         {
             auto zombie = new Zombie(zombie_yxs[i], zombie_types[i], zombie_dmg_delay);
             zombie->set_hp(zombie_hps[i]);
             zombie_list->push_back(zombie);
+        }
+    }
+
+    void zombieManager::get_variables(std::vector<int> &zombie_types, std::vector<std::pair<int, int>> &zombie_yxs, std::vector<int> &zombie_hps)
+    {
+        for (auto &zombie : *zombie_list)
+        {
+            zombie_types.push_back(zombie->get_type());
+            zombie_yxs.push_back(zombie->get_yx());
+            zombie_hps.push_back(zombie->get_hp());
         }
     }
 
@@ -87,6 +97,7 @@ namespace game
 
     void zombieManager::run()
     {
+        paused = false;
         running = true;
         thread_obj = new std::thread([=]
                                      { _thread_loop(); });
@@ -112,78 +123,84 @@ namespace game
 
         while (running)
         {
-            if (get_num() < 4 && clock->get_ticks() > add_zombie_time + add_zombie_delay)
+            if (!paused)
             {
-                add(ZOMBIETYPE_ODNR, map->zb_get_rand_ent_yx());
-                add_zombie_time = clock->get_ticks();
-            }
-
-            for (auto zombie_it = zombie_list->begin(); zombie_it != zombie_list->end();)
-            {
-                // If zombie dead, then remove
-                if ((*zombie_it)->get_hp() <= 0)
+                if (get_num() < 4 && clock->get_ticks() > add_zombie_time + add_zombie_delay)
                 {
-                    zombie_list->erase(zombie_it++);
-                    continue;
+                    add(ZOMBIETYPE_ODNR, map->zb_get_rand_ent_yx());
+                    add_zombie_time = clock->get_ticks();
                 }
 
-                // std::cout << "In zombie, player: " << player << std::endl;
-                // Move zombie
-
-                // TODO: copy map and modify zombie position
-
-                char **map_map = map->get_map();
-                for (int i = 0; i < map->lines(); i++)
+                for (auto zombie_it = zombie_list->begin(); zombie_it != zombie_list->end();)
                 {
-                    for (int j = 0; j < map->columns(); j++)
+                    // If zombie dead, then remove
+                    if ((*zombie_it)->get_hp() <= 0)
                     {
-                        zombie_map[i][j] = map_map[i][j];
+                        zombie_list->erase(zombie_it++);
+                        continue;
                     }
-                }
-                for (auto z = zombie_list->begin(); z != zombie_list->end(); z++)
-                {
-                    if (z != zombie_it)
-                        zombie_map[(int)((*z)->get_yx().first)][(int)((*z)->get_yx().second)] = 1;
-                }
 
-                int dir = solve_maze(zombie_map, map->lines(), map->columns(), {(int)round((*zombie_it)->get_yx().first), (int)round((*zombie_it)->get_yx().second)}, {(int)round(player->get_yx().first), (int)round(player->get_yx().second)}, 1, 0);
-                if (dir == SOLMAZ_UP)
-                    (*zombie_it)->move({(*zombie_it)->get_yx().first - (*zombie_it)->get_speed(), (*zombie_it)->get_yx().second});
-                else if (dir == SOLMAZ_DOWN)
-                    (*zombie_it)->move({(*zombie_it)->get_yx().first + (*zombie_it)->get_speed(), (*zombie_it)->get_yx().second});
-                else if (dir == SOLMAZ_LEFT)
-                    (*zombie_it)->move({(*zombie_it)->get_yx().first, (*zombie_it)->get_yx().second - (*zombie_it)->get_speed()});
-                else if (dir == SOLMAZ_RIGHT)
-                    (*zombie_it)->move({(*zombie_it)->get_yx().first, (*zombie_it)->get_yx().second + (*zombie_it)->get_speed()});
+                    // std::cout << "In zombie, player: " << player << std::endl;
+                    // Move zombie
 
-                // Ordinary zombie attack player
-                if ((*zombie_it)->get_type() == ZOMBIETYPE_ODNR)
-                {
-                    if (pair_distance(player->get_yx(), (*zombie_it)->get_yx()) < 1.6) // smaller than sqrt(2)
+                    // TODO: copy map and modify zombie position
+
+                    char **map_map = map->get_map();
+                    for (int i = 0; i < map->lines(); i++)
                     {
-                        // std::cout << "tick " << clock->get_ticks() << " last_t " << (*zombie_it)->last_dmg_time << " delay " << (*zombie_it)->dmg_delay << std::endl;
-                        // std::cout << "True? " << ((clock->get_ticks()) > ((*zombie_it)->last_dmg_time + (*zombie_it)->dmg_delay)) << std::endl;
-                        if (clock->get_ticks() > (*zombie_it)->last_dmg_time + (*zombie_it)->dmg_delay)
-                        { // damage player
-                            player->set_hp(player->get_hp() - (*zombie_it)->get_damage());
-                            (*zombie_it)->last_dmg_time = clock->get_ticks();
+                        for (int j = 0; j < map->columns(); j++)
+                        {
+                            zombie_map[i][j] = map_map[i][j];
                         }
                     }
-                }
-                else
-                {
-                    // zombie king
-                    // Shoot bullet
-                    // Do later
-                }
+                    for (auto z = zombie_list->begin(); z != zombie_list->end(); z++)
+                    {
+                        if (z != zombie_it)
+                            zombie_map[(int)((*z)->get_yx().first)][(int)((*z)->get_yx().second)] = 1;
+                    }
 
-                zombie_it++;
+                    int dir = solve_maze(zombie_map, map->lines(), map->columns(), {(int)round((*zombie_it)->get_yx().first), (int)round((*zombie_it)->get_yx().second)}, {(int)round(player->get_yx().first), (int)round(player->get_yx().second)}, 1, 0);
+                    if (dir == SOLMAZ_UP)
+                        (*zombie_it)->move({(*zombie_it)->get_yx().first - (*zombie_it)->get_speed(), (*zombie_it)->get_yx().second});
+                    else if (dir == SOLMAZ_DOWN)
+                        (*zombie_it)->move({(*zombie_it)->get_yx().first + (*zombie_it)->get_speed(), (*zombie_it)->get_yx().second});
+                    else if (dir == SOLMAZ_LEFT)
+                        (*zombie_it)->move({(*zombie_it)->get_yx().first, (*zombie_it)->get_yx().second - (*zombie_it)->get_speed()});
+                    else if (dir == SOLMAZ_RIGHT)
+                        (*zombie_it)->move({(*zombie_it)->get_yx().first, (*zombie_it)->get_yx().second + (*zombie_it)->get_speed()});
+
+                    // Ordinary zombie attack player
+                    if ((*zombie_it)->get_type() == ZOMBIETYPE_ODNR)
+                    {
+                        if (pair_distance(player->get_yx(), (*zombie_it)->get_yx()) < 1.6) // smaller than sqrt(2)
+                        {
+                            // std::cout << "tick " << clock->get_ticks() << " last_t " << (*zombie_it)->last_dmg_time << " delay " << (*zombie_it)->dmg_delay << std::endl;
+                            // std::cout << "True? " << ((clock->get_ticks()) > ((*zombie_it)->last_dmg_time + (*zombie_it)->dmg_delay)) << std::endl;
+                            if (clock->get_ticks() > (*zombie_it)->last_dmg_time + (*zombie_it)->dmg_delay)
+                            { // damage player
+                                player->set_hp(player->get_hp() - (*zombie_it)->get_damage());
+                                (*zombie_it)->last_dmg_time = clock->get_ticks();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // zombie king
+                        // Shoot bullet
+                        // Do later
+                    }
+
+                    zombie_it++;
+                }
             }
 
             clock->wait(1);
         }
         delete zombie_map;
     }
+
+    void zombieManager::pause() { paused = true; }
+    void zombieManager::resume() { paused = false; }
 
     zombieManager::~zombieManager()
     {

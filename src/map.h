@@ -38,12 +38,14 @@ namespace game
         std::pair<int, int> player_init_yx;
         std::vector<std::pair<int, int>> zb_ent_yx_list;
         std::string map_dir;
+        std::string map_name;
 
     public:
         Map(std::string map_dir_path);
-        bool load(std::string map_name);    // Load map from file, return whether success
+        bool load(std::string map_name); // Load map from file, return whether success
 
-        void load_saved(std::string map_name, std::vector<std::vector<int>> wall_durabilitys);
+        void set_variables(std::string map_name, std::vector<std::vector<int>> wall_durabilitys);
+        void get_variables(std::string &map_name, std::vector<std::vector<int>> &wall_durabilitys);
 
         std::string get_char(int y, int x); // Get the content in xy, return the content
         bool get_bit(int y, int x);

@@ -60,6 +60,8 @@ namespace game
         // std::vector<Zombie *> *zombie_list;
 
         bool running;
+        bool paused;
+
         void _thread_loop();
 
         std::thread *thread_obj;
@@ -68,7 +70,8 @@ namespace game
         zombieManager();
         void init(std::list<Bullet *> *bullet_list, Map *map, Player *player, Clock *clock);
 
-        void load_saved(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<float> zombie_hps);
+        void set_variables(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<int> zombie_hps);
+        void get_variables(std::vector<int>& zombie_types, std::vector<std::pair<int, int>>& zombie_yxs, std::vector<int>& zombie_hps);
 
         void add(int type, std::pair<int, int> yx);
         std::list<Zombie *> *get_zombie_list();
@@ -76,6 +79,10 @@ namespace game
         int get_num(); // number of zombies alive
         void run();
         void stop();
+
+        void pause();
+        void resume();
+
         ~zombieManager();
     };
 

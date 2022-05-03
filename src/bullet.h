@@ -78,6 +78,7 @@ namespace game
         std::list<Bullet *> *bullet_list;
         std::map<std::string, bulletType *> bul_type_dict;
         bool running;
+        bool paused;
 
         void _thread_loop();
         std::thread *thread_obj;
@@ -93,7 +94,9 @@ namespace game
         void init(Map *map, std::list<Zombie *> *zombie_list, Player *player, Clock *clock);
 
         int load_resource(std::string resource_path);
-        void load_saved(std::vector<std::string> types, std::vector<int> shoot_times, std::vector<std::pair<int, int>> yxs, std::vector<int> dirs);
+
+        void set_variables(std::vector<std::string> types, std::vector<int> shoot_times, std::vector<std::pair<int, int>> yxs, std::vector<int> dirs);
+        void get_variables(std::vector<std::string> &types, std::vector<int> &shoot_times, std::vector<std::pair<int, int>> &yxs, std::vector<int> &dirs);
 
         void print();
 
@@ -101,9 +104,12 @@ namespace game
 
         void run();
 
-        void shoot(std::string name, std::pair<float, float> yx, int dir); // add bullet to loop
+        void shoot(std::string name, std::pair<float, float> yx, int dir, clock_tick_t shoot_time); // add bullet to loop
 
         void stop();
+
+        void pause();
+        void resume();
 
         std::vector<std::string> get_names();
 

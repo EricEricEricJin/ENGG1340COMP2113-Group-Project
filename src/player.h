@@ -58,13 +58,16 @@ namespace game
         void _player_thread_loop();
         std::thread *thread_obj;
         bool running;
+        bool paused;
 
         bool _debug;
 
     public:
         Player();
         void init(bulletManager *bullet_manager, Map *map, Clock *clock, int *key_ptr);
-        void load_saved(std::pair<int, int> yx, int hp, int dir, std::string cur_bul_name);
+        
+        void set_variables(std::pair<int, int> yx, int hp, int dir, std::string cur_bul_name);
+        void get_variables(std::pair<int, int>& yx, int& hp, int& dir, std::string& cur_bul_name);
 
         void configure(playerKeySet new_keyset);
 
@@ -74,6 +77,10 @@ namespace game
         std::pair<float, float> get_yx();
         void run(bool debug = false);
         void stop();
+
+        void pause();
+        void resume();
+
         std::string get_cur_bul_name();
         ~Player();
     };

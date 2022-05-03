@@ -163,12 +163,14 @@ namespace game
         }
         else
             return false;
+
+        this->map_name = map_name;
         return true;
     }
 
-    void Map::load_saved(std::string map_name, std::vector<std::vector<int>> wall_durabilitys)
+    void Map::set_variables(std::string map_name, std::vector<std::vector<int>> wall_durabilitys)
     {
-        load(map_name);
+        this->load(map_name);
         for (int i = 0; i < LINES; i++)
         {
             for (int j = 0; j < COLS; j++)
@@ -176,6 +178,24 @@ namespace game
                 if (wall_durabilitys[i][j] != 0 && map[i][j] == nullptr)
                     add(i, j, wall_durabilitys[i][j]);
             }
+        }
+    }
+
+    void Map::get_variables(std::string &map_name, std::vector<std::vector<int>> &wall_durabilitys)
+    {
+        map_name = this->map_name;
+        std::vector<int> line;
+        for (int i = 0; i < this->LINES; i++)
+        {
+            line = {};
+            for (int j = 0; j < this->COLS; j++)
+            {
+                if (this->map[i][j] == nullptr)
+                    line.push_back(0);
+                else
+                    line.push_back(this->map[i][j]->get_durability());
+            }
+            wall_durabilitys.push_back(line);
         }
     }
 

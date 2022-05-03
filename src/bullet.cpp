@@ -105,12 +105,23 @@ namespace game
         return 1;
     }
 
-    void bulletManager::load_saved(std::vector<std::string> types, std::vector<int> shoot_times, std::vector<std::pair<int, int>> yxs, std::vector<int> dirs)
+    void bulletManager::set_variables(std::vector<std::string> types, std::vector<int> shoot_times, std::vector<std::pair<int, int>> yxs, std::vector<int> dirs)
     {
         for (int i = 0; i < types.size(); i++)
         {
             auto bullet = new Bullet(types[i], shoot_times[i], yxs[i], dirs[i], bul_type_dict[types[i]]->chr);
             bullet_list->push_back(bullet);
+        }
+    }
+
+    void bulletManager::get_variables(std::vector<std::string> &types, std::vector<int> &shoot_times, std::vector<std::pair<int, int>> &yxs, std::vector<int> &dirs)
+    {
+        for (auto &bullet : *bullet_list)
+        {
+            types.push_back(bullet->get_type());
+            shoot_times.push_back(bullet->get_shoot_time());
+            yxs.push_back(bullet->get_yx());
+            dirs.push_back(bullet->get_dir());
         }
     }
 
@@ -140,6 +151,7 @@ namespace game
 
     void bulletManager::run()
     {
+        paused = false;
         running = true;
         thread_obj = new std::thread([=]
                                      { _thread_loop(); });
@@ -154,110 +166,113 @@ namespace game
 
         while (running)
         {
-            for (auto bul_iter = bullet_list->begin(); bul_iter != bullet_list->end();)
+            if (!paused)
             {
-                triggered = false;
-                auto bullet = *bul_iter;
-                bulletType *bullet_type = bul_type_dict[bullet->get_type()];
-
-                // Contact trigger
-                if (bullet_type->trig_mode == TRIG_CONTACT)
+                for (auto bul_iter = bullet_list->begin(); bul_iter != bullet_list->end();)
                 {
-                    // contact with zombie
-                    if (std::count(bullet_type->trig_obj.begin(), bullet_type->trig_obj.end(), "zombie"))
+                    triggered = false;
+                    auto bullet = *bul_iter;
+                    bulletType *bullet_type = bul_type_dict[bullet->get_type()];
+
+                    // Contact trigger
+                    if (bullet_type->trig_mode == TRIG_CONTACT)
                     {
+                        // contact with zombie
+                        if (std::count(bullet_type->trig_obj.begin(), bullet_type->trig_obj.end(), "zombie"))
+                        {
+                            for (auto &zombie : *zombie_list)
+                            {
+                                if (pair_distance(zombie->get_yx(), bullet->get_yx()) < bullet_type->trig_c)
+                                {
+                                    triggered = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // contact with wall
+                        if (std::count(bullet_type->trig_obj.begin(), bullet_type->trig_obj.end(), "wall"))
+                        {
+                            if (map->get_bit(round(bullet->get_yx().first), round(bullet->get_yx().second)) == 1)
+                            {
+                                // Is wall
+                                triggered = true;
+                            }
+                        }
+                    }
+                    // Timer trigger
+                    else if (bullet_type->trig_mode == TRIG_TIMER && clock->get_ticks() - bullet->get_shoot_time() >= bullet_type->trig_c)
+                        triggered = true;
+
+                    // Out-of-map
+                    if (map->get_bit(bullet->get_yx().first, bullet->get_yx().second) == -1)
+                        triggered = true;
+
+                    if (triggered)
+                    {
+                        // std::cout << "TRIGGERED" << std::endl;
+                        // Find all zombies in distance
                         for (auto &zombie : *zombie_list)
                         {
-                            if (pair_distance(zombie->get_yx(), bullet->get_yx()) < bullet_type->trig_c)
+                            if (pair_distance(zombie->get_yx(), bullet->get_yx()) < bullet_type->damage_dist)
                             {
-                                triggered = true;
-                                break;
+                                temp_distance = pair_distance(zombie->get_yx(), bullet->get_yx());
+                                float damage = te_eval(bullet_type->damage_func);
+                                // std::cout << "Distance: " << temp_distance << " Damage: " << damage << std::endl;
+                                zombie->set_hp(zombie->get_hp() - damage);
                             }
                         }
-                    }
-
-                    // contact with wall
-                    if (std::count(bullet_type->trig_obj.begin(), bullet_type->trig_obj.end(), "wall"))
-                    {
-                        if (map->get_bit(round(bullet->get_yx().first), round(bullet->get_yx().second)) == 1)
+                        // player
+                        if (pair_distance(player->get_yx(), bullet->get_yx()) <= bullet_type->damage_dist)
                         {
-                            // Is wall
-                            triggered = true;
-                        }
-                    }
-                }
-                // Timer trigger
-                else if (bullet_type->trig_mode == TRIG_TIMER && clock->get_ticks() - bullet->get_shoot_time() >= bullet_type->trig_c)
-                    triggered = true;
-
-                // Out-of-map
-                if (map->get_bit(bullet->get_yx().first, bullet->get_yx().second) == -1)
-                    triggered = true;
-
-                if (triggered)
-                {
-                    // std::cout << "TRIGGERED" << std::endl;
-                    // Find all zombies in distance
-                    for (auto &zombie : *zombie_list)
-                    {
-                        if (pair_distance(zombie->get_yx(), bullet->get_yx()) < bullet_type->damage_dist)
-                        {
-                            temp_distance = pair_distance(zombie->get_yx(), bullet->get_yx());
+                            temp_distance = pair_distance(player->get_yx(), bullet->get_yx());
                             float damage = te_eval(bullet_type->damage_func);
-                            // std::cout << "Distance: " << temp_distance << " Damage: " << damage << std::endl;
-                            zombie->set_hp(zombie->get_hp() - damage);
+                            player->set_hp(player->get_hp() - damage);
                         }
-                    }
-                    // player
-                    if (pair_distance(player->get_yx(), bullet->get_yx()) <= bullet_type->damage_dist)
-                    {
-                        temp_distance = pair_distance(player->get_yx(), bullet->get_yx());
-                        float damage = te_eval(bullet_type->damage_func);
-                        player->set_hp(player->get_hp() - damage);
-                    }
 
-                    // wall
-                    for (int i = 0; i < map->lines(); i++)
-                    {
-                        for (int j = 0; j < map->columns(); j++)
+                        // wall
+                        for (int i = 0; i < map->lines(); i++)
                         {
-                            if (map->get_bit(i, j) && pair_distance({i, j}, bullet->get_yx()) <= bullet_type->damage_dist)
+                            for (int j = 0; j < map->columns(); j++)
                             {
-                                temp_distance = pair_distance({i, j}, bullet->get_yx());
-                                map->damage(i, j, te_eval(bullet_type->damage_func));
+                                if (map->get_bit(i, j) && pair_distance({i, j}, bullet->get_yx()) <= bullet_type->damage_dist)
+                                {
+                                    temp_distance = pair_distance({i, j}, bullet->get_yx());
+                                    map->damage(i, j, te_eval(bullet_type->damage_func));
+                                }
                             }
                         }
+
+                        // destroy bullet
+                        delete bullet;
+                        bullet_list->erase(bul_iter++);
+                        /*
+                            list iterator: cannot have something like {erase(it); it++;}
+                        */
                     }
+                    else
+                    {
+                        // bullet move
+                        if (bullet->get_dir() == BDIR_UP)
+                            bullet->move({bullet->get_yx().first - 1, bullet->get_yx().second});
+                        else if (bullet->get_dir() == BDIR_DOWN)
+                            bullet->move({bullet->get_yx().first + 1, bullet->get_yx().second});
+                        else if (bullet->get_dir() == BDIR_LEFT)
+                            bullet->move({bullet->get_yx().first, bullet->get_yx().second - 1});
+                        else if (bullet->get_dir() == BDIR_RIGHT)
+                            bullet->move({bullet->get_yx().first, bullet->get_yx().second + 1});
 
-                    // destroy bullet
-                    delete bullet;
-                    bullet_list->erase(bul_iter++);
-                    /*
-                        list iterator: cannot have something like {erase(it); it++;}
-                    */
-                }
-                else
-                {
-                    // bullet move
-                    if (bullet->get_dir() == BDIR_UP)
-                        bullet->move({bullet->get_yx().first - 1, bullet->get_yx().second});
-                    else if (bullet->get_dir() == BDIR_DOWN)
-                        bullet->move({bullet->get_yx().first + 1, bullet->get_yx().second});
-                    else if (bullet->get_dir() == BDIR_LEFT)
-                        bullet->move({bullet->get_yx().first, bullet->get_yx().second - 1});
-                    else if (bullet->get_dir() == BDIR_RIGHT)
-                        bullet->move({bullet->get_yx().first, bullet->get_yx().second + 1});
-
-                    bul_iter++;
+                        bul_iter++;
+                    }
                 }
             }
             clock->wait(1);
         }
     }
 
-    void bulletManager::shoot(std::string name, std::pair<float, float> yx, int dir)
+    void bulletManager::shoot(std::string name, std::pair<float, float> yx, int dir, clock_tick_t shoot_time)
     {
-        Bullet *b = new Bullet{name, clock->get_ticks(), yx, dir, bul_type_dict[name]->chr};
+        Bullet *b = new Bullet{name, shoot_time, yx, dir, bul_type_dict[name]->chr};
         bullet_list->push_back(b);
     }
 
@@ -268,6 +283,13 @@ namespace game
             thread_obj->join(); // block wait until thread complete
         delete thread_obj;
     }
+
+    void bulletManager::pause()
+    {
+        paused = true;
+    }
+
+    void bulletManager::resume() { paused = false; }
 
     std::vector<std::string> bulletManager::get_names()
     {
