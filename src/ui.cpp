@@ -126,12 +126,14 @@ namespace game
 
     bool UI::_new_game_page(std::string *map_name)
     {
+
         // select map
-        WINDOW *list_win = newwin(WIN_HEIGHT, 12, WIN_OFFSET_Y, WIN_OFFSET_X);
+        WINDOW *list_win = newwin(WIN_HEIGHT, 20, WIN_OFFSET_Y, WIN_OFFSET_X);
         box(list_win, 0, 0);
         WINDOW *preview_win = nullptr;
 
         auto map_names = map->names_of_maps();
+
         int map_idx = 0;
 
         bool ret;
@@ -153,7 +155,7 @@ namespace game
             auto minimap = map->minimap(map_names[map_idx]);
             if (preview_win != nullptr)
                 delwin(preview_win);
-            preview_win = newwin(minimap.size() + 2, minimap[0].length() + 2, WIN_OFFSET_Y, WIN_OFFSET_X + 12);
+            preview_win = newwin(minimap.size() + 2, minimap[0].length() + 2, WIN_OFFSET_Y, WIN_OFFSET_X + 20);
             box(preview_win, 0, 0);
 
             int x, y = 1;
@@ -283,7 +285,6 @@ namespace game
 
             wrefresh(game_win);
             key = getch();
-            
 
             // HP and bullet
             wclear(status_win);
@@ -384,7 +385,6 @@ namespace game
         delete thread_obj;
 
         // how to stop?
-
     }
 
     int UI::get_status() { return status_val; }

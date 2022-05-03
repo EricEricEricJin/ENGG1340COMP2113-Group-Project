@@ -35,48 +35,14 @@ float distance(std::pair<int, int> p1, std::pair<int, int> p2);
 
 void mainloop()
 {
-    // game::Setting *setting = new game::Setting();
-    // if (setting->load())
-    // {
-    //     // config file exists
-    //     std::string map_dir = setting->query<std::string>("map_dir");
-    //     std::string bullet_dir = setting->query<std::string>("bullet_dir");
-    // }
-    // else
-    // {
-    //     // default values
-    // }
-
-    /*
-
-
-        if have $BOXHEADRC env then
-            boxheadrc_path = getenv("BOXHEADRC")
-        else
-            boxheadrc_path = getenv("HOME") + "/.boxhead/bh.init"
-        endif
-
-        if file exist then
-            load file
-            laod settings
-        else
-            use default setting
-        endif
-
-        if resource_path loaded then
-            load resources
-        else
-            load from $HOME/.boxhead
-        endif
-    */
-
+    std::cout << "Loading configuration..." << std::endl;
     std::string boxheadrc_path = std::string(getenv("HOME")) + "/.boxhead/bh.init";
     std::string resource_path = std::string(getenv("HOME")) + "/.boxhead/resource/";
     int clock_frequency = 12;
 
     game::playerKeySet player_keyset{'w', 's', 'a', 'd', 'e', ' '};
 
-    game::uiKeySet ui_keyset {'k', 'j', '\n'};
+    game::uiKeySet ui_keyset{'k', 'j', '\n'};
 
     if (getenv("BOXHEADRC") != nullptr)
         boxheadrc_path = getenv("BOXHEADRC");
@@ -86,10 +52,10 @@ void mainloop()
     {
         if (setting->get_resource_path() != "")
             resource_path = setting->get_resource_path();
-        
+
         if (setting->get_clock_frequency() > 0)
             clock_frequency = setting->get_clock_frequency();
-        
+
         auto setting_keyset = setting->get_keyset();
         if (setting_keyset.size() == 6)
         {
@@ -102,12 +68,32 @@ void mainloop()
         }
     }
 
+    // print config
+    std::cout << "Configuration load." << std::endl;
+    std::cout << "    Clock frequency: " << clock_frequency << std::endl
+              << "    Player key set: " << std::endl
+              << "            UP " << player_keyset.UP << std::endl
+              << "          DOWN " << player_keyset.DOWN << std::endl
+              << "          LEFT " << player_keyset.LEFT << std::endl
+              << "         RIGHT " << player_keyset.RIGHT << std::endl
+              << "          STOP " << player_keyset.STOP << std::endl
+              << "          FIRE " << player_keyset.FIRE << std::endl;
+
+    std::cout << "Initializing map..." << std::endl;
+    game::Map *map = new game::Map(resource_path + "map/");
+    if (map->names_of_maps().empty())
+    {
+        std::cout << "Error: Map resource not found!" << std::endl;
+        delete setting;
+        delete map;
+        return;
+    }
+    std::cout << "Map initialized, " << map->names_of_maps().size() << " maps found." << std::endl;
+
     game::Clock *clock = new game::Clock;
     clock->set_freq(clock_frequency);
     clock->reset();
     clock->start();
-
-    game::Map *map = new game::Map(resource_path + "map/");
 
     game::bulletManager *bullet_manager = new game::bulletManager();
     game::zombieManager *zombie_manager = new game::zombieManager();
@@ -115,15 +101,24 @@ void mainloop()
     game::UI *ui = new game::UI();
 
     player->init(bullet_manager, map, clock, ui->get_key_ptr());
-    std::cout << "Player initialized" << std::endl;
     bullet_manager->init(map, zombie_manager->get_zombie_list(), player, clock);
-    std::cout << "Bullet initialized" << std::endl;
     zombie_manager->init(bullet_manager->get_bullet_list(), map, player, clock);
-    std::cout << "Zombie initialized" << std::endl;
 
+    std::cout << "Initializing bullet..." << std::endl;
     bullet_manager->load_resource(resource_path + "bullet/");
-    player->configure(player_keyset);
+    if (bullet_manager->get_names().empty())
+    {
+        std::cout << "Error: Bullet resource not found!" << std::endl;
+        delete map;
+        delete clock;
+        delete bullet_manager;
+        delete zombie_manager;
+        delete player;
+        delete ui;
+    }
+    std::cout << "Bullet initialized, " << bullet_manager->get_names().size() << " bullets found." << std::endl;
 
+    player->configure(player_keyset);
     ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock, ui_keyset);
 
     std::string homepage_ret_string;
@@ -132,8 +127,6 @@ void mainloop()
 
     if (homepage_ret_kind == game::HOMEPAGE_NEWG)
         std::cout << "map load " << map->load(homepage_ret_string) << std::endl;
-
-    std::cout << "HA" << std::endl;
 
     bullet_manager->run();
     zombie_manager->run();
