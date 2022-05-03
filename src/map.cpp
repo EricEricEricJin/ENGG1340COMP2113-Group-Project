@@ -29,7 +29,6 @@ namespace game
     Map::Map(std::string map_dir_path)
     {
         // allocate map
-        std::cout << "Map init" << std::endl;
         map_dir = map_dir_path;
     }
 
