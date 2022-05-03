@@ -36,7 +36,7 @@ float distance(std::pair<int, int> p1, std::pair<int, int> p2);
 void mainloop()
 {
     std::cout << "Loading configuration..." << std::endl;
-    std::string boxheadrc_path = std::string(getenv("HOME")) + "/.boxhead/bh.init";
+    std::string boxheadrc_path = std::string(getenv("HOME")) + "/.boxhead/init.bh";
     std::string resource_path = std::string(getenv("HOME")) + "/.boxhead/resource/";
     int clock_frequency = 12;
 
@@ -119,7 +119,9 @@ void mainloop()
     std::cout << "Bullet initialized, " << bullet_manager->get_names().size() << " bullets found." << std::endl;
 
     player->configure(player_keyset);
-    ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock, ui_keyset);
+
+    ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
+    ui->configure(ui_keyset, game::UTHEME_DARK | game::UTHEME_BORD);
 
     std::string homepage_ret_string;
     int homepage_ret_kind;

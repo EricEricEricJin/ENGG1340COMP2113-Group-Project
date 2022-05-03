@@ -20,7 +20,7 @@ namespace game
 {
     UI::UI() {}
 
-    void UI::init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock, uiKeySet keyset)
+    bool UI::init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock)
     {
         this->player = player;
         this->zombie_list = zombie_list;
@@ -28,16 +28,55 @@ namespace game
         this->map = map;
         this->clock = clock;
 
-        this->keyset = keyset;
-
         initscr();
         noecho();
         nocbreak();
         timeout(0);
         curs_set(0);
 
+        if (LINES < WIN_HEIGHT || COLS < WIN_WIDTH)
+        {
+            endwin();
+            return false;
+        }
+        return true;
+
         // box(stdscr, 0, 0);
         // refresh();
+    }
+
+    void UI::configure(uiKeySet keyset, int theme)
+    {
+        this->keyset = keyset;
+        this->theme = theme;
+
+        start_color();
+        if (theme & UTHEME_LIGHT)
+        {
+            init_pair(UCOLOR_BOX, COLOR_BLACK, COLOR_WHITE);
+            init_pair(UCOLOR_MENU, COLOR_BLACK, COLOR_WHITE);
+            init_pair(UCOLOR_PLAYER, COLOR_BLUE, COLOR_WHITE);
+            init_pair(UCOLOR_ZOMBIE, COLOR_GREEN, COLOR_WHITE);
+            init_pair(UCOLOR_WALL, COLOR_BLACK, COLOR_WHITE);
+            init_pair(UCOLOR_BULLET, COLOR_YELLOW, COLOR_WHITE);
+
+            init_pair(UCOLOR_HP_L, COLOR_RED, COLOR_WHITE);
+            init_pair(UCOLOR_HP_M, COLOR_YELLOW, COLOR_WHITE);
+            init_pair(UCOLOR_HP_H, COLOR_GREEN, COLOR_WHITE);
+        }
+        else if (theme & UTHEME_DARK)
+        {
+            init_pair(UCOLOR_BOX, COLOR_GREEN, COLOR_BLACK);
+            init_pair(UCOLOR_MENU, COLOR_GREEN, COLOR_BLACK);
+            init_pair(UCOLOR_PLAYER, COLOR_BLUE, COLOR_BLACK);
+            init_pair(UCOLOR_ZOMBIE, COLOR_YELLOW, COLOR_BLACK);
+            init_pair(UCOLOR_WALL, COLOR_GREEN, COLOR_BLACK);
+            init_pair(UCOLOR_BULLET, COLOR_WHITE, COLOR_BLACK);
+
+            init_pair(UCOLOR_HP_L, COLOR_RED, COLOR_BLACK);
+            init_pair(UCOLOR_HP_M, COLOR_YELLOW, COLOR_BLACK);
+            init_pair(UCOLOR_HP_H, COLOR_GREEN, COLOR_BLACK);
+        }
     }
 
     int *UI::get_key_ptr() { return &key; }
@@ -50,7 +89,9 @@ namespace game
 
         WIN_OFFSET_Y = (LINES - WIN_HEIGHT) / 2;
         WIN_OFFSET_X = (COLS - WIN_WIDTH) / 2;
+
         WINDOW *home_win = newwin(24, 80, WIN_OFFSET_Y, WIN_OFFSET_X);
+        wbkgd(home_win, COLOR_PAIR(UCOLOR_MENU));
 
         std::array<std::string, 5> items = {"New game", "Load saving", "Setting", "Edit map", "Exit"};
         int current_item = 0;
@@ -58,9 +99,12 @@ namespace game
         while (true)
         {
             wclear(home_win);
+            wattron(home_win, COLOR_PAIR(UCOLOR_BOX));
             box(home_win, 0, 0);
+            wattroff(home_win, COLOR_PAIR(UCOLOR_BOX));
 
             // display menu
+            wattron(home_win, COLOR_PAIR(UCOLOR_MENU));
             for (int i = 0; i < items.size(); i++)
             {
                 if (current_item == i)
@@ -70,6 +114,7 @@ namespace game
                 if (current_item == i)
                     wattroff(home_win, A_REVERSE);
             }
+            wattroff(home_win, COLOR_PAIR(UCOLOR_MENU));
             wrefresh(home_win);
 
             int _key = wgetch(home_win);
@@ -129,7 +174,12 @@ namespace game
 
         // select map
         WINDOW *list_win = newwin(WIN_HEIGHT, 20, WIN_OFFSET_Y, WIN_OFFSET_X);
+        wbkgd(list_win, COLOR_PAIR(UCOLOR_MENU));
+
+        wattron(list_win, COLOR_PAIR(UCOLOR_BOX));
         box(list_win, 0, 0);
+        wattroff(list_win, COLOR_PAIR(UCOLOR_BOX));
+
         WINDOW *preview_win = nullptr;
 
         auto map_names = map->names_of_maps();
@@ -141,6 +191,7 @@ namespace game
         while (true)
         {
             // display name list
+            wattron(list_win, COLOR_PAIR(UCOLOR_MENU));
             for (int i = 0; i < map_names.size(); i++)
             {
                 if (map_idx == i)
@@ -149,6 +200,7 @@ namespace game
                 if (map_idx == i)
                     wattroff(list_win, A_REVERSE);
             }
+            wattroff(list_win, COLOR_PAIR(UCOLOR_MENU));
             wrefresh(list_win);
 
             // draw minimap
@@ -156,19 +208,26 @@ namespace game
             if (preview_win != nullptr)
                 delwin(preview_win);
             preview_win = newwin(minimap.size() + 2, minimap[0].length() + 2, WIN_OFFSET_Y, WIN_OFFSET_X + 20);
-            box(preview_win, 0, 0);
+            wbkgd(preview_win, COLOR_PAIR(UCOLOR_MENU));
 
+            wattron(preview_win, COLOR_PAIR(UCOLOR_MENU));
+            box(preview_win, 0, 0);
+            wattroff(preview_win, COLOR_PAIR(UCOLOR_MENU));
+
+            wattron(preview_win, COLOR_PAIR(UCOLOR_MENU));
             int x, y = 1;
             for (auto &line : minimap)
             {
                 x = 1;
                 for (auto &chr : line)
                 {
-                    mvwaddch(preview_win, y, x, chr);
+                    if (chr != ' ')
+                        mvwaddch(preview_win, y, x, ACS_BLOCK);
                     x++;
                 }
                 y++;
             }
+            wattroff(preview_win, COLOR_PAIR(UCOLOR_MENU));
             wrefresh(preview_win);
 
             int _key = wgetch(list_win);
@@ -211,8 +270,9 @@ namespace game
         int x_0 = (COLS - width) / 2;
 
         status_win = newwin(3, width, y_0, x_0);
-
+        wbkgd(status_win, COLOR_PAIR(UCOLOR_MENU));
         game_win = newwin(map->lines() + 2, width, y_0 + 3, x_0);
+        wbkgd(game_win, COLOR_PAIR(UCOLOR_WALL));
 
         // start thread...
         status_val = USTATUS_RUNNING;
@@ -228,9 +288,17 @@ namespace game
         {
 
             wclear(game_win);
-            box(game_win, 0, 0);
+
+            wattron(game_win, COLOR_PAIR(UCOLOR_WALL));
+            // this is wall
+            if (theme & UTHEME_THIN)
+                box(game_win, 0, 0);
+            else
+                wborder(game_win, ACS_CKBOARD, ACS_CKBOARD, ACS_CKBOARD, ACS_CKBOARD, ACS_CKBOARD, ACS_CKBOARD, ACS_CKBOARD, ACS_CKBOARD);
+            wattroff(game_win, COLOR_PAIR(UCOLOR_WALL));
 
             // map
+            wattron(game_win, COLOR_PAIR(UCOLOR_WALL));
             for (int i = 0; i < map->lines(); i++)
             {
                 for (int j = 0; j < map->columns(); j++)
@@ -238,66 +306,96 @@ namespace game
                     if (map->get_bit(i, j))
                     {
                         chtype wall_chr;
-                        int srding = (map->get_bit(i - 1, j) << 3) | (map->get_bit(i + 1, j) << 2) | (map->get_bit(i, j - 1) << 1) | map->get_bit(i, j + 1);
+                        if (theme & UTHEME_THIN)
+                        {
+                            int srding = (map->get_bit(i - 1, j) << 3) | (map->get_bit(i + 1, j) << 2) | (map->get_bit(i, j - 1) << 1) | map->get_bit(i, j + 1);
 
-                        if ((srding & 0b1100) && !(srding & 0b0011))
-                            wall_chr = ACS_VLINE;
-                        else if ((srding & 0b0011) && !(srding & 0b1100))
-                            wall_chr = ACS_HLINE;
-                        else if (srding == 0b0101)
-                            wall_chr = ACS_ULCORNER;
-                        else if (srding == 0b0110)
-                            wall_chr = ACS_URCORNER;
-                        else if (srding == 0b1001)
-                            wall_chr = ACS_LLCORNER;
-                        else if (srding == 0b1010)
-                            wall_chr = ACS_LRCORNER;
-                        else if (srding == 0b1101)
-                            wall_chr = ACS_LTEE;
-                        else if (srding == 0b1110)
-                            wall_chr = ACS_RTEE;
-                        else if (srding == 0b0111)
-                            wall_chr = ACS_TTEE;
-                        else if (srding == 0b1011)
-                            wall_chr = ACS_BTEE;
-                        else if (srding == 0b1111)
-                            wall_chr = ACS_PLUS;
+                            if ((srding & 0b1100) && !(srding & 0b0011))
+                                wall_chr = ACS_VLINE;
+                            else if ((srding & 0b0011) && !(srding & 0b1100))
+                                wall_chr = ACS_HLINE;
+                            else if (srding == 0b0101)
+                                wall_chr = ACS_ULCORNER;
+                            else if (srding == 0b0110)
+                                wall_chr = ACS_URCORNER;
+                            else if (srding == 0b1001)
+                                wall_chr = ACS_LLCORNER;
+                            else if (srding == 0b1010)
+                                wall_chr = ACS_LRCORNER;
+                            else if (srding == 0b1101)
+                                wall_chr = ACS_LTEE;
+                            else if (srding == 0b1110)
+                                wall_chr = ACS_RTEE;
+                            else if (srding == 0b0111)
+                                wall_chr = ACS_TTEE;
+                            else if (srding == 0b1011)
+                                wall_chr = ACS_BTEE;
+                            else if (srding == 0b1111)
+                                wall_chr = ACS_PLUS;
+                        }
+                        else
+                            wall_chr = ACS_CKBOARD;
 
                         mvwaddch(game_win, i + 1, j + 1, wall_chr);
                     }
                 }
             }
+            wattroff(game_win, COLOR_PAIR(UCOLOR_WALL));
 
             // player
+            wattron(game_win, COLOR_PAIR(UCOLOR_PLAYER));
             mvwaddstr(game_win, (int)round(player->get_yx().first + 1), (int)round(player->get_yx().second + 1), player->get_char().c_str());
+            wattroff(game_win, COLOR_PAIR(UCOLOR_PLAYER));
 
             // zombie
+            wattron(game_win, COLOR_PAIR(UCOLOR_ZOMBIE));
             for (auto &zombie : *zombie_list)
             {
                 mvwaddstr(game_win, (int)round(zombie->get_yx().first) + 1, (int)round(zombie->get_yx().second) + 1, zombie->get_char().c_str());
             }
+            wattroff(game_win, COLOR_PAIR(UCOLOR_ZOMBIE));
 
             // bullet
+            wattron(game_win, COLOR_PAIR(UCOLOR_BULLET));
             for (auto &bullet : *bullet_list)
             {
                 mvwaddstr(game_win, (int)round(bullet->get_yx().first) + 1, (int)round(bullet->get_yx().second) + 1, bullet->get_char().c_str());
             }
+            wattroff(game_win, COLOR_PAIR(UCOLOR_BULLET));
 
             wrefresh(game_win);
             key = getch();
 
             // HP and bullet
             wclear(status_win);
-            box(status_win, 0, 0);
 
-            wattron(status_win, A_REVERSE);
+            wattron(status_win, COLOR_PAIR(UCOLOR_BOX));
+            box(status_win, 0, 0);
+            wattroff(status_win, COLOR_PAIR(UCOLOR_BOX));
+
+            wattron(status_win, COLOR_PAIR(UCOLOR_MENU) | A_REVERSE);
             mvwprintw(status_win, 1, 1, "    HP    ");
             mvwprintw(status_win, 1, 26, "  WEAPON  ");
             mvwprintw(status_win, 1, 51, "   SCORE  ");
-            wattroff(status_win, A_REVERSE);
-            mvwprintw(status_win, 1, 11, "  %d", (int)(player->get_hp()));
+            wattroff(status_win, COLOR_PAIR(UCOLOR_MENU) | A_REVERSE);
+
+            wattron(status_win, COLOR_PAIR(UCOLOR_MENU));
             mvwprintw(status_win, 1, 36, "  %s", player->get_cur_bul_name().c_str());
             mvwprintw(status_win, 1, 61, "  %ld", clock->get_ticks());
+            wattroff(status_win, COLOR_PAIR(UCOLOR_MENU));
+
+            int hp_color;
+            if (player->get_hp() > 66.6)
+                hp_color = COLOR_PAIR(UCOLOR_HP_H);
+            else if (player->get_hp() > 33.3)
+                hp_color = COLOR_PAIR(UCOLOR_HP_M);
+            else
+                hp_color = COLOR_PAIR(UCOLOR_HP_L);
+
+            wattron(status_win, hp_color);
+            mvwprintw(status_win, 1, 11, "  %d", (int)(player->get_hp()));
+            wattroff(status_win, hp_color);
+
             wrefresh(status_win);
 
             // deal with menu
@@ -337,6 +435,7 @@ namespace game
         timeout(-1);
 
         WINDOW *menu_win = newwin(WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
+        wbkgd(menu_win, COLOR_PAIR(UCOLOR_MENU));
 
         std::array<std::string, 3> items = {"Resume", "Save", "Exit"};
         int current_item = 0;
@@ -345,7 +444,12 @@ namespace game
         while (true)
         {
             wclear(menu_win);
+            wattron(menu_win, COLOR_PAIR(UCOLOR_BOX));
             box(menu_win, 0, 0);
+            wattroff(menu_win, COLOR_PAIR(UCOLOR_BOX));
+
+            wattron(menu_win, COLOR_PAIR(UCOLOR_MENU));
+
             for (int i = 0; i < items.size(); i++)
             {
                 if (i == current_item)
@@ -354,6 +458,7 @@ namespace game
                 if (i == current_item)
                     wattroff(menu_win, A_REVERSE);
             }
+            wattroff(menu_win, COLOR_PAIR(UCOLOR_MENU));
 
             wrefresh(menu_win);
             int key = getch();
