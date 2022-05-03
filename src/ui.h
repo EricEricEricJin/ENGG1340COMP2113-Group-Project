@@ -14,6 +14,28 @@
 
 namespace game
 {
+
+    enum
+    {
+        UTHEME_LIGHT = 0b0001,
+        UTHEME_DARK = 0b0010,
+        UTHEME_THIN = 0b0100,
+        UTHEME_BORD = 0b1000
+    };
+
+    enum
+    {
+        UCOLOR_BOX = 1,
+        UCOLOR_MENU,
+        UCOLOR_PLAYER,
+        UCOLOR_ZOMBIE,
+        UCOLOR_WALL,
+        UCOLOR_BULLET,
+        UCOLOR_HP_H,
+        UCOLOR_HP_M,
+        UCOLOR_HP_L
+    };
+
     enum
     {
         USTATUS_RUNNING = 0,
@@ -64,6 +86,8 @@ namespace game
 
         int key;
 
+        int theme;
+
         void _game_thread_loop();
         int _game_menu();
 
@@ -75,7 +99,10 @@ namespace game
 
     public:
         UI();
-        void init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock, uiKeySet keyset);
+
+        bool init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock);
+        void configure(uiKeySet keyset, int theme);
+
         int *get_key_ptr();
         bool homepage(std::string *ret_string, int *ret_kind); // return only when select map and mode
         // parameter: [map list: Map]
