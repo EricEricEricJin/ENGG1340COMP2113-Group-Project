@@ -61,23 +61,63 @@ namespace game
         }
     }
 
-    std::vector<int> Setting::get_keyset()
+    std::vector<int> Setting::get_player_keyset()
     {
         try
         {
-            std::vector<int> ret(6);
-            ret[0] = (*json_data)["keyset"]["up"].get<int>();
-            ret[1] = (*json_data)["keyset"]["down"].get<int>();
-            ret[2] = (*json_data)["keyset"]["left"].get<int>();
-            ret[3] = (*json_data)["keyset"]["right"].get<int>();
-            ret[4] = (*json_data)["keyset"]["stop"].get<int>();
-            ret[5] = (*json_data)["keyset"]["fire"].get<int>();
+            std::vector<int> ret = {0, 0, 0, 0, 0, 0};
+            if ((*json_data)["player_keyset"]["up"] != nullptr)
+                ret[0] = (*json_data)["player_keyset"]["up"].get<int>();
+            if ((*json_data)["player_keyset"]["down"] != nullptr)
+                ret[1] = (*json_data)["player_keyset"]["down"].get<int>();
+            if ((*json_data)["player_keyset"]["left"] != nullptr)
+                ret[2] = (*json_data)["player_keyset"]["left"].get<int>();
+            if ((*json_data)["player_keyset"]["right"] != nullptr)
+                ret[3] = (*json_data)["player_keyset"]["right"].get<int>();
+            if ((*json_data)["player_keyset"]["stop"] != nullptr)
+                ret[4] = (*json_data)["player_keyset"]["stop"].get<int>();
+            if ((*json_data)["player_keyset"]["fire"] != nullptr)
+                ret[5] = (*json_data)["player_keyset"]["fire"].get<int>();
             return ret;
         }
         catch (const std::exception &e)
         {
             std::cout << "Get Keyset Error" << std::endl;
             return {};
+        }
+    }
+
+    std::vector<int> Setting::get_ui_keyset()
+    {
+        try
+        {
+            std::vector<int> ret = {0, 0, 0, 0};
+            if ((*json_data)["ui_keyset"]["up"] != nullptr)
+                ret[0] = (*json_data)["ui_keyset"]["up"].get<int>();
+            if ((*json_data)["ui_keyset"]["down"] != nullptr)
+                ret[1] = (*json_data)["ui_keyset"]["down"].get<int>();
+            if ((*json_data)["ui_keyset"]["enter"] != nullptr)
+                ret[4] = (*json_data)["ui_keyset"]["enter"].get<int>();
+            if ((*json_data)["ui_keyset"]["quit"] != nullptr)
+                ret[5] = (*json_data)["ui_keyset"]["quit"].get<int>();
+            return ret;
+        }
+        catch (const std::exception &e)
+        {
+            std::cout << "Get Keyset Error" << std::endl;
+            return {};
+        }
+    }
+
+    std::string Setting::get_theme()
+    {
+        try
+        {
+            return (*json_data)["theme"].get<std::string>();
+        }
+        catch (const std::exception &e)
+        {
+            return "";
         }
     }
 
