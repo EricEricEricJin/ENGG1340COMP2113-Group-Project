@@ -7,12 +7,12 @@ using namespace std;
 
 int main()
 {
+    map<string, int> zombie = {{"a", 1}, {"b", 2}};
+    vector<vector<int>> mapwall = {{1, 2, 3}, {4, 5, 6}};    
     nlohmann::json json_data;
-    ifstream file_stream("../resource/map/0.json", fstream::in);
-    file_stream >> json_data;
-
-    vector<float> vec;
-    cout << (json_data["lines"].is_number_integer()) << endl;
+    // json_data["zombies"] = {};
+    json_data["map"]["wall"] = mapwall;
+    cout << json_data << endl;
     
     return 0;
 }
