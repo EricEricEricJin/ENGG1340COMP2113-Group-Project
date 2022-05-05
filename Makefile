@@ -11,10 +11,9 @@ RESOURCE_DIR = ~
 all: create_build build/main;
 
 create_build:
-	if [ -d build ]; \
-		then rm -r build; \
-	fi; \
-	mkdir build
+	if ! [ -d build ]; \
+		then mkdir build; \
+	fi;
 
 build/bullet.o: src/bullet.cpp src/bullet.h src/map.h src/player.h src/zombie.h
 	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -L lib/ -o $@
