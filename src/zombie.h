@@ -14,6 +14,12 @@ enum
 
 namespace game
 {
+    enum
+    {
+        ZDIFFICULTY_LOW = 3,
+        ZDIFFICULTY_MED = 5,
+        ZDIFFICULTY_HIG = 7,
+    };
 
     const int zombie_dmg_delay = 2;
 
@@ -59,6 +65,8 @@ namespace game
         std::list<Zombie *> *zombie_list;
         // std::vector<Zombie *> *zombie_list;
 
+        int tar_num;
+
         bool running;
         bool paused;
 
@@ -69,6 +77,8 @@ namespace game
     public:
         zombieManager();
         void init(std::list<Bullet *> *bullet_list, Map *map, Player *player, Clock *clock);
+
+        void set_difficulty(int difficulty);
 
         void set_variables(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<int> zombie_hps);
         void get_variables(std::vector<int>& zombie_types, std::vector<std::pair<int, int>>& zombie_yxs, std::vector<int>& zombie_hps);
