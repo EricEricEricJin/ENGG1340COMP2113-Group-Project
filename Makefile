@@ -38,15 +38,18 @@ clock.o: src/clock.cpp src/clock.h
 setting.o: src/setting.cpp src/setting.h
 	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
 
+rw_saved.o: src/rw_saved.cpp src/rw_saved.h include/json.hpp
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
+
 lib/tinyexpr.o: lib/tinyexpr.c
 	gcc -c $< -o $@ -I include/
 
-main: bullet.o map.o player.o ui.o zombie.o mainloop.o main.o solve_maze.o clock.o lib/tinyexpr.o setting.o
+main: bullet.o map.o player.o ui.o zombie.o mainloop.o main.o solve_maze.o clock.o lib/tinyexpr.o setting.o rw_saved.o
 	g++ $^ -g -o main $(LINK_LIBS)
 
 .PHONY: clean install uninstall
 clean:
-	rm bullet.o map.o player.o ui.o zombie.o mainloop.o main.o clock.o solve_maze.o setting.o lib/tinyexpr.o
+	rm bullet.o map.o player.o ui.o zombie.o mainloop.o main.o clock.o solve_maze.o setting.o rw_saved.o lib/tinyexpr.o
 
 install: main
 	cp main $(INSTALL_DIR)/boxhead; \

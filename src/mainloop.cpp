@@ -30,6 +30,7 @@
 #include "zombie.h"
 #include "clock.h"
 #include "setting.h"
+#include "rw_saved.h"
 
 float distance(std::pair<int, int> p1, std::pair<int, int> p2);
 
@@ -99,6 +100,7 @@ void mainloop()
     game::zombieManager *zombie_manager = new game::zombieManager();
     game::Player *player = new game::Player();
     game::UI *ui = new game::UI();
+    game::rwSaved *rw_saved = new game::rwSaved();
 
     player->init(bullet_manager, map, clock, ui->get_key_ptr());
     bullet_manager->init(map, zombie_manager->get_zombie_list(), player, clock);
@@ -120,15 +122,28 @@ void mainloop()
 
     player->configure(player_keyset);
 
+    rw_saved->init(zombie_manager, bullet_manager, player, map, clock);
+
     ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
     ui->configure(ui_keyset, game::UTHEME_LIGHT | game::UTHEME_BORD);
 
     std::string homepage_ret_string;
     int homepage_ret_kind;
-    ui->homepage(&homepage_ret_string, &homepage_ret_kind);
 
-    if (homepage_ret_kind == game::HOMEPAGE_NEWG)
-        std::cout << "map load " << map->load(homepage_ret_string) << std::endl;
+    for (;;)
+    {
+        ui->homepage(&homepage_ret_string, &homepage_ret_kind);
+        if (homepage_ret_kind == game::HOMEPAGE_NEWG)
+        {
+            if (map->load(homepage_ret_string))
+                break;
+        }
+        else if (homepage_ret_kind == game::HOMEPAGE_LOAD)
+        {
+            if (rw_saved->read_set(homepage_ret_string))
+                break;
+        }
+    }
 
     bullet_manager->run();
     zombie_manager->run();

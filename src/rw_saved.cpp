@@ -94,6 +94,7 @@ namespace game
             map->set_variables(map_name, map_wall_duras);
             clock->set_ticks(clock_ticks);
 
+            delete json_data;
             return true;
         }
         catch (const std::exception &e)
@@ -176,17 +177,20 @@ namespace game
         (*json_data)["clock_ticks"] = clock_ticks;
 
         // save to file
+        bool ret;
         try
         {
-            (*json_data) >> f;
-            f.close();
-            return true;
+            f << (*json_data);
+            ret = true;
         }
         catch (const std::exception &e)
         {
             std::cerr << e.what() << '\n';
-            f.close();
-            return false;
+            ret = false;
         }
+
+        f.close();
+        delete json_data;
+        return ret;
     }
 }

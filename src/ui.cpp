@@ -258,7 +258,9 @@ namespace game
         return ret;
     }
 
-    std::string UI::_load_saving_page() {}
+    std::string UI::_load_saving_page()
+    {
+    }
 
     void UI::_setting_page() {}
     void UI::_edit_map_page() {}

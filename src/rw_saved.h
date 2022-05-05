@@ -24,11 +24,11 @@ namespace game
         Map* map;
         Clock* clock;
     public:
-        rwSaved();
+        // rwSaved();
         void init(zombieManager* zombie_manager, bulletManager* bullet_manager, Player* player, Map* map, Clock* clock);
         bool read_set(std::string path);
         bool get_write(std::string path);
-        ~rwSaved();
+        // ~rwSaved();
     };
 }
 
