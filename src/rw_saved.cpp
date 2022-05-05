@@ -60,6 +60,7 @@ namespace game
         catch (const std::exception &e)
         {
             delete json_data;
+            json_data = nullptr;
             f.close();
             return false;
         }
@@ -122,11 +123,13 @@ namespace game
             clock->set_ticks(clock_ticks);
 
             delete json_data;
+            json_data = nullptr;
             return true;
         }
         catch (const std::exception &e)
         {
             delete json_data;
+            json_data = nullptr;
             return false;
         }
     }
@@ -166,7 +169,10 @@ namespace game
         int clock_ticks = clock->get_ticks();
 
         if (json_data != nullptr)
+        {
             delete json_data;
+            json_data = nullptr;
+        }
 
         json_data = new nlohmann::json();
 
@@ -220,6 +226,7 @@ namespace game
 
         f.close();
         delete json_data;
+        json_data = nullptr;
         return ret;
     }
 }

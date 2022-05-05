@@ -428,12 +428,10 @@ namespace game
                     auto saving_name = _prompt_input("Saving name", 16);
                     rw_saved->get_write(saving_name);
                     status_val = USTATUS_EXIT;
-                    break;
                 }
                 else if (menu_ret == 2) // exit
                 {
                     status_val = USTATUS_EXIT;
-                    break;
                 }
             }
 
@@ -441,6 +439,7 @@ namespace game
             clock->wait(1);
             key = getch();
         }
+
         delwin(game_win);
         delwin(status_win);
     }
@@ -500,12 +499,12 @@ namespace game
     void UI::stop_game()
     {
         status_val = USTATUS_EXIT;
-        // if (thread_obj->joinable())
-        thread_obj->join();
-
-        delete thread_obj;
-
-        // how to stop?
+        if (thread_obj && thread_obj->joinable())
+        {
+            thread_obj->join();
+            delete thread_obj;
+            thread_obj = nullptr;
+        }
     }
 
     int UI::get_status() { return status_val; }
@@ -514,7 +513,7 @@ namespace game
     {
         timeout(-1);
         WINDOW *list_win = newwin(WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
-        box(list_win, 0, 0);
+        wbkgd(list_win, COLOR_PAIR(UCOLOR_MENU));
         int option = 0;
 
         int menu_key = 0;
@@ -527,15 +526,16 @@ namespace game
         int first_y = (WIN_HEIGHT - option_list.size()) / 2;
         int first_x = (WIN_WIDTH - max_len) / 2;
 
+        wattron(list_win, COLOR_PAIR(UCOLOR_MENU));
         for (;;)
         {
             // display
-            werase(list_win);
-            
+            wclear(list_win);
+
             wattron(list_win, COLOR_PAIR(UCOLOR_BOX));
             box(list_win, 0, 0);
             wattroff(list_win, COLOR_PAIR(UCOLOR_BOX));
-            
+
             wattron(list_win, COLOR_PAIR(UCOLOR_MENU));
             for (int i = 0; i < option_list.size(); i++)
             {
@@ -566,6 +566,7 @@ namespace game
             else if (option >= option_list.size())
                 option = 0;
         }
+        wattroff(list_win, COLOR_PAIR(UCOLOR_MENU));
 
         delwin(list_win);
         return option;
@@ -594,6 +595,6 @@ namespace game
         return ret_str;
     }
 
-    UI::~UI() {}
+    UI::~UI() { stop_game(); }
 
 }

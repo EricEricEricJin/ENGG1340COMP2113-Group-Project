@@ -146,7 +146,7 @@ void mainloop()
         else if (homepage_ret_kind == game::HOMEPAGE_EXIT)
             break;
     }
-    
+
     if (homepage_ret_kind != game::HOMEPAGE_EXIT)
     {
         bullet_manager->run();
@@ -154,13 +154,31 @@ void mainloop()
         player->run();
         ui->start_game();
 
+        bool paused = false;
         while (player->get_hp() > 0 && ui->get_status() != game::USTATUS_EXIT)
         {
             clock->wait(1);
-            // std::cout << "clock tick " << clock->get_ticks() << std::endl;
+            if (bool ui_status = ui->get_status(); ui_status == game::USTATUS_PAUSE && !paused)
+            {
+                paused = true;
+                player->pause();
+                bullet_manager->pause();
+                zombie_manager->pause();
+                clock->stop();
+            }
+            else if (ui_status == game::USTATUS_RUNNING && paused)
+            {
+                paused = false;
+                player->resume();
+                bullet_manager->resume();
+                zombie_manager->resume();
+                clock->start();
+            }
         }
         ui->stop_game();
     }
+
+    std::cout << "END" << std::endl;
 
     delete ui;
     delete zombie_manager;
