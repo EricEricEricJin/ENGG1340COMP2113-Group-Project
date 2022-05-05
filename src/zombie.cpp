@@ -66,8 +66,9 @@ namespace game
         tar_num = difficulty;
     }
 
-    void zombieManager::set_variables(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<int> zombie_hps)
+    void zombieManager::set_variables(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<int> zombie_hps, int tar_num)
     {
+        this->tar_num = tar_num;
         for (int i = 0; i < zombie_types.size(); i++)
         {
             auto zombie = new Zombie(zombie_yxs[i], zombie_types[i], zombie_dmg_delay);
@@ -76,8 +77,9 @@ namespace game
         }
     }
 
-    void zombieManager::get_variables(std::vector<int> &zombie_types, std::vector<std::pair<int, int>> &zombie_yxs, std::vector<int> &zombie_hps)
+    void zombieManager::get_variables(std::vector<int> &zombie_types, std::vector<std::pair<int, int>> &zombie_yxs, std::vector<int> &zombie_hps, int& tar_num)
     {
+        tar_num = this->tar_num;
         for (auto &zombie : *zombie_list)
         {
             zombie_types.push_back(zombie->get_type());

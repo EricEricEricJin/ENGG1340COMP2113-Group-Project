@@ -80,8 +80,8 @@ namespace game
 
         void set_difficulty(int difficulty);
 
-        void set_variables(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<int> zombie_hps);
-        void get_variables(std::vector<int>& zombie_types, std::vector<std::pair<int, int>>& zombie_yxs, std::vector<int>& zombie_hps);
+        void set_variables(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<int> zombie_hps, int tar_num);
+        void get_variables(std::vector<int>& zombie_types, std::vector<std::pair<int, int>>& zombie_yxs, std::vector<int>& zombie_hps, int& tar_num);
 
         void add(int type, std::pair<int, int> yx);
         std::list<Zombie *> *get_zombie_list();

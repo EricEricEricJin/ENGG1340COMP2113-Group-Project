@@ -79,6 +79,7 @@ namespace game
             std::vector<int> zombie_types;
             std::vector<std::pair<int, int>> zombie_yxs;
             std::vector<int> zombie_hps;
+            int zombie_tar_num;
 
             for (auto &zombie : (*json_data)["zombies"])
             {
@@ -86,6 +87,7 @@ namespace game
                 zombie_yxs.push_back({zombie["y"].get<int>(), zombie["x"].get<int>()});
                 zombie_hps.push_back(zombie["hp"].get<int>());
             }
+            zombie_tar_num = (*json_data)["zombie_tar_num"];
 
             // Bullets
             std::vector<std::string> bullet_types;
@@ -116,7 +118,7 @@ namespace game
             // Clock
             int clock_ticks = (*json_data)["clock_ticks"].get<int>();
 
-            zombie_manager->set_variables(zombie_types, zombie_yxs, zombie_hps);
+            zombie_manager->set_variables(zombie_types, zombie_yxs, zombie_hps, zombie_tar_num);
             bullet_manager->set_variables(bullet_types, bullet_shoot_times, bullet_yxs, bullet_dirs);
             player->set_variables(player_yx, player_hp, player_dir, player_bul_name);
             map->set_variables(map_name, map_wall_duras);
@@ -153,6 +155,7 @@ namespace game
         std::vector<int> zombie_types;
         std::vector<std::pair<int, int>> zombie_yxs;
         std::vector<int> zombie_hps;
+        int zombie_tar_num;
 
         std::vector<std::string> bullet_types;
         std::vector<int> bullet_shoot_times;
@@ -163,7 +166,7 @@ namespace game
         std::vector<std::vector<int>> map_wall_duras;
 
         player->get_variables(player_yx, player_hp, player_dir, player_bul_name);
-        zombie_manager->get_variables(zombie_types, zombie_yxs, zombie_hps);
+        zombie_manager->get_variables(zombie_types, zombie_yxs, zombie_hps, zombie_tar_num);
         bullet_manager->get_variables(bullet_types, bullet_shoot_times, bullet_yxs, bullet_dirs);
         map->get_variables(map_name, map_wall_duras);
         int clock_ticks = clock->get_ticks();
@@ -193,6 +196,7 @@ namespace game
                     {"x", zombie_yxs[i].second},
                     {"hp", zombie_hps[i]}});
         }
+        (*json_data)["zombie_tar_num"] = zombie_tar_num;
 
         // bullets
         for (int i = 0; i < bullet_types.size(); i++)
