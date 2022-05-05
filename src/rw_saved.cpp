@@ -2,16 +2,40 @@
 
 namespace game
 {
-    void rwSaved::init(zombieManager *zombie_manager, bulletManager *bullet_manager, Player *player, Map *map, Clock *clock)
+    void rwSaved::init(zombieManager *zombie_manager, bulletManager *bullet_manager, Player *player, Map *map, Clock *clock, std::string saving_dir)
     {
         this->zombie_manager = zombie_manager;
         this->bullet_manager = bullet_manager;
         this->player = player;
         this->map = map;
         this->clock = clock;
+        this->saving_dir = saving_dir;
+
+        json_data = nullptr;
     }
-    bool rwSaved::read_set(std::string path)
+
+    std::vector<std::string> rwSaved::get_all_savings()
     {
+        using namespace std;
+        using namespace std::filesystem;
+
+        vector<string> ret;
+        path str(saving_dir);
+        if (!exists(str))
+            return ret; // fail
+        directory_entry entry(str);
+        if (entry.status().type() != file_type::directory)
+            return ret;
+        directory_iterator list(str);
+        for (auto &i : list)
+            ret.push_back(i.path().filename());
+        return ret;
+        ;
+    }
+
+    bool rwSaved::read_set(std::string name)
+    {
+        auto path = saving_dir + name;
         // open file
         std::ifstream f(path);
         if (f.fail())
@@ -22,7 +46,10 @@ namespace game
 
         // clear json
         if (json_data != nullptr)
+        {
             delete json_data;
+            json_data = nullptr;
+        };
         json_data = new nlohmann::json();
 
         try
@@ -104,8 +131,10 @@ namespace game
         }
     }
 
-    bool rwSaved::get_write(std::string path)
+    bool rwSaved::get_write(std::string name)
     {
+        auto path = saving_dir + name;
+
         std::ofstream f(path);
         if (f.fail())
         {

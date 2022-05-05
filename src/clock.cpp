@@ -6,6 +6,7 @@ namespace game
     Clock::Clock()
     {
         ticks = 0;
+        thread_obj = nullptr;
     }
 
     void Clock::start()
@@ -18,8 +19,11 @@ namespace game
     void Clock::stop()
     {
         running = false;
-        thread_obj->join();
-        delete thread_obj;
+        if (thread_obj != nullptr)
+        {
+            thread_obj->join();
+            delete thread_obj;
+        }
     }
 
     void Clock::reset() { ticks = 0; }

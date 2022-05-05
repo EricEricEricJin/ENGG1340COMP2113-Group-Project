@@ -43,7 +43,7 @@ void mainloop()
 
     game::playerKeySet player_keyset{'w', 's', 'a', 'd', 'e', ' '};
 
-    game::uiKeySet ui_keyset{'k', 'j', '\n'};
+    game::uiKeySet ui_keyset{'k', 'j', '\n', 'q'};
 
     if (getenv("BOXHEADRC") != nullptr)
         boxheadrc_path = getenv("BOXHEADRC");
@@ -122,9 +122,9 @@ void mainloop()
 
     player->configure(player_keyset);
 
-    rw_saved->init(zombie_manager, bullet_manager, player, map, clock);
+    rw_saved->init(zombie_manager, bullet_manager, player, map, clock, "./saving/");
 
-    ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock);
+    ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock, rw_saved);
     ui->configure(ui_keyset, game::UTHEME_LIGHT | game::UTHEME_BORD);
 
     std::string homepage_ret_string;
@@ -143,19 +143,24 @@ void mainloop()
             if (rw_saved->read_set(homepage_ret_string))
                 break;
         }
+        else if (homepage_ret_kind == game::HOMEPAGE_EXIT)
+            break;
     }
-
-    bullet_manager->run();
-    zombie_manager->run();
-    player->run();
-    ui->start_game();
-
-    while (player->get_hp() > 0 && ui->get_status() != game::USTATUS_EXIT)
+    
+    if (homepage_ret_kind != game::HOMEPAGE_EXIT)
     {
-        clock->wait(1);
-        // std::cout << "clock tick " << clock->get_ticks() << std::endl;
+        bullet_manager->run();
+        zombie_manager->run();
+        player->run();
+        ui->start_game();
+
+        while (player->get_hp() > 0 && ui->get_status() != game::USTATUS_EXIT)
+        {
+            clock->wait(1);
+            // std::cout << "clock tick " << clock->get_ticks() << std::endl;
+        }
+        ui->stop_game();
     }
-    ui->stop_game();
 
     delete ui;
     delete zombie_manager;

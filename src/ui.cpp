@@ -15,18 +15,20 @@
 #include "zombie.h"
 #include "map.h"
 #include "bullet.h"
+#include "rw_saved.h"
 
 namespace game
 {
     UI::UI() {}
 
-    bool UI::init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock)
+    bool UI::init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock, rwSaved *rw_saved)
     {
         this->player = player;
         this->zombie_list = zombie_list;
         this->bullet_list = bullet_list;
         this->map = map;
         this->clock = clock;
+        this->rw_saved = rw_saved;
 
         initscr();
         noecho();
@@ -124,7 +126,7 @@ namespace game
                 current_item--;
             else if (_key == keyset.key_enter)
             {
-                wclear(home_win);
+                werase(home_win);
                 wrefresh(home_win);
                 if (current_item == HOMEPAGE_NEWG)
                 {
@@ -137,8 +139,12 @@ namespace game
                 }
                 else if (current_item == HOMEPAGE_LOAD)
                 {
-                    *ret_string = _load_saving_page();
-                    *ret_kind = HOMEPAGE_LOAD;
+                    bool _ret = _load_saving_page(ret_string);
+                    if (_ret)
+                    {
+                        *ret_kind = HOMEPAGE_LOAD;
+                        break;
+                    }
                 }
                 else if (current_item == HOMEPAGE_SETT)
                 {
@@ -258,8 +264,14 @@ namespace game
         return ret;
     }
 
-    std::string UI::_load_saving_page()
+    bool UI::_load_saving_page(std::string *ret_string)
     {
+        auto saving_list = rw_saved->get_all_savings();
+        auto ret = _select_list(saving_list);
+        if (ret == -1)
+            return false;
+        *ret_string = saving_list[ret];
+        return true;
     }
 
     void UI::_setting_page() {}
@@ -413,7 +425,9 @@ namespace game
                 }
                 else if (menu_ret == 1) // save
                 {
-                    // saving stuff
+                    auto saving_name = _prompt_input("Saving name", 16);
+                    rw_saved->get_write(saving_name);
+                    status_val = USTATUS_EXIT;
                     break;
                 }
                 else if (menu_ret == 2) // exit
@@ -495,6 +509,90 @@ namespace game
     }
 
     int UI::get_status() { return status_val; }
+
+    int UI::_select_list(std::vector<std::string> option_list)
+    {
+        timeout(-1);
+        WINDOW *list_win = newwin(WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
+        box(list_win, 0, 0);
+        int option = 0;
+
+        int menu_key = 0;
+
+        int max_len = 0;
+        for (auto &i : option_list)
+            if (i.length() > max_len)
+                max_len = i.length();
+
+        int first_y = (WIN_HEIGHT - option_list.size()) / 2;
+        int first_x = (WIN_WIDTH - max_len) / 2;
+
+        for (;;)
+        {
+            // display
+            werase(list_win);
+            
+            wattron(list_win, COLOR_PAIR(UCOLOR_BOX));
+            box(list_win, 0, 0);
+            wattroff(list_win, COLOR_PAIR(UCOLOR_BOX));
+            
+            wattron(list_win, COLOR_PAIR(UCOLOR_MENU));
+            for (int i = 0; i < option_list.size(); i++)
+            {
+                if (i == option)
+                    wattron(list_win, A_REVERSE);
+                mvwprintw(list_win, first_y + i, first_x, option_list[i].c_str());
+                if (i == option)
+                    wattroff(list_win, A_REVERSE);
+            }
+            wattroff(list_win, COLOR_PAIR(UCOLOR_MENU));
+            wrefresh(list_win);
+
+            menu_key = getch();
+            if (menu_key == keyset.key_enter)
+                break;
+            else if (menu_key == keyset.key_quit)
+            {
+                option = -1;
+                break;
+            }
+            else if (menu_key == keyset.key_up)
+                option--;
+            else if (menu_key == keyset.key_down)
+                option++;
+
+            if (option < 0)
+                option = option_list.size() - 1;
+            else if (option >= option_list.size())
+                option = 0;
+        }
+
+        delwin(list_win);
+        return option;
+    }
+
+    std::string UI::_prompt_input(std::string prompt, int max_len)
+    {
+        WINDOW *prompt_win = newwin(WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
+        echo();
+        timeout(-1);
+
+        wattron(prompt_win, COLOR_PAIR(UCOLOR_BOX));
+        box(prompt_win, 0, 0);
+        wattroff(prompt_win, COLOR_PAIR(UCOLOR_BOX));
+
+        mvwprintw(prompt_win, WIN_HEIGHT / 3, (WIN_WIDTH - prompt.length()) / 2, prompt.c_str());
+
+        char *input_str = new char[max_len + 1];
+        mvwgetnstr(prompt_win, WIN_HEIGHT / 3 * 2, (WIN_WIDTH - max_len) / 2, input_str, max_len);
+
+        std::string ret_str(input_str);
+        delete[] input_str;
+        delwin(prompt_win);
+        noecho();
+        timeout(0);
+        return ret_str;
+    }
 
     UI::~UI() {}
 

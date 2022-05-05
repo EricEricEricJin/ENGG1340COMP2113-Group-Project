@@ -6,6 +6,7 @@ namespace game
 {
     Player::Player()
     {
+        thread_obj = nullptr;
     }
 
     void Player::init(bulletManager *bullet_manager, Map *map, Clock *clock, int *key_ptr)
@@ -159,8 +160,11 @@ namespace game
     void Player::stop()
     {
         running = false;
-        thread_obj->join();
-        delete thread_obj;
+        if (thread_obj != nullptr)
+        {
+            thread_obj->join();
+            delete thread_obj;
+        }
     }
 
     void Player::pause() { paused = true; }

@@ -2,7 +2,10 @@
 #define _UI_H
 
 #include <iostream>
+
 #include <ncurses.h>
+// #include <menu.h>
+
 #include <vector>
 #include <list>
 #include <thread>
@@ -56,12 +59,14 @@ namespace game
         int key_up;
         int key_down;
         int key_enter;
+        int key_quit;
     };
 
     class Player;
     class Zombie;
     class Map;
     class Bullet;
+    class rwSaved;
 
     class UI
     {
@@ -77,6 +82,7 @@ namespace game
         std::list<Bullet *> *bullet_list;
         Map *map;
         Clock *clock;
+        rwSaved* rw_saved;
 
         int status_val;
         std::thread *thread_obj;
@@ -88,11 +94,14 @@ namespace game
 
         int theme;
 
+        int _select_list(std::vector<std::string> option_list);
+        std::string _prompt_input(std::string prompt, int max_len);
+
         void _game_thread_loop();
         int _game_menu();
 
         bool _new_game_page(std::string *map_name); // map name
-        std::string _load_saving_page();            // saving name
+        bool _load_saving_page(std::string* ret_string);            // saving name
         void _setting_page();
         void _edit_map_page();
         // void _bottom_mode();
@@ -100,7 +109,7 @@ namespace game
     public:
         UI();
 
-        bool init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock);
+        bool init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock, rwSaved* rw_saved);
         void configure(uiKeySet keyset, int theme);
 
         int *get_key_ptr();

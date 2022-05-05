@@ -3,6 +3,7 @@
 #include <iostream>
 #include <tuple>
 #include <fstream>
+#include <filesystem>
 #include <json.hpp>
 
 #include "zombie.h"
@@ -16,6 +17,8 @@ namespace game
     class rwSaved
     {
     private:
+        std::string saving_dir;
+
         nlohmann::json* json_data;
 
         zombieManager* zombie_manager;
@@ -25,9 +28,10 @@ namespace game
         Clock* clock;
     public:
         // rwSaved();
-        void init(zombieManager* zombie_manager, bulletManager* bullet_manager, Player* player, Map* map, Clock* clock);
-        bool read_set(std::string path);
-        bool get_write(std::string path);
+        void init(zombieManager* zombie_manager, bulletManager* bullet_manager, Player* player, Map* map, Clock* clock, std::string saving_dir);
+        std::vector<std::string> get_all_savings();
+        bool read_set(std::string name);
+        bool get_write(std::string name);
         // ~rwSaved();
     };
 }

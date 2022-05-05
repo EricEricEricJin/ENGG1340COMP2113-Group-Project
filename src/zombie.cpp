@@ -50,6 +50,7 @@ namespace game
     zombieManager::zombieManager()
     {
         zombie_list = new std::list<Zombie *>;
+        thread_obj = nullptr;
     }
 
     void zombieManager::init(std::list<Bullet *> *bullet_list, Map *map, Player *player, Clock *clock)
@@ -106,8 +107,11 @@ namespace game
     void zombieManager::stop()
     {
         running = false;
-        thread_obj->join();
-        delete thread_obj;
+        if (thread_obj != nullptr)
+        {
+            thread_obj->join();
+            delete thread_obj;
+        }
     }
 
     void zombieManager::_thread_loop()

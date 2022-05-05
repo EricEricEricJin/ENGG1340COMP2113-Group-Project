@@ -42,10 +42,10 @@ int main()
     {
         switch (c)
         {
-        case KEY_DOWN:
+        case 'j':
             menu_driver(my_menu, REQ_DOWN_ITEM);
             break;
-        case KEY_UP:
+        case 'k':
             menu_driver(my_menu, REQ_UP_ITEM);
             break;
         }

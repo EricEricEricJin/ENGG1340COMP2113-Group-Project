@@ -40,6 +40,7 @@ namespace game
     bulletManager::bulletManager()
     {
         bullet_list = new std::list<Bullet *>;
+        thread_obj = nullptr;
     }
 
     void bulletManager::init(Map *map, std::list<Zombie *> *zombie_list, Player *player, Clock *clock)
@@ -279,9 +280,11 @@ namespace game
     void bulletManager::stop()
     {
         running = false;
-        if (thread_obj->joinable())
+        if (thread_obj != nullptr)
+        {
             thread_obj->join(); // block wait until thread complete
-        delete thread_obj;
+            delete thread_obj;
+        }
     }
 
     void bulletManager::pause()
