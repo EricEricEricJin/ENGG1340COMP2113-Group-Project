@@ -5,56 +5,68 @@ LINK_LIBS = -lncurses -lpthread
 
 INSTALL_DIR = ~/.local/bin
 RESOURCE_DIR = ~
-# abs_path = $(shell pwd)
 
-# NOTE: dependencies of object files below are not complete
-bullet.o: src/bullet.cpp src/bullet.h src/map.h src/player.h src/zombie.h
-	$(CC) -c $(COMPILE_FLAGS) $<  $(INCLUDE_FLAGS) -L lib/
+.PHONY: create_build all clean install uninstall
 
-map.o: src/map.cpp src/map.h
-	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
+all: create_build build/main;
 
-player.o: src/player.cpp src/player.h src/map.h src/bullet.h
-	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
+create_build:
+	if [ -d build ]; \
+		then rm -r build; \
+	fi; \
+	mkdir build
 
-ui.o: src/ui.cpp src/ui.h src/player.h src/map.h src/zombie.h src/bullet.h
-	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
+build/bullet.o: src/bullet.cpp src/bullet.h src/map.h src/player.h src/zombie.h
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -L lib/ -o $@
 
-solve_maze.o: src/solve_maze.cpp src/solve_maze.h
-	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
+build/map.o: src/map.cpp src/map.h
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
 
-zombie.o: src/zombie.cpp src/zombie.h src/bullet.h src/player.h src/map.h src/solve_maze.h
-	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
+build/player.o: src/player.cpp src/player.h src/map.h src/bullet.h
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
 
-mainloop.o: src/mainloop.cpp src/mainloop.h src/ui.h src/map.h src/bullet.h src/player.h src/zombie.h src/clock.h
-	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
+build/ui.o: src/ui.cpp src/ui.h src/player.h src/map.h src/zombie.h src/bullet.h
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
 
-main.o: src/main.cpp src/mainloop.h
-	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
+build/solve_maze.o: src/solve_maze.cpp src/solve_maze.h
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
 
-clock.o: src/clock.cpp src/clock.h
-	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
+build/zombie.o: src/zombie.cpp src/zombie.h src/bullet.h src/player.h src/map.h src/solve_maze.h
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
 
-setting.o: src/setting.cpp src/setting.h
-	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
+build/mainloop.o: src/mainloop.cpp src/mainloop.h src/ui.h src/map.h src/bullet.h src/player.h src/zombie.h src/clock.h
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
 
-rw_saved.o: src/rw_saved.cpp src/rw_saved.h include/json.hpp
-	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS)
+build/main.o: src/main.cpp src/mainloop.h
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
+
+build/clock.o: src/clock.cpp src/clock.h
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
+
+build/setting.o: src/setting.cpp src/setting.h
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
+
+build/rw_saved.o: src/rw_saved.cpp src/rw_saved.h include/json.hpp
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
 
 lib/tinyexpr.o: lib/tinyexpr.c
 	gcc -c $< -o $@ -I include/
 
-main: bullet.o map.o player.o ui.o zombie.o mainloop.o main.o solve_maze.o clock.o lib/tinyexpr.o setting.o rw_saved.o
-	g++ $^ -g -o main $(LINK_LIBS)
+build/main: build/bullet.o build/map.o build/player.o build/ui.o build/zombie.o build/mainloop.o build/main.o build/solve_maze.o build/clock.o lib/tinyexpr.o build/setting.o build/rw_saved.o
+	g++ $^ -g -o $@ $(LINK_LIBS)
 
-.PHONY: clean install uninstall
 clean:
-	rm bullet.o map.o player.o ui.o zombie.o mainloop.o main.o clock.o solve_maze.o setting.o rw_saved.o lib/tinyexpr.o
+	rm -r build; \
+	rm main;
 
-install: main
-	cp main $(INSTALL_DIR)/boxhead; \
+install: build/main local_resource
+	cp $< $(INSTALL_DIR)/boxhead; \
+	if [ -d $(RESOURCE_DIR)/.boxhead ]; \
+		then rm -r $(RESOURCE_DIR)/.boxhead; \
+	fi; \
 	mkdir $(RESOURCE_DIR)/.boxhead; \
-	cp -r local_resource $(RESOURCE_DIR)/.boxhead/resource;
+	mkdir $(RESOURCE_DIR)/.boxhead/savings; \
+	cp -r local_resource $(RESOURCE_DIR)/.boxhead/resource; \
 
 uninstall:
 	rm -r $(INSTALL_DIR)/boxhead; \
