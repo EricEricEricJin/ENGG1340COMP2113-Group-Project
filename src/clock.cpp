@@ -19,10 +19,11 @@ namespace game
     void Clock::stop()
     {
         running = false;
-        if (thread_obj != nullptr)
+        if (thread_obj && thread_obj->joinable())
         {
             thread_obj->join();
             delete thread_obj;
+            thread_obj = nullptr;
         }
     }
 
