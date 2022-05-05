@@ -32,15 +32,20 @@ namespace game
 
         initscr();
         noecho();
-        nocbreak();
+        cbreak();
         timeout(0);
         curs_set(0);
+
+        thread_obj = nullptr;
 
         if (LINES < WIN_HEIGHT || COLS < WIN_WIDTH)
         {
             endwin();
             return false;
         }
+        WIN_OFFSET_Y = (LINES - WIN_HEIGHT) / 2;
+        WIN_OFFSET_X = (COLS - WIN_WIDTH) / 2;
+
         return true;
 
         // box(stdscr, 0, 0);
@@ -86,196 +91,113 @@ namespace game
     bool UI::homepage(std::string *ret_string, int *ret_kind)
     {
         // setting
-        cbreak();
         timeout(-1);
-
-        WIN_OFFSET_Y = (LINES - WIN_HEIGHT) / 2;
-        WIN_OFFSET_X = (COLS - WIN_WIDTH) / 2;
 
         WINDOW *home_win = newwin(24, 80, WIN_OFFSET_Y, WIN_OFFSET_X);
         wbkgd(home_win, COLOR_PAIR(UCOLOR_MENU));
 
-        std::array<std::string, 5> items = {"New game", "Load saving", "Setting", "Edit map", "Exit"};
-        int current_item = 0;
+        std::vector<std::string> items = {"New game", "Load saving", "Exit"};
 
-        while (true)
+        if (int current_item = _select_list(items, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); current_item == 0)
         {
-            wclear(home_win);
-            wattron(home_win, COLOR_PAIR(UCOLOR_BOX));
-            box(home_win, 0, 0);
-            wattroff(home_win, COLOR_PAIR(UCOLOR_BOX));
-
-            // display menu
-            wattron(home_win, COLOR_PAIR(UCOLOR_MENU));
-            for (int i = 0; i < items.size(); i++)
-            {
-                if (current_item == i)
-                    wattron(home_win, A_REVERSE);
-                mvwaddstr(home_win, WIN_HEIGHT / items.size() * i + 1, WIN_WIDTH / 2 + 1, items[i].c_str());
-
-                if (current_item == i)
-                    wattroff(home_win, A_REVERSE);
-            }
-            wattroff(home_win, COLOR_PAIR(UCOLOR_MENU));
-            wrefresh(home_win);
-
-            int _key = wgetch(home_win);
-            if (_key == keyset.key_down)
-                current_item++;
-            else if (_key == keyset.key_up)
-                current_item--;
-            else if (_key == keyset.key_enter)
-            {
-                werase(home_win);
-                wrefresh(home_win);
-                if (current_item == HOMEPAGE_NEWG)
-                {
-                    bool _ret = _new_game_page(ret_string);
-                    if (_ret)
-                    {
-                        *ret_kind = HOMEPAGE_NEWG;
-                        break;
-                    }
-                }
-                else if (current_item == HOMEPAGE_LOAD)
-                {
-                    bool _ret = _load_saving_page(ret_string);
-                    if (_ret)
-                    {
-                        *ret_kind = HOMEPAGE_LOAD;
-                        break;
-                    }
-                }
-                else if (current_item == HOMEPAGE_SETT)
-                {
-                    _setting_page();
-                    *ret_kind = HOMEPAGE_SETT;
-                }
-                else if (current_item == HOMEPAGE_EDIT)
-                {
-                    _edit_map_page();
-                    *ret_kind = HOMEPAGE_EDIT;
-                }
-                else if (current_item == HOMEPAGE_EXIT)
-                {
-                    *ret_kind = HOMEPAGE_EXIT;
-                    break;
-                };
-            }
-
-            if (current_item < 0)
-                current_item = items.size();
-            else if (current_item >= items.size())
-                current_item = 0;
+            bool _ret = _new_game_page(ret_string);
+            if (_ret)
+                *ret_kind = HOMEPAGE_NEWG;
         }
+        else if (current_item == 1)
+        {
+            bool _ret = _load_saving_page(ret_string);
+            if (_ret)
+                *ret_kind = HOMEPAGE_LOAD;
+        }
+        else if (current_item == 2 || current_item == -1)
+            *ret_kind = HOMEPAGE_EXIT;
 
         delwin(home_win);
-        nocbreak();
         timeout(0);
         return false;
     }
 
     bool UI::_new_game_page(std::string *map_name)
     {
-
-        // select map
-        WINDOW *list_win = newwin(WIN_HEIGHT, 20, WIN_OFFSET_Y, WIN_OFFSET_X);
-        wbkgd(list_win, COLOR_PAIR(UCOLOR_MENU));
-
-        wattron(list_win, COLOR_PAIR(UCOLOR_BOX));
-        box(list_win, 0, 0);
-        wattroff(list_win, COLOR_PAIR(UCOLOR_BOX));
-
         WINDOW *preview_win = nullptr;
 
         auto map_names = map->names_of_maps();
 
-        int map_idx = 0;
+        bool ret = true;
+        int current_item = 0;
 
-        bool ret;
+        bool disp_mm_running = true;
 
-        while (true)
-        {
-            // display name list
-            wattron(list_win, COLOR_PAIR(UCOLOR_MENU));
-            for (int i = 0; i < map_names.size(); i++)
+        // display map thread
+        std::thread display_minimap_thread([this, &preview_win, &map_names, &current_item, &disp_mm_running]
+                                           {
+            int current_current_item = current_item;
+            while (disp_mm_running)
             {
-                if (map_idx == i)
-                    wattron(list_win, A_REVERSE);
-                mvwaddstr(list_win, i + 1, 1, map_names[i].c_str());
-                if (map_idx == i)
-                    wattroff(list_win, A_REVERSE);
-            }
-            wattroff(list_win, COLOR_PAIR(UCOLOR_MENU));
-            wrefresh(list_win);
-
-            // draw minimap
-            auto minimap = map->minimap(map_names[map_idx]);
-            if (preview_win != nullptr)
-                delwin(preview_win);
-            preview_win = newwin(minimap.size() + 2, minimap[0].length() + 2, WIN_OFFSET_Y, WIN_OFFSET_X + 20);
-            wbkgd(preview_win, COLOR_PAIR(UCOLOR_MENU));
-
-            wattron(preview_win, COLOR_PAIR(UCOLOR_MENU));
-            box(preview_win, 0, 0);
-            wattroff(preview_win, COLOR_PAIR(UCOLOR_MENU));
-
-            wattron(preview_win, COLOR_PAIR(UCOLOR_MENU));
-            int x, y = 1;
-            for (auto &line : minimap)
-            {
-                x = 1;
-                for (auto &chr : line)
+                if (current_current_item != current_item)
                 {
-                    if (chr != ' ')
-                        mvwaddch(preview_win, y, x, ACS_BLOCK);
-                    x++;
+                    current_current_item = current_item;
+                    auto minimap = map->minimap(map_names[current_item]);
+                    if (preview_win != nullptr)
+                    {
+                        werase(preview_win);
+                        wrefresh(preview_win);
+                        delwin(preview_win);
+                        preview_win = nullptr;
+                    }
+                    preview_win = newwin(minimap.size() + 2, minimap[0].length() + 2, WIN_OFFSET_Y + (WIN_HEIGHT - minimap.size() - 2) / 2,
+                                        WIN_OFFSET_X + WINT_WIDTH / 2 + (WIN_WIDTH - minimap[0].size() - 2) / 2);
+                    wbkgd(preview_win, COLOR_PAIR(UCOLOR_MENU));
+
+                    wattron(preview_win, COLOR_PAIR(UCOLOR_MENU));
+                    box(preview_win, 0, 0);
+                    wattroff(preview_win, COLOR_PAIR(UCOLOR_MENU));
+
+                    wattron(preview_win, COLOR_PAIR(UCOLOR_MENU));
+                    int x, y = 1;
+                    for (auto &line : minimap)
+                    {
+                        x = 1;
+                        for (auto &chr : line)
+                        {
+                            if (chr != ' ')
+                                mvwaddch(preview_win, y, x, ACS_BLOCK);
+                            x++;
+                        }
+                        y++;
+                    }
+                    wattroff(preview_win, COLOR_PAIR(UCOLOR_MENU));
+                    wrefresh(preview_win);
                 }
-                y++;
-            }
-            wattroff(preview_win, COLOR_PAIR(UCOLOR_MENU));
-            wrefresh(preview_win);
+                else
+                    clock->wait(1);
+            } });
 
-            int _key = wgetch(list_win);
-            if (_key == keyset.key_down)
-                map_idx++;
-            else if (_key == keyset.key_up)
-                map_idx--;
-            else if (_key == keyset.key_enter)
-            {
-                ret = true;
-                break;
-            }
-            else if (_key == 'q')
-            {
-                ret = false;
-                break;
-            }
+        if (current_item = _select_list(map_names, WIN_HEIGHT, WIN_WIDTH / 2, WIN_OFFSET_Y, WIN_OFFSET_X, &current_item); current_item == -1)
+            ret = false;
+        else
+            *map_name = map_names[current_item];
 
-            if (map_idx < 0)
-                map_idx = map_names.size() - 1;
-            else if (map_idx >= map_names.size())
-                map_idx = 0;
-        }
+        disp_mm_running = false;
+        display_minimap_thread.join();
 
         delwin(preview_win);
-        delwin(list_win);
-        *map_name = map_names[map_idx];
         return ret;
     }
 
     bool UI::_load_saving_page(std::string *ret_string)
     {
         auto saving_list = rw_saved->get_all_savings();
-        auto ret = _select_list(saving_list);
+        auto ret = _select_list(saving_list, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
         if (ret == -1)
             return false;
         *ret_string = saving_list[ret];
         return true;
     }
 
-    void UI::_setting_page() {}
-    void UI::_edit_map_page() {}
+    // void UI::_setting_page() {}
+    // void UI::_edit_map_page() {}
 
     void UI::start_game()
     {
@@ -296,10 +218,6 @@ namespace game
 
     void UI::_game_thread_loop()
     {
-        // keypad(game_win, true);
-        // keypad(stdscr, true);
-
-        // draw and refresh screen
         while (status_val == USTATUS_RUNNING)
         {
 
@@ -414,22 +332,24 @@ namespace game
             if (key == 'p')
             {
                 status_val = USTATUS_PAUSE;
-                wclear(game_win);
+                werase(game_win);
                 wrefresh(game_win);
-                wclear(status_win);
+                werase(status_win);
                 wrefresh(status_win);
 
-                if (auto menu_ret = _game_menu(); menu_ret == 0) // resume
+                std::vector<std::string> menu_items = {"Resume", "Save and Exit", "Exit"};
+
+                if (int current_item = _select_list(menu_items, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); current_item == 0 || current_item == -1) // resume
                 {
                     status_val = USTATUS_RUNNING;
                 }
-                else if (menu_ret == 1) // save
+                else if (current_item == 1) // save
                 {
                     auto saving_name = _prompt_input("Saving name", 16);
                     rw_saved->get_write(saving_name);
                     status_val = USTATUS_EXIT;
                 }
-                else if (menu_ret == 2) // exit
+                else if (current_item == 2) // exit
                 {
                     status_val = USTATUS_EXIT;
                 }
@@ -442,58 +362,6 @@ namespace game
 
         delwin(game_win);
         delwin(status_win);
-    }
-
-    int UI::_game_menu()
-    {
-        cbreak();
-        timeout(-1);
-
-        WINDOW *menu_win = newwin(WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
-        wbkgd(menu_win, COLOR_PAIR(UCOLOR_MENU));
-
-        std::array<std::string, 3> items = {"Resume", "Save", "Exit"};
-        int current_item = 0;
-
-        // display
-        while (true)
-        {
-            wclear(menu_win);
-            wattron(menu_win, COLOR_PAIR(UCOLOR_BOX));
-            box(menu_win, 0, 0);
-            wattroff(menu_win, COLOR_PAIR(UCOLOR_BOX));
-
-            wattron(menu_win, COLOR_PAIR(UCOLOR_MENU));
-
-            for (int i = 0; i < items.size(); i++)
-            {
-                if (i == current_item)
-                    wattron(menu_win, A_REVERSE);
-                mvwaddstr(menu_win, WIN_HEIGHT / items.size() * i + 1, WIN_WIDTH / 2 + 1, items[i].c_str());
-                if (i == current_item)
-                    wattroff(menu_win, A_REVERSE);
-            }
-            wattroff(menu_win, COLOR_PAIR(UCOLOR_MENU));
-
-            wrefresh(menu_win);
-            int key = getch();
-            if (key == keyset.key_down)
-                current_item++;
-            else if (key == keyset.key_up)
-                current_item--;
-            else if (key == keyset.key_enter)
-                break;
-
-            if (current_item < 0)
-                current_item = items.size() - 1;
-            else if (current_item >= items.size())
-                current_item = 0;
-        }
-
-        delwin(menu_win);
-        nocbreak();
-        timeout(0);
-        return current_item;
     }
 
     void UI::stop_game()
@@ -509,10 +377,11 @@ namespace game
 
     int UI::get_status() { return status_val; }
 
-    int UI::_select_list(std::vector<std::string> option_list)
+    int UI::_select_list(std::vector<std::string> option_list, int height, int width, int y_beg, int x_beg, int *item_ptr)
     {
         timeout(-1);
-        WINDOW *list_win = newwin(WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
+
+        WINDOW *list_win = newwin(height, width, y_beg, x_beg);
         wbkgd(list_win, COLOR_PAIR(UCOLOR_MENU));
         int option = 0;
 
@@ -523,15 +392,16 @@ namespace game
             if (i.length() > max_len)
                 max_len = i.length();
 
-        int first_y = (WIN_HEIGHT - option_list.size()) / 2;
-        int first_x = (WIN_WIDTH - max_len) / 2;
+        int first_y = (height - option_list.size()) / 2;
+        int first_x = (width - max_len) / 2;
 
         wattron(list_win, COLOR_PAIR(UCOLOR_MENU));
         for (;;)
         {
-            // display
-            wclear(list_win);
+            if (item_ptr)
+                *item_ptr = option;
 
+            werase(list_win);
             wattron(list_win, COLOR_PAIR(UCOLOR_BOX));
             box(list_win, 0, 0);
             wattroff(list_win, COLOR_PAIR(UCOLOR_BOX));
@@ -546,9 +416,10 @@ namespace game
                     wattroff(list_win, A_REVERSE);
             }
             wattroff(list_win, COLOR_PAIR(UCOLOR_MENU));
+
             wrefresh(list_win);
 
-            menu_key = getch();
+            menu_key = wgetch(list_win);
             if (menu_key == keyset.key_enter)
                 break;
             else if (menu_key == keyset.key_quit)
@@ -568,7 +439,12 @@ namespace game
         }
         wattroff(list_win, COLOR_PAIR(UCOLOR_MENU));
 
+        werase(list_win);
+        wrefresh(list_win);
         delwin(list_win);
+
+        timeout(0);
+
         return option;
     }
 
@@ -589,6 +465,8 @@ namespace game
 
         std::string ret_str(input_str);
         delete[] input_str;
+        werase(prompt_win);
+        wrefresh(prompt_win);
         delwin(prompt_win);
         noecho();
         timeout(0);

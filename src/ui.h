@@ -49,9 +49,7 @@ namespace game
     {
         HOMEPAGE_NEWG = 0,
         HOMEPAGE_LOAD = 1,
-        HOMEPAGE_SETT = 2,
-        HOMEPAGE_EDIT = 3,
-        HOMEPAGE_EXIT = 4
+        HOMEPAGE_EXIT = 2
     };
 
     struct uiKeySet
@@ -82,7 +80,7 @@ namespace game
         std::list<Bullet *> *bullet_list;
         Map *map;
         Clock *clock;
-        rwSaved* rw_saved;
+        rwSaved *rw_saved;
 
         int status_val;
         std::thread *thread_obj;
@@ -94,22 +92,21 @@ namespace game
 
         int theme;
 
-        int _select_list(std::vector<std::string> option_list);
+        int _select_list(std::vector<std::string> option_list, int height, int width, int y_beg, int x_beg, int* item_ptr = nullptr);
         std::string _prompt_input(std::string prompt, int max_len);
 
         void _game_thread_loop();
-        int _game_menu();
 
-        bool _new_game_page(std::string *map_name); // map name
-        bool _load_saving_page(std::string* ret_string);            // saving name
-        void _setting_page();
-        void _edit_map_page();
+        bool _new_game_page(std::string *map_name);      // map name
+        bool _load_saving_page(std::string *ret_string); // saving name
+        // void _setting_page();
+        // void _edit_map_page();
         // void _bottom_mode();
 
     public:
         UI();
 
-        bool init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock, rwSaved* rw_saved);
+        bool init(Player *player, std::list<Zombie *> *zombie_list, std::list<Bullet *> *bullet_list, Map *map, Clock *clock, rwSaved *rw_saved);
         void configure(uiKeySet keyset, int theme);
 
         int *get_key_ptr();
