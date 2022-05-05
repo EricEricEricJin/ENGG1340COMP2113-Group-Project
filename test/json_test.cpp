@@ -7,12 +7,17 @@ using namespace std;
 
 int main()
 {
-    map<string, int> zombie = {{"a", 1}, {"b", 2}};
-    vector<vector<int>> mapwall = {{1, 2, 3}, {4, 5, 6}};    
-    nlohmann::json json_data;
-    // json_data["zombies"] = {};
-    json_data["map"]["wall"] = mapwall;
-    cout << json_data << endl;
+   nlohmann::json json_data;
+    try
+    {
+        json_data.get<int>();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+   cout << (json_data["A"] == nullptr) << endl;
     
     return 0;
 }
