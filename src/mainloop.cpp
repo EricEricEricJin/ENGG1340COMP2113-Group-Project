@@ -42,8 +42,8 @@ void mainloop()
     int clock_frequency = 12;
 
     game::playerKeySet player_keyset{'w', 's', 'a', 'd', 'e', ' '};
-
     game::uiKeySet ui_keyset{'k', 'j', '\n', 'q'};
+    int theme = 0;
 
     if (getenv("BOXHEADRC") != nullptr)
         boxheadrc_path = getenv("BOXHEADRC");
@@ -51,23 +51,62 @@ void mainloop()
     game::Setting *setting = new game::Setting();
     if (setting->load(boxheadrc_path))
     {
+        // Resource path
         if (setting->get_resource_path() != "")
             resource_path = setting->get_resource_path();
 
+        // Clock frequency
         if (setting->get_clock_frequency() > 0)
             clock_frequency = setting->get_clock_frequency();
 
-        auto setting_keyset = setting->get_keyset();
-        if (setting_keyset.size() == 6)
+        // Player keyset
+        auto setting_player_keyset = setting->get_player_keyset();
+        if (setting_player_keyset.size() == 6)
         {
-            player_keyset.UP = setting_keyset[0];
-            player_keyset.DOWN = setting_keyset[1];
-            player_keyset.LEFT = setting_keyset[2];
-            player_keyset.RIGHT = setting_keyset[3];
-            player_keyset.STOP = setting_keyset[4];
-            player_keyset.FIRE = setting_keyset[5];
+            if (setting_player_keyset[0])
+                player_keyset.UP = setting_player_keyset[0];
+            if (setting_player_keyset[1])
+                player_keyset.DOWN = setting_player_keyset[1];
+            if (setting_player_keyset[2])
+                player_keyset.LEFT = setting_player_keyset[2];
+            if (setting_player_keyset[3])
+                player_keyset.RIGHT = setting_player_keyset[3];
+            if (setting_player_keyset[4])
+                player_keyset.STOP = setting_player_keyset[4];
+            if (setting_player_keyset[5])
+                player_keyset.FIRE = setting_player_keyset[5];
         }
+
+        // UI keyset
+        auto setting_ui_keyset = setting->get_ui_keyset();
+        if (setting_ui_keyset.size() == 4)
+        {
+            if (setting_ui_keyset[0])
+                ui_keyset.key_up = setting_ui_keyset[0];
+            if (setting_ui_keyset[1])
+                ui_keyset.key_down = setting_ui_keyset[1];
+            if (setting_ui_keyset[2])
+                ui_keyset.key_enter = setting_ui_keyset[2];
+            if (setting_ui_keyset[3])
+                ui_keyset.key_quit = setting_ui_keyset[3];
+        }
+
+        // theme
+        if (auto setting_theme = setting->get_theme(); setting_theme.find("dark") != std::string::npos)
+            theme |= game::UTHEME_DARK;
+        else if (setting_theme.find("light") != std::string::npos)
+            theme |= game::UTHEME_LIGHT;
+
+        if (auto setting_theme = setting->get_theme(); setting_theme.find("bord") != std::string::npos)
+            theme |= game::UTHEME_BORD;
+        else if (setting_theme.find("thin") != std::string::npos)
+            theme |= game::UTHEME_THIN;
     }
+
+    if ((theme & 0b0011) == 0) // light/dark not set
+        theme |= game::UTHEME_DARK;
+    if ((theme & 0b1100) == 0) // bord / thin not set
+        theme |= game::UTHEME_THIN;
 
     // print config
     std::cout << "Configuration load." << std::endl;
@@ -78,7 +117,8 @@ void mainloop()
               << "          LEFT " << player_keyset.LEFT << std::endl
               << "         RIGHT " << player_keyset.RIGHT << std::endl
               << "          STOP " << player_keyset.STOP << std::endl
-              << "          FIRE " << player_keyset.FIRE << std::endl;
+              << "          FIRE " << player_keyset.FIRE << std::endl
+              << "    Theme: " << theme << std::endl;
 
     std::cout << "Initializing map..." << std::endl;
     game::Map *map = new game::Map(resource_path + "map/");
@@ -125,7 +165,7 @@ void mainloop()
     rw_saved->init(zombie_manager, bullet_manager, player, map, clock, "./saving/");
 
     ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock, rw_saved);
-    ui->configure(ui_keyset, game::UTHEME_LIGHT | game::UTHEME_BORD);
+    ui->configure(ui_keyset, theme);
 
     std::string homepage_ret_string;
     int homepage_ret_kind;

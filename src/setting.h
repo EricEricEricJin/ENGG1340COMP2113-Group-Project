@@ -21,7 +21,10 @@ namespace game
 
         int get_clock_frequency();
 
-        std::vector<int> get_keyset();
+        std::vector<int> get_player_keyset();
+        std::vector<int> get_ui_keyset();
+        
+        std::string get_theme();
 
         ~Setting();
     };
