@@ -97,7 +97,7 @@ namespace game
 
         void _game_thread_loop();
 
-        bool _new_game_page(std::string *map_name);      // map name
+        bool _new_game_page(std::string *map_name, int* difficulty);      // map name
         bool _load_saving_page(std::string *ret_string); // saving name
         // void _setting_page();
         // void _edit_map_page();
@@ -110,7 +110,7 @@ namespace game
         void configure(uiKeySet keyset, int theme);
 
         int *get_key_ptr();
-        bool homepage(std::string *ret_string, int *ret_kind); // return only when select map and mode
+        bool homepage(std::string *ret_string, int* ret_val, int *ret_kind); // return only when select map and mode
         // parameter: [map list: Map]
         // return value: [map id: int], [# of players: int], [difficulty: int]
 

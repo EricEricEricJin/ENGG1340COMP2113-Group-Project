@@ -61,6 +61,11 @@ namespace game
         this->clock = clock;
     }
 
+    void zombieManager::set_difficulty(int difficulty)
+    {
+        tar_num = difficulty;
+    }
+
     void zombieManager::set_variables(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<int> zombie_hps)
     {
         for (int i = 0; i < zombie_types.size(); i++)
@@ -129,7 +134,7 @@ namespace game
         {
             if (!paused)
             {
-                if (get_num() < 4 && clock->get_ticks() > add_zombie_time + add_zombie_delay)
+                if (get_num() < tar_num && clock->get_ticks() > add_zombie_time + add_zombie_delay)
                 {
                     add(ZOMBIETYPE_ODNR, map->zb_get_rand_ent_yx());
                     add_zombie_time = clock->get_ticks();

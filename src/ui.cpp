@@ -88,7 +88,7 @@ namespace game
 
     int *UI::get_key_ptr() { return &key; }
 
-    bool UI::homepage(std::string *ret_string, int *ret_kind)
+    bool UI::homepage(std::string *ret_string, int *ret_val, int *ret_kind)
     {
         // setting
         timeout(-1);
@@ -100,7 +100,7 @@ namespace game
 
         if (int current_item = _select_list(items, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); current_item == 0)
         {
-            bool _ret = _new_game_page(ret_string);
+            bool _ret = _new_game_page(ret_string, ret_val);
             if (_ret)
                 *ret_kind = HOMEPAGE_NEWG;
         }
@@ -118,20 +118,22 @@ namespace game
         return false;
     }
 
-    bool UI::_new_game_page(std::string *map_name)
+    bool UI::_new_game_page(std::string *map_name, int *difficulty)
     {
         WINDOW *preview_win = nullptr;
 
         auto map_names = map->names_of_maps();
 
-        bool ret = true;
-        int current_item = 0;
+        bool ret;
+        for (;;)
+        {
+            ret = true;
+            int current_item = 0;
+            bool disp_mm_running = true;
 
-        bool disp_mm_running = true;
-
-        // display map thread
-        std::thread display_minimap_thread([this, &preview_win, &map_names, &current_item, &disp_mm_running]
-                                           {
+            // display map thread
+            std::thread display_minimap_thread([this, &preview_win, &map_names, &current_item, &disp_mm_running]
+                                               {
             int current_current_item = current_item;
             while (disp_mm_running)
             {
@@ -174,15 +176,29 @@ namespace game
                     clock->wait(1);
             } });
 
-        if (current_item = _select_list(map_names, WIN_HEIGHT, WIN_WIDTH / 2, WIN_OFFSET_Y, WIN_OFFSET_X, &current_item); current_item == -1)
-            ret = false;
-        else
-            *map_name = map_names[current_item];
+            if (current_item = _select_list(map_names, WIN_HEIGHT, WIN_WIDTH / 2, WIN_OFFSET_Y, WIN_OFFSET_X, &current_item); current_item == -1)
+                ret = false;
+            else
+                *map_name = map_names[current_item];
 
-        disp_mm_running = false;
-        display_minimap_thread.join();
+            disp_mm_running = false;
+            display_minimap_thread.join();
 
-        delwin(preview_win);
+            werase(preview_win);
+            wrefresh(preview_win);
+            delwin(preview_win);
+
+            if (!ret)
+                break;
+
+            // select difficulty:
+            std::vector<std::string> difficulty_items = {"High", "Medium", "Low"};
+            if (int current_item = _select_list(difficulty_items, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); current_item != -1)
+            {
+                *difficulty = current_item;
+                break;
+            }
+        }
         return ret;
     }
 
@@ -355,7 +371,6 @@ namespace game
                 }
             }
 
-            // key = wgetch(game_win);
             clock->wait(1);
             key = getch();
         }

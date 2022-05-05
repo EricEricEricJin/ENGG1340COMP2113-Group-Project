@@ -168,15 +168,25 @@ void mainloop()
     ui->configure(ui_keyset, theme);
 
     std::string homepage_ret_string;
+    int homepage_ret_val;
+
     int homepage_ret_kind;
 
     for (;;)
     {
-        ui->homepage(&homepage_ret_string, &homepage_ret_kind);
+        ui->homepage(&homepage_ret_string, &homepage_ret_val, &homepage_ret_kind);
         if (homepage_ret_kind == game::HOMEPAGE_NEWG)
         {
             if (map->load(homepage_ret_string))
+            {
+                if (homepage_ret_val == 0)
+                    zombie_manager->set_difficulty(game::ZDIFFICULTY_HIG);
+                else if (homepage_ret_val == 1)
+                    zombie_manager->set_difficulty(game::ZDIFFICULTY_MED);
+                else if (homepage_ret_val == 2)
+                    zombie_manager->set_difficulty(game::ZDIFFICULTY_LOW);
                 break;
+            }
         }
         else if (homepage_ret_kind == game::HOMEPAGE_LOAD)
         {
