@@ -56,10 +56,8 @@ namespace game
         using namespace std;
 
         filesystem::path str(resource_path); // Must have "/" at end
-        cout << "fp: " << str << endl;
         if (!filesystem::exists(str))
             return 0;
-        cout << "exist" << endl;
         filesystem::directory_entry entry(str);
         if (entry.status().type() != filesystem::file_type::directory)
             return 0;
@@ -68,43 +66,54 @@ namespace game
         for (auto &_name : list)
         {
             auto name = _name.path().filename().string();
-            cout << "name: " << name << endl;
             // open and parse file
             ifstream f(resource_path + name, fstream::in);
+
+            std::string type;
+
             if (f.fail())
-                continue;
+            {
+                f.close();
+                return 0;
+            }
+
             nlohmann::json json_data;
             try
             {
                 f >> json_data;
                 f.close();
+
+                type = json_data["type"].get<string>();
+
+                bul_type_dict[type] = new bulletType;
+                bul_type_dict[type]->speed = json_data["speed"].get<float>();
+                bul_type_dict[type]->chr = json_data["char"].get<string>();
+                bul_type_dict[type]->trig_mode = json_data["trig_mode"].get<int>();
+                bul_type_dict[type]->damage_dist = json_data["damage_dist"].get<float>();
+
+                bul_type_dict[type]->trig_c = json_data["trig_c"].get<float>();
+
+                if (bul_type_dict[type]->trig_mode == TRIG_CONTACT)
+                    for (auto &i : json_data["trig_obj"])
+                        bul_type_dict[type]->trig_obj.push_back(i.get<string>());
+
+                for (auto &i : json_data["damage_obj"])
+                    bul_type_dict[type]->damage_obj.push_back(i.get<std::string>());
+
+                te_variable vars[] = {{"x", &temp_distance}};
+                bul_type_dict[type]->damage_func = te_compile(json_data["damage_expr"].get<string>().c_str(), vars, 1, nullptr);
             }
             catch (const std::exception &e)
             {
-                std::cerr << e.what() << '\n';
+                // std::cerr << e.what() << '\n';
                 f.close();
+                if (!type.empty())
+                {
+                    delete bul_type_dict[type];
+                    bul_type_dict.erase(type);
+                }
                 return 0;
             }
-
-            auto type = json_data["type"].get<string>();
-
-            bul_type_dict[type] = new bulletType;
-            bul_type_dict[type]->speed = json_data["speed"].get<float>();
-            bul_type_dict[type]->chr = json_data["char"].get<string>();
-            bul_type_dict[type]->trig_mode = json_data["trig_mode"].get<int>();
-            bul_type_dict[type]->damage_dist = json_data["damage_dist"].get<float>();
-
-            bul_type_dict[type]->trig_c = json_data["trig_c"].get<float>();
-
-            if (bul_type_dict[type]->trig_mode == TRIG_CONTACT)
-                for (auto &i : json_data["trig_obj"])
-                    bul_type_dict[type]->trig_obj.push_back(i.get<string>());
-
-            for (auto &i : json_data["damage_obj"])
-                bul_type_dict[type]->damage_obj.push_back(i.get<std::string>());
-
-            te_variable vars[] = {{"x", &temp_distance}};
-            bul_type_dict[type]->damage_func = te_compile(json_data["damage_expr"].get<string>().c_str(), vars, 1, nullptr);
         }
         return 1;
     }
