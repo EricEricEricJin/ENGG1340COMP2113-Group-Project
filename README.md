@@ -18,3 +18,54 @@ Features planning to implement:
 6. Control the appearing and number of zombies throughout the game
 
 ## Installation
+### Install to default location
+By default, the binary is installed in directory `$HOME/.local/bin/` and resource folder is `$HOME/.boxhead/`. Note that resource folder is created while installation, user does not need to create it.
+
+To install at default location, execute
+```bash
+make
+make install
+```
+
+### Install to customized location
+If want to specify install location, execute
+```bash
+make RESOURCE_DIR=your_resource_folder INSTALL_DIR=your_binary_folder
+make install RESOURCE_DIR=your_resource_folder INSTALL_DIR=your_binary_folder
+```
+
+Example: if user wants to install the binary under `$HOME/bh_ins_test` and want to install the resource folder as `$HOME/bh_ins_test/hama/`, the user should execute
+```bash
+make RESOURCE_DIR=$HOME/bh_ins_test/hama INSTALL_DIR=$HOME/bh_ins_test
+make install RESOURCE_DIR=$HOME/bh_ins_test/hama INSTALL_DIR=$HOME/bh_ins_test
+```
+Then the program and resources are installed at following locations:
+```
+/home/eric/bh_ins_test/
+├── boxhead
+└── hama
+    ├── resource
+    │   ├── bullet
+    │   │   ├── 9mm.json
+    │   │   └── rpg.json
+    │   └── map
+    │       ├── 0.json
+    │       ├── bad_map.json
+    │       ├── map_2.json
+    │       └── map_3.json
+    └── saving
+```
+
+### Uninstall from default location
+To uninstall, if it is installed in default location, execute
+```bash
+make uninstall
+```
+
+### Uninstall from customized location
+If it is installed under user-speficied location, execute
+```bash
+make uninstall RESOURCE_DIR=your_resource_folder INSTALL_DIR=your_binary_folder
+```
+
+__WARNING: When uninstalling, all files under RESOURCE_DIR will be removed. Please type correct path if you use customized location, and backup your savings and resources.__
