@@ -32,6 +32,7 @@ namespace game
         std::vector<std::string> get_all_savings();
         bool read_set(std::string name);
         bool get_write(std::string name);
+        bool delete_saving(std::string name);
         // ~rwSaved();
     };
 }

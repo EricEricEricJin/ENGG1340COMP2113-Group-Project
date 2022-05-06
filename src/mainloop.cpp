@@ -212,10 +212,19 @@ void mainloop()
                 goto UI_HOMEPAGE_START;
             }
         }
+        else if (homepage_ret_kind == game::HOMEPAGE_DELE)
+        {
+            if (rw_saved->delete_saving(homepage_ret_string))
+            {
+                ui->notice(game::UNOTICE_NORMAL, "Saving " + homepage_ret_string + " deleted.");
+            }
+            else
+                ui->notice(game::UNOTICE_ERROR, "Cannot delete saving " + homepage_ret_string + ".");
+        }
         else if (homepage_ret_kind == game::HOMEPAGE_EXIT)
             break;
 
-        if (homepage_ret_kind != game::HOMEPAGE_EXIT)
+        if (homepage_ret_kind == game::HOMEPAGE_NEWG || homepage_ret_kind == game::HOMEPAGE_LOAD)
         {
             bullet_manager->run();
             zombie_manager->run();

@@ -53,9 +53,10 @@ namespace game
     };
     enum
     {
-        HOMEPAGE_NEWG = 0,
-        HOMEPAGE_LOAD = 1,
-        HOMEPAGE_EXIT = 2
+        HOMEPAGE_NEWG,
+        HOMEPAGE_LOAD,
+        HOMEPAGE_DELE,
+        HOMEPAGE_EXIT,
     };
 
     struct uiKeySet
@@ -108,6 +109,7 @@ namespace game
 
         bool _new_game_page(std::string *map_name, int* difficulty);      // map name
         bool _load_saving_page(std::string *ret_string); // saving name
+        bool _delete_saving_page(std::string* ret_string);
         // void _setting_page();
         // void _edit_map_page();
         // void _bottom_mode();

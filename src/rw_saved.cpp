@@ -233,4 +233,9 @@ namespace game
         json_data = nullptr;
         return ret;
     }
+
+    bool rwSaved::delete_saving(std::string name)
+    {
+        return std::filesystem::remove(saving_dir + name);
+    }
 }

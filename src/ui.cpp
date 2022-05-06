@@ -96,7 +96,7 @@ namespace game
         WINDOW *home_win = newwin(24, 80, WIN_OFFSET_Y, WIN_OFFSET_X);
         wbkgd(home_win, COLOR_PAIR(UCOLOR_MENU));
 
-        std::vector<std::string> items = {"New game", "Load saving", "Exit"};
+        std::vector<std::string> items = {"New game", "Load saving", "Delete saving", "Exit"};
         bool ret;
 
         for (;;)
@@ -119,7 +119,16 @@ namespace game
                     break;
                 }
             }
-            else if (current_item == 2 || current_item == -1)
+            else if (current_item == 2)
+            {
+                ret = _delete_saving_page(ret_string);
+                if (ret)
+                {
+                    *ret_kind = HOMEPAGE_DELE;
+                    break;
+                }
+            }
+            else if (current_item == 3 || current_item == -1)
             {
                 *ret_kind = HOMEPAGE_EXIT;
                 ret = false;
@@ -224,6 +233,23 @@ namespace game
             return false;
         *ret_string = saving_list[ret];
         return true;
+    }
+
+    bool UI::_delete_saving_page(std::string *ret_string)
+    {
+        auto saving_lsit = rw_saved->get_all_savings();
+        if (int ret = _select_list("Delete saving", saving_lsit, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); ret == -1)
+            return false;
+        else
+        {
+            if (int ret = _select_list("Confirm delete " + saving_lsit[ret], {"Confirm", "Cancel"}, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); ret == 0)
+            {
+                *ret_string = saving_lsit[ret];
+                return true;
+            }
+            else
+                return false;
+        }
     }
 
     // void UI::_setting_page() {}
