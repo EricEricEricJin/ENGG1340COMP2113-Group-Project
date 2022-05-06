@@ -37,9 +37,17 @@ float distance(std::pair<int, int> p1, std::pair<int, int> p2);
 void mainloop()
 {
     std::cout << "Loading configuration..." << std::endl;
+
+#ifdef BOXHEAD_PATH
+    std::string boxheadrc_path = std::string(BOXHEAD_PATH) + "init.bh";
+    std::string resource_path = std::string(BOXHEAD_PATH) + "resource/";
+    std::string saving_path = std::string(BOXHEAD_PATH) + "saving/";
+#else
     std::string boxheadrc_path = std::string(getenv("HOME")) + "/.boxhead/init.bh";
     std::string resource_path = std::string(getenv("HOME")) + "/.boxhead/resource/";
     std::string saving_path = std::string(getenv("HOME")) + "/.boxhead/saving/";
+#endif
+
     int clock_frequency = 12;
 
     game::playerKeySet player_keyset{'w', 's', 'a', 'd', 'e', ' '};

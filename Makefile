@@ -3,8 +3,8 @@ COMPILE_FLAGS = -g -std=c++17
 INCLUDE_FLAGS = -I src/ -I include/
 LINK_LIBS = -lncurses -lpthread
 
-INSTALL_DIR = ~/.local/bin
-RESOURCE_DIR = ~
+INSTALL_DIR = ${HOME}/.local/bin
+RESOURCE_DIR = ${HOME}/.boxhead
 
 .PHONY: create_build all clean install uninstall
 
@@ -34,7 +34,8 @@ build/zombie.o: src/zombie.cpp src/zombie.h src/bullet.h src/player.h src/map.h 
 	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
 
 build/mainloop.o: src/mainloop.cpp src/mainloop.h src/ui.h src/map.h src/bullet.h src/player.h src/zombie.h src/clock.h
-	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
+	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@ \
+	-D 'BOXHEAD_PATH="$(RESOURCE_DIR)/"'
 
 build/main.o: src/main.cpp src/mainloop.h
 	$(CC) -c $(COMPILE_FLAGS) $< $(INCLUDE_FLAGS) -o $@
@@ -61,13 +62,13 @@ clean:
 
 install: build/main local_resource
 	cp $< $(INSTALL_DIR)/boxhead; \
-	if [ -d $(RESOURCE_DIR)/.boxhead ]; \
-		then rm -r $(RESOURCE_DIR)/.boxhead; \
+	if [ -d $(RESOURCE_DIR) ]; \
+		then rm -r $(RESOURCE_DIR); \
 	fi; \
-	mkdir $(RESOURCE_DIR)/.boxhead; \
-	mkdir $(RESOURCE_DIR)/.boxhead/saving; \
-	cp -r local_resource $(RESOURCE_DIR)/.boxhead/resource; \
+	mkdir $(RESOURCE_DIR); \
+	mkdir $(RESOURCE_DIR)/saving; \
+	cp -r local_resource $(RESOURCE_DIR)/resource; \
 
 uninstall:
-	rm -r $(INSTALL_DIR)/boxhead; \
-	rm -r $(RESOURCE_DIR)/.boxhead;
+	rm $(INSTALL_DIR)/boxhead; \
+	rm -r $(RESOURCE_DIR);

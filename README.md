@@ -17,4 +17,4 @@ Features planning to implement:
 5. Determining whether main character or zombie is killed
 6. Control the appearing and number of zombies throughout the game
 
-**NOTE: FILES IN THIS REPO ARE CURRENTLY TESTINGS OF SOME LIBS AND SETUPS. CURRENTLY THEY DO NOT REPRESENT ANY OUTCOMES OF THIS PROJECT.**
+## Installation
