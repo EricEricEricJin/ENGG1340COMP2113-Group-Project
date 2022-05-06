@@ -72,6 +72,18 @@ namespace game
         hp = 100;
     }
 
+    chtype Player::get_char()
+    {
+        if (direction == PDIR_LEFT)
+            return ACS_LARROW;
+        if (direction == PDIR_RIGHT)
+            return ACS_RARROW;
+        if (direction == PDIR_UP)
+            return ACS_UARROW;
+        else
+            return ACS_DARROW;
+    }
+
     void Player::run(bool debug)
     {
         paused = false;

@@ -76,8 +76,6 @@ namespace game
     class UI
     {
     private:
-        const std::string PLAYER_CHR = "P";
-        const std::string ZOMBIE_CHR = "Z";
 
         const int WIN_WIDTH = 80, WIN_HEIGHT = 24;
         int WIN_OFFSET_Y, WIN_OFFSET_X;

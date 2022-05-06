@@ -73,7 +73,7 @@ namespace game
 
         float get_hp();            // return hp
         bool set_hp(float new_hp); // true for alive, false for dead
-        std::string get_char();    // depend on direction
+        chtype get_char();    // depend on direction
         std::pair<float, float> get_yx();
 
         void reset();

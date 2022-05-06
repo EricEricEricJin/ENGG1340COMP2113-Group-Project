@@ -260,11 +260,12 @@ void mainloop()
                     clock->start();
                 }
             }
+            clock->start();
             player->stop();
             zombie_manager->stop();
             bullet_manager->stop();
-            clock->stop();
             ui->stop_game();
+            clock->stop();
             if (player->get_hp() <= 0)
                 ui->notice(game::UNOTICE_NORMAL, "You died!");
         }

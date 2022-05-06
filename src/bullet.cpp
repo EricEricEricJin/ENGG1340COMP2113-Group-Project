@@ -231,6 +231,7 @@ namespace game
                                 zombie->set_hp(zombie->get_hp() - damage);
                             }
                         }
+
                         // player
                         if (pair_distance(player->get_yx(), bullet->get_yx()) <= bullet_type->damage_dist)
                         {

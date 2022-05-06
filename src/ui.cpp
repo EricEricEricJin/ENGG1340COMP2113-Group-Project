@@ -337,7 +337,7 @@ namespace game
 
             // player
             wattron(game_win, COLOR_PAIR(UCOLOR_PLAYER));
-            mvwaddstr(game_win, (int)round(player->get_yx().first + 1), (int)round(player->get_yx().second + 1), PLAYER_CHR.c_str());
+            mvwaddch(game_win, (int)round(player->get_yx().first + 1), (int)round(player->get_yx().second + 1), player->get_char());
             wattroff(game_win, COLOR_PAIR(UCOLOR_PLAYER));
 
             // zombie
@@ -412,7 +412,6 @@ namespace game
                     status_val = USTATUS_EXIT;
                 }
             }
-
             clock->wait_until(waiting_ticks + 1);
             key = getch();
         }
