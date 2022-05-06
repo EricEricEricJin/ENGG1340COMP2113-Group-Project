@@ -80,8 +80,9 @@ namespace game
             return ACS_RARROW;
         if (direction == PDIR_UP)
             return ACS_UARROW;
-        else
+        if (direction == PDIR_DOWN)
             return ACS_DARROW;
+        return ACS_DIAMOND;
     }
 
     void Player::run(bool debug)
