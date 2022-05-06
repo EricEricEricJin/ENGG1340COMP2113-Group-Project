@@ -37,7 +37,7 @@ int bfs(char **map, int lines, int cols, std::pair<int, int> source_yx, std::pai
 
             if (front == target_yx)
             {
-                delete searched;
+                delete[] searched;
                 return depth;
             }
             else
@@ -66,7 +66,7 @@ int bfs(char **map, int lines, int cols, std::pair<int, int> source_yx, std::pai
             }
         }
     }
-    delete searched;
+    delete[] searched;
     return -1;
 }
 

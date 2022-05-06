@@ -211,7 +211,7 @@ namespace game
                         triggered = true;
 
                     // Out-of-map
-                    if (map->get_bit(bullet->get_yx().first, bullet->get_yx().second) == -1)
+                    if (map->get_bit(bullet->get_yx().first, bullet->get_yx().second))
                         triggered = true;
 
                     if (triggered)
