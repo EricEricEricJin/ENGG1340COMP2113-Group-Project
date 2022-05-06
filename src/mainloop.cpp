@@ -120,60 +120,61 @@ void mainloop()
               << "          FIRE " << player_keyset.FIRE << std::endl
               << "    Theme: " << theme << std::endl;
 
-    std::cout << "Initializing map..." << std::endl;
-    game::Map *map = new game::Map(resource_path + "map/");
-    if (map->names_of_maps().empty())
-    {
-        std::cout << "Error: Map resource not found!" << std::endl;
-        delete setting;
-        delete map;
-        return;
-    }
-    std::cout << "Map initialized, " << map->names_of_maps().size() << " maps found." << std::endl;
-
-    game::Clock *clock = new game::Clock;
-    clock->set_freq(clock_frequency);
-    clock->reset();
-    clock->start();
-
     game::bulletManager *bullet_manager = new game::bulletManager();
     game::zombieManager *zombie_manager = new game::zombieManager();
     game::Player *player = new game::Player();
     game::UI *ui = new game::UI();
     game::rwSaved *rw_saved = new game::rwSaved();
-
-    player->init(bullet_manager, map, clock, ui->get_key_ptr());
-    bullet_manager->init(map, zombie_manager->get_zombie_list(), player, clock);
-    zombie_manager->init(bullet_manager->get_bullet_list(), map, player, clock);
-
-    std::cout << "Initializing bullet..." << std::endl;
-    bullet_manager->load_resource(resource_path + "bullet/");
-    if (bullet_manager->get_names().empty())
-    {
-        std::cout << "Error: Bullet resource not found!" << std::endl;
-        delete map;
-        delete clock;
-        delete bullet_manager;
-        delete zombie_manager;
-        delete player;
-        delete ui;
-    }
-    std::cout << "Bullet initialized, " << bullet_manager->get_names().size() << " bullets found." << std::endl;
-
-    player->configure(player_keyset);
-
-    rw_saved->init(zombie_manager, bullet_manager, player, map, clock, "./saving/");
-
-    ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock, rw_saved);
-    ui->configure(ui_keyset, theme);
+    game::Map *map = new game::Map(resource_path + "map/");
+    game::Clock *clock = new game::Clock;
 
     std::string homepage_ret_string;
     int homepage_ret_val;
-
     int homepage_ret_kind;
+
+    // Initialize UI
+    if (!(ui->init(player, zombie_manager->get_zombie_list(), bullet_manager->get_bullet_list(), map, clock, rw_saved)))
+    {
+        std::cout << "Terminal size too small!" << std::endl;
+        std::cout << "Terminal size too small!" << std::endl;
+        goto MAINLOOP_END;
+    }
+    ui->configure(ui_keyset, theme);
+
+    // Initialize map
+    if (map->names_of_maps().empty())
+    {
+        ui->notice(game::UNOTICE_ERROR, "Map resource not found");
+        goto MAINLOOP_END;
+    }
+
+    // Initialize clock
+    clock->set_freq(clock_frequency);
+    clock->reset();
+    clock->start();
+
+    // Initialize player
+    player->init(bullet_manager, map, clock, ui->get_key_ptr());
+    player->configure(player_keyset);
+
+    // Initialize zombies
+    zombie_manager->init(bullet_manager->get_bullet_list(), map, player, clock);
+
+    // Initialize bullet
+    bullet_manager->init(map, zombie_manager->get_zombie_list(), player, clock);
+    bullet_manager->load_resource(resource_path + "bullet/");
+    if (bullet_manager->get_names().empty())
+    {
+        ui->notice(game::UNOTICE_ERROR, "Bullet resource not found");
+        goto MAINLOOP_END;
+    }
+
+    // savings
+    rw_saved->init(zombie_manager, bullet_manager, player, map, clock, "./saving/");
 
     for (;;)
     {
+    UI_HOMEPAGE_START:
         ui->homepage(&homepage_ret_string, &homepage_ret_val, &homepage_ret_kind);
         if (homepage_ret_kind == game::HOMEPAGE_NEWG)
         {
@@ -185,51 +186,63 @@ void mainloop()
                     zombie_manager->set_difficulty(game::ZDIFFICULTY_MED);
                 else if (homepage_ret_val == 2)
                     zombie_manager->set_difficulty(game::ZDIFFICULTY_LOW);
-                break;
+                // break;
+            }
+            else
+            {
+                ui->notice(game::UNOTICE_ERROR, "Cannot load this map");
+                goto UI_HOMEPAGE_START;
             }
         }
         else if (homepage_ret_kind == game::HOMEPAGE_LOAD)
         {
             if (rw_saved->read_set(homepage_ret_string))
-                break;
+            {
+            }
+            else
+            {
+                ui->notice(game::UNOTICE_ERROR, "Cannot load this saving");
+                goto UI_HOMEPAGE_START;
+            }
         }
         else if (homepage_ret_kind == game::HOMEPAGE_EXIT)
             break;
-    }
 
-    if (homepage_ret_kind != game::HOMEPAGE_EXIT)
-    {
-        bullet_manager->run();
-        zombie_manager->run();
-        player->run();
-        ui->start_game();
-
-        bool paused = false;
-        while (player->get_hp() > 0 && ui->get_status() != game::USTATUS_EXIT)
+        if (homepage_ret_kind != game::HOMEPAGE_EXIT)
         {
-            clock->wait(1);
-            if (bool ui_status = ui->get_status(); ui_status == game::USTATUS_PAUSE && !paused)
+            bullet_manager->run();
+            zombie_manager->run();
+            player->run();
+            ui->start_game();
+
+            bool paused = false;
+            while (player->get_hp() > 0 && ui->get_status() != game::USTATUS_EXIT)
             {
-                paused = true;
-                player->pause();
-                bullet_manager->pause();
-                zombie_manager->pause();
-                clock->stop();
+                clock->wait(1);
+                if (bool ui_status = ui->get_status(); ui_status == game::USTATUS_PAUSE && !paused)
+                {
+                    paused = true;
+                    player->pause();
+                    bullet_manager->pause();
+                    zombie_manager->pause();
+                    clock->stop();
+                }
+                else if (ui_status == game::USTATUS_RUNNING && paused)
+                {
+                    paused = false;
+                    player->resume();
+                    bullet_manager->resume();
+                    zombie_manager->resume();
+                    clock->start();
+                }
             }
-            else if (ui_status == game::USTATUS_RUNNING && paused)
-            {
-                paused = false;
-                player->resume();
-                bullet_manager->resume();
-                zombie_manager->resume();
-                clock->start();
-            }
+            ui->stop_game();
+            if (player->get_hp() <= 0)
+                ui->notice(game::UNOTICE_NORMAL, "You died!");
         }
-        ui->stop_game();
     }
 
-    std::cout << "END" << std::endl;
-
+MAINLOOP_END:
     delete ui;
     delete zombie_manager;
     delete player;

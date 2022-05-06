@@ -28,8 +28,9 @@ namespace game
 
     Map::Map(std::string map_dir_path)
     {
-        // allocate map
         map_dir = map_dir_path;
+        map = nullptr;
+        bitmap = nullptr;
     }
 
     // Load map: load size and bitmap
@@ -55,117 +56,72 @@ namespace game
         int lines;
         int cols;
 
-        if (json_data["lines"].is_number_integer())
-            lines = json_data["lines"];
-        else
-            return false;
+        if (!zb_ent_yx_list.empty())
+            zb_ent_yx_list = {};
 
-        if (json_data["cols"].is_number_integer())
-            cols = json_data["cols"];
-        else
-            return false;
+        _delete_map();
 
-        LINES = lines;
-        COLS = cols;
-
-        // Load bitmap
-        // map = (Wall ***)malloc(sizeof(Wall **) * lines); // ?
-        // for (int i = 0; i < cols; i++)
-        //     map[i] = (Wall **)malloc(sizeof(Wall *) * cols);
-        map = new Wall **[lines];
-        for (int i = 0; i < lines; i++)
-            map[i] = new Wall *[cols];
-
-        bitmap = new char *[lines];
-        for (int i = 0; i < lines; i++)
-            bitmap[i] = new char[cols];
-
-        int i, j;
-        if (json_data["bitmap"].is_array())
+        try
         {
-            i = 0;
+            int lines = json_data["lines"].get<int>();
+            int cols = json_data["cols"].get<int>();
+
+            map = new Wall **[lines];
+            for (int i = 0; i < lines; i++)
+                map[i] = new Wall *[cols];
+
+            bitmap = new char *[lines];
+            for (int i = 0; i < lines; i++)
+                bitmap[i] = new char[cols];
+
+            int i = 0, j;
             for (auto &line : json_data["bitmap"])
             {
-                if (line.is_string())
+                j = 0;
+                for (auto &chr : line.get<std::string>())
                 {
-                    j = 0;
-                    for (auto &chr : line.get<std::string>())
+                    if (chr == ' ')
                     {
-                        // std::cout << "in Map::load(): " << i << " " << j << std::endl;
-                        if (chr == ' ')
-                        {
-                            map[i][j] = nullptr;
-                            bitmap[i][j] = 0;
-                        }
-                        else if (chr == '#')
-                        {
-                            map[i][j] = new Wall(-1, i, j);
-                            bitmap[i][j] = 1;
-                        }
-                        j++;
+                        map[i][j] = nullptr;
+                        bitmap[i][j] = 0;
                     }
-                    i++;
+                    else if (chr == '#')
+                    {
+                        map[i][j] = new Wall(-1, i, j);
+                        bitmap[i][j] = 1;
+                    }
+                    j++;
                 }
-                else
-                    return false;
+                i++;
             }
-        }
-        else
-            return false;
 
-        // Load player initialize point
-        if (json_data["player_init"].is_array())
-        {
-            if (json_data["player_init"][0].is_number_integer() &&
-                json_data["player_init"][1].is_number_integer())
-            {
-                player_init_yx = {
-                    json_data["player_init"][0],
-                    json_data["player_init"][1]};
-            }
-            else
-                return false;
-        }
-        else
-            return false;
+            player_init_yx = {json_data["player_init"][0].get<int>(), json_data["player_init"][1].get<int>()};
 
-        // Load zombie entrance points
-        if (json_data["z_entrance"]["up"].is_array())
-        {
-            // up: only x coord
+            // Load zombie entrance points
             for (auto &x : json_data["z_entrance"]["up"])
-                zb_ent_yx_list.push_back({0, x});
-        }
-        else
-            return false;
+                zb_ent_yx_list.push_back({0, x.get<int>()});
 
-        if (json_data["z_entrance"]["left"].is_array())
-        {
-            // left: only y coord
             for (auto &y : json_data["z_entrance"]["left"])
-                zb_ent_yx_list.push_back({y, 0});
-        }
-        else
-            return false;
+                zb_ent_yx_list.push_back({y.get<int>(), 0});
 
-        if (json_data["z_entrance"]["down"].is_array())
-        {
             for (auto &x : json_data["z_entrance"]["down"])
-                zb_ent_yx_list.push_back({lines - 1, x});
-        }
-        else
-            return false;
+                zb_ent_yx_list.push_back({lines - 1, x.get<int>()});
 
-        if (json_data["z_entrance"]["right"].is_array())
-        {
             for (auto &y : json_data["z_entrance"]["right"])
-                zb_ent_yx_list.push_back({y, cols - 1});
-        }
-        else
-            return false;
+                zb_ent_yx_list.push_back({y.get<int>(), cols - 1});
 
-        this->map_name = map_name;
-        return true;
+            this->map_name = map_name;
+            this->LINES = lines;
+            this->COLS = cols;
+
+            return true;
+        }
+        catch (const std::exception &e)
+        {
+
+            std::cerr << e.what() << '\n';
+            return false;
+        }
     }
 
     void Map::set_variables(std::string map_name, std::vector<std::vector<int>> wall_durabilitys)
@@ -281,7 +237,8 @@ namespace game
 
     Map::~Map()
     {
-        delete map;
+        delete[] map;
+        delete[] bitmap;
         // std::cout << "Map Dec" << std::endl;
     }
 
@@ -330,6 +287,28 @@ namespace game
         }
 
         return ret;
+    }
+
+    void Map::_delete_map()
+    {
+        if (map)
+        {
+            for (int i = 0; i < LINES; i++)
+            {
+                for (int j = 0; j < COLS; j++)
+                    delete map[i][j];
+                delete[] map[i];
+            }
+            delete[] map;
+            map = nullptr;
+        }
+        if (bitmap)
+        {
+            for (int i = 0; i < LINES; i++)
+                delete[] bitmap[i];
+            delete[] bitmap;
+            bitmap = nullptr;
+        }
     }
 
 }

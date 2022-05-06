@@ -97,25 +97,38 @@ namespace game
         wbkgd(home_win, COLOR_PAIR(UCOLOR_MENU));
 
         std::vector<std::string> items = {"New game", "Load saving", "Exit"};
+        bool ret;
 
-        if (int current_item = _select_list(items, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); current_item == 0)
+        for (;;)
         {
-            bool _ret = _new_game_page(ret_string, ret_val);
-            if (_ret)
-                *ret_kind = HOMEPAGE_NEWG;
+            if (int current_item = _select_list(items, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); current_item == 0)
+            {
+                ret = _new_game_page(ret_string, ret_val);
+                if (ret)
+                {
+                    *ret_kind = HOMEPAGE_NEWG;
+                    break;
+                }
+            }
+            else if (current_item == 1)
+            {
+                ret = _load_saving_page(ret_string);
+                if (ret)
+                {
+                    *ret_kind = HOMEPAGE_LOAD;
+                    break;
+                }
+            }
+            else if (current_item == 2 || current_item == -1)
+            {
+                *ret_kind = HOMEPAGE_EXIT;
+                ret = false;
+                break;
+            }
         }
-        else if (current_item == 1)
-        {
-            bool _ret = _load_saving_page(ret_string);
-            if (_ret)
-                *ret_kind = HOMEPAGE_LOAD;
-        }
-        else if (current_item == 2 || current_item == -1)
-            *ret_kind = HOMEPAGE_EXIT;
-
         delwin(home_win);
         timeout(0);
-        return false;
+        return ret;
     }
 
     bool UI::_new_game_page(std::string *map_name, int *difficulty)
@@ -465,9 +478,10 @@ namespace game
 
     std::string UI::_prompt_input(std::string prompt, int max_len)
     {
-        WINDOW *prompt_win = newwin(WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
         echo();
         timeout(-1);
+        WINDOW *prompt_win = newwin(WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
+        wbkgd(prompt_win, COLOR_PAIR(UCOLOR_MENU));
 
         wattron(prompt_win, COLOR_PAIR(UCOLOR_BOX));
         box(prompt_win, 0, 0);
@@ -486,6 +500,39 @@ namespace game
         noecho();
         timeout(0);
         return ret_str;
+    }
+
+    void UI::notice(int type, std::string content)
+    {
+        timeout(-1);
+        // new win
+        WINDOW *notice_win = newwin(WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
+        wbkgd(notice_win, COLOR_PAIR(UCOLOR_MENU));
+
+        wattron(notice_win, COLOR_PAIR(UCOLOR_BOX));
+        box(notice_win, 0, 0);
+        wattroff(notice_win, COLOR_PAIR(UCOLOR_BOX));
+
+        if (type == UNOTICE_NORMAL)
+            mvwprintw(notice_win, 0, (WIN_WIDTH - 6) / 2, "NOTICE");
+        else if (type == UNOTICE_ERROR)
+            mvwprintw(notice_win, 0, (WIN_WIDTH - 5) / 2, "ERROR");
+        else if (type == UNOTICE_WARNING)
+            mvwprintw(notice_win, 0, (WIN_WIDTH - 7) / 2, "WARNING");
+
+        mvwprintw(notice_win, WIN_HEIGHT / 2 - 1, (WIN_WIDTH - content.length()) / 2, content.c_str());
+
+        mvwprintw(notice_win, WIN_HEIGHT / 2 + 1, (WIN_WIDTH - 16) / 2, "Press any key...");
+
+        wrefresh(notice_win);
+
+        getch();
+
+        werase(notice_win);
+        wrefresh(notice_win);
+        delwin(notice_win);
+
+        timeout(0);
     }
 
     UI::~UI() { stop_game(); }

@@ -40,6 +40,8 @@ namespace game
         std::string map_dir;
         std::string map_name;
 
+        void _delete_map();
+
     public:
         Map(std::string map_dir_path);
         bool load(std::string map_name); // Load map from file, return whether success
