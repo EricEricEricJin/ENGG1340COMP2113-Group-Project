@@ -162,7 +162,7 @@ namespace game
                         preview_win = nullptr;
                     }
                     preview_win = newwin(minimap.size() + 2, minimap[0].length() + 2, WIN_OFFSET_Y + (WIN_HEIGHT - minimap.size() - 2) / 2,
-                                        WIN_OFFSET_X + WINT_WIDTH / 2 + (WIN_WIDTH - minimap[0].size() - 2) / 2);
+                                        WIN_OFFSET_X + WIN_WIDTH / 2 + (WIN_WIDTH - minimap[0].size() - 2) / 2);
                     wbkgd(preview_win, COLOR_PAIR(UCOLOR_MENU));
 
                     wattron(preview_win, COLOR_PAIR(UCOLOR_MENU));
