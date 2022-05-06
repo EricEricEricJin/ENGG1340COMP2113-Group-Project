@@ -151,7 +151,6 @@ namespace game
                 }
             }
             clock->wait(1);
-            beep();
         }
     }
 
