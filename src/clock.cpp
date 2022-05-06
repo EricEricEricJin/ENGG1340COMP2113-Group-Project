@@ -51,6 +51,8 @@ namespace game
 
     void Clock::wait(float ticks) { usleep(period_us * ticks); }
 
+    void Clock::wait_until(float ticks) { usleep(period_us * (ticks - this->ticks)); }
+
     void Clock::_thread_loop()
     {
         while (running)

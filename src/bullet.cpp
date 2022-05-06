@@ -170,8 +170,11 @@ namespace game
         std::list<Bullet *>::iterator bul_iter;
         bool triggered;
 
+        clock_tick_t waiting_ticks;
+
         while (running)
         {
+            waiting_ticks = clock->get_ticks();
             if (!paused)
             {
                 for (auto bul_iter = bullet_list->begin(); bul_iter != bullet_list->end();)
@@ -272,7 +275,7 @@ namespace game
                     }
                 }
             }
-            clock->wait(1);
+            clock->wait_until(waiting_ticks + 1);
         }
     }
 

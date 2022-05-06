@@ -85,8 +85,10 @@ namespace game
     void Player::_player_thread_loop()
     {
         int key = 0;
+        clock_tick_t waiting_ticks;
         while (running)
         {
+            waiting_ticks = clock->get_ticks();
             if (!paused)
             {
                 if (!_debug)
@@ -150,7 +152,7 @@ namespace game
                     x = x_temp;
                 }
             }
-            clock->wait(1);
+            clock->wait_until(waiting_ticks + 1);
         }
     }
 

@@ -275,9 +275,10 @@ namespace game
 
     void UI::_game_thread_loop()
     {
+        clock_tick_t waiting_ticks;
         while (status_val == USTATUS_RUNNING)
         {
-
+            waiting_ticks = clock->get_ticks();
             werase(game_win);
 
             wattron(game_win, COLOR_PAIR(UCOLOR_WALL));
@@ -412,7 +413,7 @@ namespace game
                 }
             }
 
-            clock->wait(1);
+            clock->wait_until(waiting_ticks + 1);
             key = getch();
         }
 

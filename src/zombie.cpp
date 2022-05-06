@@ -138,8 +138,11 @@ namespace game
         const int add_zombie_delay = 5;
         int add_zombie_time = -1;
 
+        clock_tick_t waiting_ticks;
+
         while (running)
         {
+            waiting_ticks = clock->get_ticks();
             if (!paused)
             {
                 if (get_num() < tar_num && clock->get_ticks() > add_zombie_time + add_zombie_delay)
@@ -211,7 +214,7 @@ namespace game
                 }
             }
 
-            clock->wait(1);
+            clock->wait_until(waiting_ticks + 1);
         }
         delete[] zombie_map;
     }
