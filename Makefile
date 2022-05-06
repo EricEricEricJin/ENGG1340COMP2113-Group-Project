@@ -1,7 +1,7 @@
 CC = g++
 COMPILE_FLAGS = -g -std=c++17
 INCLUDE_FLAGS = -I src/ -I include/
-LINK_LIBS = -lncursesw -lpthread -lstdc++fs
+LINK_LIBS = -lncurses -lpthread -lstdc++fs
 
 INSTALL_DIR = ${HOME}/.local/bin
 RESOURCE_DIR = ${HOME}/.boxhead
