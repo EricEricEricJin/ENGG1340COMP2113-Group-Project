@@ -103,6 +103,11 @@ namespace game
 
     int zombieManager::get_num() { return zombie_list->size(); }
 
+    void zombieManager::reset()
+    {
+        zombie_list->clear();
+    }
+
     void zombieManager::run()
     {
         paused = false;
@@ -207,7 +212,7 @@ namespace game
 
             clock->wait(1);
         }
-        delete zombie_map;
+        delete[] zombie_map;
     }
 
     void zombieManager::pause() { paused = true; }

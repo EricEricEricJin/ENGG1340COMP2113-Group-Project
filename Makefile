@@ -65,7 +65,7 @@ install: build/main local_resource
 		then rm -r $(RESOURCE_DIR)/.boxhead; \
 	fi; \
 	mkdir $(RESOURCE_DIR)/.boxhead; \
-	mkdir $(RESOURCE_DIR)/.boxhead/savings; \
+	mkdir $(RESOURCE_DIR)/.boxhead/saving; \
 	cp -r local_resource $(RESOURCE_DIR)/.boxhead/resource; \
 
 uninstall:

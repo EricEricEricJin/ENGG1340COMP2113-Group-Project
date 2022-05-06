@@ -102,6 +102,7 @@ namespace game
 
         std::list<Bullet *> *get_bullet_list();
 
+        void reset();
         void run();
 
         void shoot(std::string name, std::pair<float, float> yx, int dir, clock_tick_t shoot_time); // add bullet to loop

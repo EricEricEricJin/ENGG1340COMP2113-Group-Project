@@ -150,6 +150,11 @@ namespace game
         return bullet_list;
     }
 
+    void bulletManager::reset()
+    {
+        bullet_list->clear();
+    }
+
     void bulletManager::run()
     {
         paused = false;

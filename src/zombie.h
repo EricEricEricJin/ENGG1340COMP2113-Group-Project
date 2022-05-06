@@ -87,6 +87,9 @@ namespace game
         std::list<Zombie *> *get_zombie_list();
 
         int get_num(); // number of zombies alive
+
+        void reset();
+
         void run();
         void stop();
 

@@ -60,24 +60,20 @@ namespace game
             return false;
     }
 
-    // std::string Player::get_char()
-    // {
-    //     return chr;
-    // }
-
     std::pair<float, float> Player::get_yx()
     {
         return {y, x};
     }
 
+    void Player::reset()
+    {
+        y = map->player_get_init_yx().first;
+        x = map->player_get_init_yx().second;
+    }
+
     void Player::run(bool debug)
     {
         paused = false;
-        if (x < 0 || y < 0)
-        {
-            y = map->player_get_init_yx().first;
-            x = map->player_get_init_yx().second;
-        }
 
         running = true;
         _debug = debug;

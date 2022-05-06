@@ -39,6 +39,7 @@ void mainloop()
     std::cout << "Loading configuration..." << std::endl;
     std::string boxheadrc_path = std::string(getenv("HOME")) + "/.boxhead/init.bh";
     std::string resource_path = std::string(getenv("HOME")) + "/.boxhead/resource/";
+    std::string saving_path = std::string(getenv("HOME")) + "/.boxhead/saving/";
     int clock_frequency = 12;
 
     game::playerKeySet player_keyset{'w', 's', 'a', 'd', 'e', ' '};
@@ -54,6 +55,9 @@ void mainloop()
         // Resource path
         if (setting->get_resource_path() != "")
             resource_path = setting->get_resource_path();
+
+        if (setting->get_saving_path() != "")
+            resource_path = setting->get_saving_path();
 
         // Clock frequency
         if (setting->get_clock_frequency() > 0)
@@ -170,12 +174,15 @@ void mainloop()
     }
 
     // savings
-    rw_saved->init(zombie_manager, bullet_manager, player, map, clock, "./saving/");
+    rw_saved->init(zombie_manager, bullet_manager, player, map, clock, saving_path);
 
     for (;;)
     {
     UI_HOMEPAGE_START:
         ui->homepage(&homepage_ret_string, &homepage_ret_val, &homepage_ret_kind);
+        zombie_manager->reset();
+        bullet_manager->reset();
+        player->reset();
         if (homepage_ret_kind == game::HOMEPAGE_NEWG)
         {
             if (map->load(homepage_ret_string))

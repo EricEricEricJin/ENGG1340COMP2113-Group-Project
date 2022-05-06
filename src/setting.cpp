@@ -49,6 +49,20 @@ namespace game
         }
     }
 
+    std::string Setting::get_saving_path()
+    {
+        try
+        {
+            return (*json_data)["saving_path"].get<std::string>();
+        }
+        catch(const std::exception& e)
+        {
+            return "";
+        }
+        
+    }
+
+
     int Setting::get_clock_frequency()
     {
         try

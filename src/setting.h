@@ -18,6 +18,7 @@ namespace game
 
         bool load(std::string boxheadrc_path);
         std::string get_resource_path();
+        std::string get_saving_path();
 
         int get_clock_frequency();
 
