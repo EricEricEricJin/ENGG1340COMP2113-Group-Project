@@ -56,6 +56,7 @@ build/main: build/bullet.o build/map.o build/player.o build/ui.o build/zombie.o 
 
 clean:
 	rm -r build; \
+	rm lib/tinyexpr.o; \
 	rm main;
 
 install: build/main local_resource
