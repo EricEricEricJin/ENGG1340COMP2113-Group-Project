@@ -215,32 +215,15 @@ namespace game
         return zb_ent_yx_list[i];
     }
 
-    std::pair<int, int> Map::player_get_init_yx()
-    {
-        return player_init_yx;
-    }
+    std::pair<int, int> Map::player_get_init_yx() { return player_init_yx; }
 
-    char **Map::get_map()
-    {
-        return bitmap;
-    }
+    char **Map::get_map() { return bitmap; }
 
-    int Map::columns()
-    {
-        return COLS;
-    }
+    int Map::columns() { return COLS; }
 
-    int Map::lines()
-    {
-        return LINES;
-    }
+    int Map::lines() { return LINES; }
 
-    Map::~Map()
-    {
-        delete[] map;
-        delete[] bitmap;
-        // std::cout << "Map Dec" << std::endl;
-    }
+    Map::~Map() { _delete_map(); }
 
     std::vector<std::string> Map::names_of_maps()
     {

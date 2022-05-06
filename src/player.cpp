@@ -60,10 +60,10 @@ namespace game
             return false;
     }
 
-    std::string Player::get_char()
-    {
-        return chr;
-    }
+    // std::string Player::get_char()
+    // {
+    //     return chr;
+    // }
 
     std::pair<float, float> Player::get_yx()
     {
