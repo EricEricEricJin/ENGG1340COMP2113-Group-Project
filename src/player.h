@@ -2,7 +2,7 @@
 #define _PLAYER_H
 
 #include <iostream>
-#include <ncurses.h>
+#include <curses.h>
 #include <thread>
 #include <vector>
 #include <list>
