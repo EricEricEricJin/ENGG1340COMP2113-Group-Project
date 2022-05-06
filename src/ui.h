@@ -101,7 +101,7 @@ namespace game
 
         int theme;
 
-        int _select_list(std::vector<std::string> option_list, int height, int width, int y_beg, int x_beg, int* item_ptr = nullptr);
+        int _select_list(std::string prompt, std::vector<std::string> option_list, int height, int width, int y_beg, int x_beg, int* item_ptr = nullptr);
         std::string _prompt_input(std::string prompt, int max_len);
 
         void _game_thread_loop();

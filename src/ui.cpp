@@ -101,7 +101,7 @@ namespace game
 
         for (;;)
         {
-            if (int current_item = _select_list(items, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); current_item == 0)
+            if (int current_item = _select_list("Homepage", items, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); current_item == 0)
             {
                 ret = _new_game_page(ret_string, ret_val);
                 if (ret)
@@ -189,7 +189,7 @@ namespace game
                     clock->wait(1);
             } });
 
-            if (current_item = _select_list(map_names, WIN_HEIGHT, WIN_WIDTH / 2, WIN_OFFSET_Y, WIN_OFFSET_X, &current_item); current_item == -1)
+            if (current_item = _select_list("Select map", map_names, WIN_HEIGHT, WIN_WIDTH / 2, WIN_OFFSET_Y, WIN_OFFSET_X, &current_item); current_item == -1)
                 ret = false;
             else
                 *map_name = map_names[current_item];
@@ -200,13 +200,14 @@ namespace game
             werase(preview_win);
             wrefresh(preview_win);
             delwin(preview_win);
+            preview_win = nullptr;
 
             if (!ret)
                 break;
 
             // select difficulty:
             std::vector<std::string> difficulty_items = {"High", "Medium", "Low"};
-            if (int current_item = _select_list(difficulty_items, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); current_item != -1)
+            if (int current_item = _select_list("Select difficulty", difficulty_items, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); current_item != -1)
             {
                 *difficulty = current_item;
                 break;
@@ -218,7 +219,7 @@ namespace game
     bool UI::_load_saving_page(std::string *ret_string)
     {
         auto saving_list = rw_saved->get_all_savings();
-        auto ret = _select_list(saving_list, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
+        auto ret = _select_list("Select saving", saving_list, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X);
         if (ret == -1)
             return false;
         *ret_string = saving_list[ret];
@@ -368,7 +369,7 @@ namespace game
 
                 std::vector<std::string> menu_items = {"Resume", "Save and Exit", "Exit"};
 
-                if (int current_item = _select_list(menu_items, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); current_item == 0 || current_item == -1) // resume
+                if (int current_item = _select_list("Menu", menu_items, WIN_HEIGHT, WIN_WIDTH, WIN_OFFSET_Y, WIN_OFFSET_X); current_item == 0 || current_item == -1) // resume
                 {
                     status_val = USTATUS_RUNNING;
                 }
@@ -405,7 +406,7 @@ namespace game
 
     int UI::get_status() { return status_val; }
 
-    int UI::_select_list(std::vector<std::string> option_list, int height, int width, int y_beg, int x_beg, int *item_ptr)
+    int UI::_select_list(std::string prompt, std::vector<std::string> option_list, int height, int width, int y_beg, int x_beg, int *item_ptr)
     {
         timeout(-1);
 
@@ -433,6 +434,7 @@ namespace game
             wattron(list_win, COLOR_PAIR(UCOLOR_BOX));
             box(list_win, 0, 0);
             wattroff(list_win, COLOR_PAIR(UCOLOR_BOX));
+            mvwprintw(list_win, 0, (width - prompt.length()) / 2, prompt.c_str());
 
             wattron(list_win, COLOR_PAIR(UCOLOR_MENU));
             for (int i = 0; i < option_list.size(); i++)
