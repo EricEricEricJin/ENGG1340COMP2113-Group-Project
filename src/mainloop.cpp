@@ -21,7 +21,6 @@
 #include "mainloop.h"
 #include <queue>
 #include <vector>
-#include <filesystem>
 
 #include "ui.h"
 #include "map.h"

@@ -3,7 +3,7 @@
 #include "player.h"
 #include "zombie.h"
 
-#include <filesystem>
+#include <experimental/filesystem>
 #include <fstream>
 
 #include "tinyexpr.h"
@@ -55,13 +55,13 @@ namespace game
     {
         using namespace std;
 
-        filesystem::path str(resource_path); // Must have "/" at end
-        if (!filesystem::exists(str))
+        experimental::filesystem::path str(resource_path); // Must have "/" at end
+        if (!experimental::filesystem::exists(str))
             return 0;
-        filesystem::directory_entry entry(str);
-        if (entry.status().type() != filesystem::file_type::directory)
+        experimental::filesystem::directory_entry entry(str);
+        if (entry.status().type() != experimental::filesystem::file_type::directory)
             return 0;
-        filesystem::directory_iterator list(str);
+        experimental::filesystem::directory_iterator list(str);
 
         for (auto &_name : list)
         {

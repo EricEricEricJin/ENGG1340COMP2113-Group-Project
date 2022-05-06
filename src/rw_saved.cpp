@@ -17,7 +17,7 @@ namespace game
     std::vector<std::string> rwSaved::get_all_savings()
     {
         using namespace std;
-        using namespace std::filesystem;
+        using namespace std::experimental::filesystem;
 
         vector<string> ret;
         path str(saving_dir);
@@ -236,6 +236,6 @@ namespace game
 
     bool rwSaved::delete_saving(std::string name)
     {
-        return std::filesystem::remove(saving_dir + name);
+        return std::experimental::filesystem::remove(saving_dir + name);
     }
 }
