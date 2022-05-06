@@ -5,5 +5,10 @@
     "trig_mode": 1,
     "trig_c": 15,
     "damage_dist": 8,
+    "damage_obj": [
+        "wall",
+        "zombie",
+        "player"
+    ],
     "damage_expr": "(80 - x * 10)"
 }

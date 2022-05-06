@@ -59,6 +59,7 @@ namespace game
         float damage_dist;
         int trig_c;
         std::vector<std::string> trig_obj;
+        std::vector<std::string> damage_obj;
 
         te_expr *damage_func;
 

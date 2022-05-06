@@ -100,6 +100,9 @@ namespace game
                 for (auto &i : json_data["trig_obj"])
                     bul_type_dict[type]->trig_obj.push_back(i.get<string>());
 
+            for (auto &i : json_data["damage_obj"])
+                bul_type_dict[type]->damage_obj.push_back(i.get<std::string>());
+
             te_variable vars[] = {{"x", &temp_distance}};
             bul_type_dict[type]->damage_func = te_compile(json_data["damage_expr"].get<string>().c_str(), vars, 1, nullptr);
         }
@@ -213,46 +216,54 @@ namespace game
                     else if (bullet_type->trig_mode == TRIG_TIMER && clock->get_ticks() - bullet->get_shoot_time() >= bullet_type->trig_c)
                         triggered = true;
 
-                    // Out-of-map
-                    if (map->get_bit(bullet->get_yx().first, bullet->get_yx().second))
-                        triggered = true;
+                    // // Out-of-map
+                    // if (map->get_bit(bullet->get_yx().first, bullet->get_yx().second))
+                    //     triggered = true;
 
                     if (triggered)
                     {
                         // std::cout << "TRIGGERED" << std::endl;
                         // Find all zombies in distance
-                        for (auto &zombie : *zombie_list)
+                        if (std::count(bullet_type->damage_obj.begin(), bullet_type->damage_obj.end(), "zombie"))
                         {
-                            if (pair_distance(zombie->get_yx(), bullet->get_yx()) < bullet_type->damage_dist)
+                            for (auto &zombie : *zombie_list)
                             {
-                                temp_distance = pair_distance(zombie->get_yx(), bullet->get_yx());
-                                float damage = te_eval(bullet_type->damage_func);
-                                // std::cout << "Distance: " << temp_distance << " Damage: " << damage << std::endl;
-                                zombie->set_hp(zombie->get_hp() - damage);
-                            }
-                        }
-
-                        // player
-                        if (pair_distance(player->get_yx(), bullet->get_yx()) <= bullet_type->damage_dist)
-                        {
-                            temp_distance = pair_distance(player->get_yx(), bullet->get_yx());
-                            float damage = te_eval(bullet_type->damage_func);
-                            player->set_hp(player->get_hp() - damage);
-                        }
-
-                        // wall
-                        for (int i = 0; i < map->lines(); i++)
-                        {
-                            for (int j = 0; j < map->columns(); j++)
-                            {
-                                if (map->get_bit(i, j) && pair_distance({i, j}, bullet->get_yx()) <= bullet_type->damage_dist)
+                                if (pair_distance(zombie->get_yx(), bullet->get_yx()) < bullet_type->damage_dist)
                                 {
-                                    temp_distance = pair_distance({i, j}, bullet->get_yx());
-                                    map->damage(i, j, te_eval(bullet_type->damage_func));
+                                    temp_distance = pair_distance(zombie->get_yx(), bullet->get_yx());
+                                    float damage = te_eval(bullet_type->damage_func);
+                                    // std::cout << "Distance: " << temp_distance << " Damage: " << damage << std::endl;
+                                    zombie->set_hp(zombie->get_hp() - damage);
                                 }
                             }
                         }
 
+                        // player
+                        if (std::count(bullet_type->damage_obj.begin(), bullet_type->damage_obj.end(), "player"))
+                        {
+                            if (pair_distance(player->get_yx(), bullet->get_yx()) <= bullet_type->damage_dist)
+                            {
+                                temp_distance = pair_distance(player->get_yx(), bullet->get_yx());
+                                float damage = te_eval(bullet_type->damage_func);
+                                player->set_hp(player->get_hp() - damage);
+                            }
+                        }
+
+                        // wall
+                        if (std::count(bullet_type->damage_obj.begin(), bullet_type->damage_obj.end(), "wall"))
+                        {
+                            for (int i = 0; i < map->lines(); i++)
+                            {
+                                for (int j = 0; j < map->columns(); j++)
+                                {
+                                    if (map->get_bit(i, j) && pair_distance({i, j}, bullet->get_yx()) <= bullet_type->damage_dist)
+                                    {
+                                        temp_distance = pair_distance({i, j}, bullet->get_yx());
+                                        map->damage(i, j, te_eval(bullet_type->damage_func));
+                                    }
+                                }
+                            }
+                        }
                         // destroy bullet
                         delete bullet;
                         bullet_list->erase(bul_iter++);

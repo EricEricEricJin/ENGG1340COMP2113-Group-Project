@@ -8,6 +8,10 @@
         "wall",
         "zombie"
     ],
+    "damage_obj": [
+        "wall",
+        "zombie"
+    ],
     "damage_dist": 1,
     "damage_expr": "(20)"
 }
