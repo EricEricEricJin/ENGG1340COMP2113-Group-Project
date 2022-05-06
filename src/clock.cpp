@@ -11,9 +11,12 @@ namespace game
 
     void Clock::start()
     {
-        running = true;
-        thread_obj = new std::thread([=]
-                                     { _thread_loop(); });
+        if (!running)
+        {
+            running = true;
+            thread_obj = new std::thread([=]
+                                         { _thread_loop(); });
+        }
     }
 
     void Clock::stop()

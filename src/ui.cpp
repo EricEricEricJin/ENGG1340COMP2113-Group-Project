@@ -147,19 +147,20 @@ namespace game
         auto map_names = map->names_of_maps();
 
         bool ret;
+        int current_item = 0;
         for (;;)
         {
             ret = true;
-            int current_item = 0;
             bool disp_mm_running = true;
 
             // display map thread
             std::thread display_minimap_thread([this, &preview_win, &map_names, &current_item, &disp_mm_running]
                                                {
-            int current_current_item = current_item;
+            clock->wait(1);
+            int current_current_item = -1;
             while (disp_mm_running)
             {
-                if (current_current_item != current_item)
+                if (current_current_item != current_item && current_item != -1)
                 {
                     current_current_item = current_item;
                     auto minimap = map->minimap(map_names[current_item]);
@@ -451,6 +452,10 @@ namespace game
         int first_x = (width - max_len) / 2;
 
         wattron(list_win, COLOR_PAIR(UCOLOR_MENU));
+
+        if (item_ptr && (*item_ptr) >= 0 && (*item_ptr) < option_list.size())
+            option = *item_ptr;
+
         for (;;)
         {
             if (item_ptr)

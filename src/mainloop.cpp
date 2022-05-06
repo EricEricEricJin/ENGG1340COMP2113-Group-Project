@@ -162,8 +162,6 @@ void mainloop()
 
     // Initialize clock
     clock->set_freq(clock_frequency);
-    clock->reset();
-    clock->start();
 
     // Initialize player
     player->init(bullet_manager, map, clock, ui->get_key_ptr());
@@ -188,6 +186,7 @@ void mainloop()
     {
     UI_HOMEPAGE_START:
         ui->homepage(&homepage_ret_string, &homepage_ret_val, &homepage_ret_kind);
+        clock->reset();
         zombie_manager->reset();
         bullet_manager->reset();
         player->reset();
@@ -234,6 +233,7 @@ void mainloop()
 
         if (homepage_ret_kind == game::HOMEPAGE_NEWG || homepage_ret_kind == game::HOMEPAGE_LOAD)
         {
+            clock->start();
             bullet_manager->run();
             zombie_manager->run();
             player->run();
@@ -260,6 +260,10 @@ void mainloop()
                     clock->start();
                 }
             }
+            player->stop();
+            zombie_manager->stop();
+            bullet_manager->stop();
+            clock->stop();
             ui->stop_game();
             if (player->get_hp() <= 0)
                 ui->notice(game::UNOTICE_NORMAL, "You died!");

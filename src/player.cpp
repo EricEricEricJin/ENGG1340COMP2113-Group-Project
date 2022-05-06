@@ -69,6 +69,7 @@ namespace game
     {
         y = map->player_get_init_yx().first;
         x = map->player_get_init_yx().second;
+        hp = 100;
     }
 
     void Player::run(bool debug)
@@ -150,6 +151,7 @@ namespace game
                 }
             }
             clock->wait(1);
+            beep();
         }
     }
 
@@ -160,6 +162,7 @@ namespace game
         {
             thread_obj->join();
             delete thread_obj;
+            thread_obj = nullptr;
         }
     }
 

@@ -289,6 +289,7 @@ namespace game
         {
             thread_obj->join(); // block wait until thread complete
             delete thread_obj;
+            thread_obj = nullptr;
         }
     }
 
@@ -310,10 +311,7 @@ namespace game
     bulletManager::~bulletManager()
     {
         stop();
-        for (auto &bul_type : bul_type_dict)
-            delete bul_type.second;
-        for (auto &bullet : *bullet_list)
-            delete bullet;
+        reset();
         delete bullet_list;
     }
 }

@@ -123,6 +123,7 @@ namespace game
         {
             thread_obj->join();
             delete thread_obj;
+            thread_obj = nullptr;
         }
     }
 
@@ -221,8 +222,7 @@ namespace game
     zombieManager::~zombieManager()
     {
         stop();
-        for (auto &zombie : *zombie_list)
-            delete zombie;
+        zombie_list->clear();
         delete zombie_list;
     }
 

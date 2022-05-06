@@ -1,0 +1,13 @@
+{
+    "type": "Rifile",
+    "char": "*",
+    "speed": 1.1,
+    "trig_mode": 0,
+    "trig_c": 1.4,
+    "trig_obj": [
+        "wall",
+        "zombie"
+    ],
+    "damage_dist": 1,
+    "damage_expr": "(40)"
+}
