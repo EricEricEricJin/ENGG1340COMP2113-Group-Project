@@ -172,7 +172,7 @@ namespace game
                         preview_win = nullptr;
                     }
                     preview_win = newwin(minimap.size() + 2, minimap[0].length() + 2, WIN_OFFSET_Y + (WIN_HEIGHT - minimap.size() - 2) / 2,
-                                        WIN_OFFSET_X + WIN_WIDTH / 2 + (WIN_WIDTH - minimap[0].size() - 2) / 2);
+                                        WIN_OFFSET_X + WIN_WIDTH / 2 + (WIN_WIDTH / 2 - minimap[0].size() - 2) / 2);
                     wbkgd(preview_win, COLOR_PAIR(UCOLOR_MENU));
 
                     wattron(preview_win, COLOR_PAIR(UCOLOR_MENU));
@@ -465,7 +465,7 @@ namespace game
             wattron(list_win, COLOR_PAIR(UCOLOR_BOX));
             box(list_win, 0, 0);
             wattroff(list_win, COLOR_PAIR(UCOLOR_BOX));
-            mvwprintw(list_win, 0, (width - prompt.length()) / 2, prompt.c_str());
+            mvwprintw(list_win, 0, (width - prompt.length()) / 2 - 1, (" " + prompt + " ").c_str());
 
             wattron(list_win, COLOR_PAIR(UCOLOR_MENU));
             for (int i = 0; i < option_list.size(); i++)
@@ -547,11 +547,11 @@ namespace game
         wattroff(notice_win, COLOR_PAIR(UCOLOR_BOX));
 
         if (type == UNOTICE_NORMAL)
-            mvwprintw(notice_win, 0, (WIN_WIDTH - 6) / 2, "NOTICE");
+            mvwprintw(notice_win, 0, (WIN_WIDTH - 8) / 2, " NOTICE ");
         else if (type == UNOTICE_ERROR)
-            mvwprintw(notice_win, 0, (WIN_WIDTH - 5) / 2, "ERROR");
+            mvwprintw(notice_win, 0, (WIN_WIDTH - 7) / 2, " ERROR ");
         else if (type == UNOTICE_WARNING)
-            mvwprintw(notice_win, 0, (WIN_WIDTH - 7) / 2, "WARNING");
+            mvwprintw(notice_win, 0, (WIN_WIDTH - 9) / 2, " WARNING ");
 
         mvwprintw(notice_win, WIN_HEIGHT / 2 - 1, (WIN_WIDTH - content.length()) / 2, content.c_str());
 
