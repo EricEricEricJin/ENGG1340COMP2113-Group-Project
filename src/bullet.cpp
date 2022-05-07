@@ -289,13 +289,13 @@ namespace game
                     {
                         // bullet move
                         if (bullet->get_dir() == BDIR_UP)
-                            bullet->move({bullet->get_yx().first - 1, bullet->get_yx().second});
+                            bullet->move({bullet->get_yx().first - bullet_type->speed, bullet->get_yx().second});
                         else if (bullet->get_dir() == BDIR_DOWN)
-                            bullet->move({bullet->get_yx().first + 1, bullet->get_yx().second});
+                            bullet->move({bullet->get_yx().first + bullet_type->speed, bullet->get_yx().second});
                         else if (bullet->get_dir() == BDIR_LEFT)
-                            bullet->move({bullet->get_yx().first, bullet->get_yx().second - 1});
+                            bullet->move({bullet->get_yx().first, bullet->get_yx().second - bullet_type->speed});
                         else if (bullet->get_dir() == BDIR_RIGHT)
-                            bullet->move({bullet->get_yx().first, bullet->get_yx().second + 1});
+                            bullet->move({bullet->get_yx().first, bullet->get_yx().second + bullet_type->speed});
 
                         bul_iter++;
                     }

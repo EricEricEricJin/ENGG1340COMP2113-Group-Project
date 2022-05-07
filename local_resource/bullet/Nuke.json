@@ -1,0 +1,12 @@
+{
+    "type": "Nuke",
+    "char": "@",
+    "speed": 0,
+    "trig_mode": 1,
+    "trig_c": 20,
+    "damage_dist": 100,
+    "damage_obj": [
+        "zombie"
+    ],
+    "damage_expr": "101"
+}
