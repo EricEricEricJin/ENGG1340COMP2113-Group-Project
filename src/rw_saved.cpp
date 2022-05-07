@@ -74,6 +74,7 @@ namespace game
             int player_hp = (*json_data)["player"]["hp"].get<int>();
             int player_dir = (*json_data)["player"]["dir"].get<int>();
             std::string player_bul_name = (*json_data)["player"]["cur_bul_name"].get<std::string>();
+            int player_score = (*json_data)["player"]["score"].get<int>();
 
             // Zombies
             std::vector<int> zombie_types;
@@ -120,7 +121,7 @@ namespace game
 
             zombie_manager->set_variables(zombie_types, zombie_yxs, zombie_hps, zombie_tar_num);
             bullet_manager->set_variables(bullet_types, bullet_shoot_times, bullet_yxs, bullet_dirs);
-            player->set_variables(player_yx, player_hp, player_dir, player_bul_name);
+            player->set_variables(player_yx, player_hp, player_dir, player_bul_name, player_score);
             map->set_variables(map_name, map_wall_duras);
             clock->set_ticks(clock_ticks);
 
@@ -151,6 +152,7 @@ namespace game
         int player_hp;
         int player_dir;
         std::string player_bul_name;
+        int player_score;
 
         std::vector<int> zombie_types;
         std::vector<std::pair<int, int>> zombie_yxs;
@@ -165,7 +167,7 @@ namespace game
         std::string map_name;
         std::vector<std::vector<int>> map_wall_duras;
 
-        player->get_variables(player_yx, player_hp, player_dir, player_bul_name);
+        player->get_variables(player_yx, player_hp, player_dir, player_bul_name, player_score);
         zombie_manager->get_variables(zombie_types, zombie_yxs, zombie_hps, zombie_tar_num);
         bullet_manager->get_variables(bullet_types, bullet_shoot_times, bullet_yxs, bullet_dirs);
         map->get_variables(map_name, map_wall_duras);
@@ -185,6 +187,7 @@ namespace game
         (*json_data)["player"]["hp"] = player_hp;
         (*json_data)["player"]["dir"] = player_dir;
         (*json_data)["player"]["cur_bul_name"] = player_bul_name;
+        (*json_data)["player"]["score"] = player_score;
 
         // zombies
         for (int i = 0; i < zombie_types.size(); i++)

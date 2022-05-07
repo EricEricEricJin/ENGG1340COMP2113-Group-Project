@@ -6,6 +6,7 @@
 #include <thread>
 #include <vector>
 #include <list>
+#include <mutex>
 #include "clock.h"
 
 namespace game
@@ -51,6 +52,8 @@ namespace game
 
         playerKeySet *key_set;
 
+        int score;
+
         float hp;
         std::string chr = "P";
         float x = -1, y = -1;
@@ -63,12 +66,14 @@ namespace game
         bool _debug;
         int last_nonstop_dir;
 
+        std::mutex score_lock;
+
     public:
         Player();
         void init(bulletManager *bullet_manager, Map *map, Clock *clock, int *key_ptr);
         
-        void set_variables(std::pair<int, int> yx, int hp, int dir, std::string cur_bul_name);
-        void get_variables(std::pair<int, int>& yx, int& hp, int& dir, std::string& cur_bul_name);
+        void set_variables(std::pair<int, int> yx, int hp, int dir, std::string cur_bul_name, int score);
+        void get_variables(std::pair<int, int>& yx, int& hp, int& dir, std::string& cur_bul_name, int& score);
 
         void configure(playerKeySet new_keyset);
 
@@ -78,6 +83,9 @@ namespace game
         std::pair<float, float> get_yx();
 
         void reset();
+        void set_score(int new_score);
+        int get_score();
+
         void run(bool debug = false);
         void stop();
 

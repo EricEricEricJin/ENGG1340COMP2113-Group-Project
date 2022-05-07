@@ -23,21 +23,23 @@ namespace game
         reset();
     }
 
-    void Player::set_variables(std::pair<int, int> yx, int hp, int dir, std::string cur_bul_name)
+    void Player::set_variables(std::pair<int, int> yx, int hp, int dir, std::string cur_bul_name, int score)
     {
         this->y = yx.first;
         this->x = yx.second;
         this->hp = hp;
         this->direction = dir;
         this->cur_bul_name = cur_bul_name;
+        set_score(score);
     }
 
-    void Player::get_variables(std::pair<int, int> &yx, int &hp, int &dir, std::string &cur_bul_name)
+    void Player::get_variables(std::pair<int, int> &yx, int &hp, int &dir, std::string &cur_bul_name, int &score)
     {
         yx = {this->y, this->x};
         hp = this->hp;
         dir = this->direction;
         cur_bul_name = this->cur_bul_name;
+        score = this->score;
     }
 
     void Player::configure(playerKeySet new_keyset)
@@ -71,6 +73,7 @@ namespace game
         direction = PDIR_STOP;
         last_nonstop_dir = PDIR_RIGHT;
         hp = 100;
+        set_score(0);
     }
 
     chtype Player::get_char()
@@ -83,6 +86,15 @@ namespace game
             return ACS_LARROW;
         return ACS_RARROW;
     }
+
+    void Player::set_score(int new_score)
+    {
+        score_lock.lock();
+        score = new_score;
+        score_lock.unlock();
+    }
+
+    int Player::get_score() { return score; }
 
     void Player::run(bool debug)
     {
@@ -166,6 +178,7 @@ namespace game
                     y = y_temp;
                     x = x_temp;
                 }
+                set_score(get_score() + 1);
             }
             clock->wait_until(waiting_ticks + 1);
         }

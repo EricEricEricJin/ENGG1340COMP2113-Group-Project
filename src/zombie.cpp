@@ -156,6 +156,7 @@ namespace game
                     // If zombie dead, then remove
                     if ((*zombie_it)->get_hp() <= 0)
                     {
+                        player->set_score(player->get_score() + 100);
                         zombie_list->erase(zombie_it++);
                         continue;
                     }

@@ -369,7 +369,7 @@ namespace game
 
             wattron(status_win, COLOR_PAIR(UCOLOR_MENU));
             mvwprintw(status_win, 0, 35, "  %s", player->get_cur_bul_name().c_str());
-            mvwprintw(status_win, 0, 60, "  %ld", clock->get_ticks());
+            mvwprintw(status_win, 0, 60, "  %ld", player->get_score());
             wattroff(status_win, COLOR_PAIR(UCOLOR_MENU));
 
             int hp_color;
