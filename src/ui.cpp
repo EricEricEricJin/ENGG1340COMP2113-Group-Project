@@ -362,14 +362,14 @@ namespace game
             werase(status_win);
 
             wattron(status_win, COLOR_PAIR(UCOLOR_MENU) | A_REVERSE);
-            mvwprintw(status_win, 0, 0, "    HP    ");
-            mvwprintw(status_win, 0, 25, "  WEAPON  ");
-            mvwprintw(status_win, 0, 50, "   SCORE  ");
+            mvwprintw(status_win, 0, 1, "    HP    ");
+            mvwprintw(status_win, 0, 26, "  WEAPON  ");
+            mvwprintw(status_win, 0, 51, "   SCORE  ");
             wattroff(status_win, COLOR_PAIR(UCOLOR_MENU) | A_REVERSE);
 
             wattron(status_win, COLOR_PAIR(UCOLOR_MENU));
-            mvwprintw(status_win, 0, 35, "  %s", player->get_cur_bul_name().c_str());
-            mvwprintw(status_win, 0, 60, "  %ld", player->get_score());
+            mvwprintw(status_win, 0, 36, "  %s", player->get_cur_bul_name().c_str());
+            mvwprintw(status_win, 0, 61, "  %ld", player->get_score());
             wattroff(status_win, COLOR_PAIR(UCOLOR_MENU));
 
             int hp_color;
@@ -381,7 +381,7 @@ namespace game
                 hp_color = COLOR_PAIR(UCOLOR_HP_L);
 
             wattron(status_win, hp_color);
-            mvwprintw(status_win, 0, 10, "  %d", (int)(player->get_hp()));
+            mvwprintw(status_win, 0, 11, "  %d", (int)(player->get_hp()));
             wattroff(status_win, hp_color);
 
             wrefresh(status_win);
@@ -546,6 +546,7 @@ namespace game
         box(notice_win, 0, 0);
         wattroff(notice_win, COLOR_PAIR(UCOLOR_BOX));
 
+        wattron(notice_win, COLOR_PAIR(UCOLOR_MENU));
         if (type == UNOTICE_NORMAL)
             mvwprintw(notice_win, 0, (WIN_WIDTH - 8) / 2, " NOTICE ");
         else if (type == UNOTICE_ERROR)
@@ -556,10 +557,11 @@ namespace game
         mvwprintw(notice_win, WIN_HEIGHT / 2 - 1, (WIN_WIDTH - content.length()) / 2, content.c_str());
 
         mvwprintw(notice_win, WIN_HEIGHT / 2 + 1, (WIN_WIDTH - 16) / 2, "Press any key...");
+        wattroff(notice_win, COLOR_PAIR(UCOLOR_MENU));
 
         wrefresh(notice_win);
 
-        getch();
+        wgetch(notice_win);
 
         werase(notice_win);
         wrefresh(notice_win);

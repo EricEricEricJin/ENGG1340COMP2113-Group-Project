@@ -171,8 +171,7 @@ void mainloop()
 
     // Initialize bullet
     bullet_manager->init(map, zombie_manager->get_zombie_list(), player, clock);
-    bullet_manager->load_resource(resource_path + "bullet/");
-    if (bullet_manager->get_names().empty())
+    if (bullet_manager->load_resource(resource_path + "bullet/") == 0 || bullet_manager->get_names().empty())
     {
         ui->notice(game::UNOTICE_ERROR, "Bullet resource not found");
         goto MAINLOOP_END;

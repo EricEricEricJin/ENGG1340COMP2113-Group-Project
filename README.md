@@ -69,3 +69,35 @@ make uninstall RESOURCE_DIR=your_resource_folder INSTALL_DIR=your_binary_folder
 ```
 
 __WARNING: When uninstalling, all files under RESOURCE_DIR will be removed. Please type correct path if you use customized location, and backup your savings and resources.__
+
+## User configure file
+User can configure config file under RESOURCE_DIR. Its name is `init.bh` and is in JSON format.
+
+Following are the keys can be added to configure file
+| Key | Type | Description | Example | Default value |
+| --- | ---- | -----------| --- | --- |
+| theme | string | dark or light, bord or thin | "dark, bord" | "dark, thin"
+| resource_path | string | directory of resource | "/home/eric/hama/" | $HOME/.boxhead/resource/| 
+| saving_path | string | directory of savings | "/home/eric/mysavings/" | $HOME/.boxhead/saving |
+| Clock frequency | integer | Frequency of the game loop | 8 | 12 |
+| player_keyset | map | Keyset to move, shoot | {"up": 107, "down": 106} | {"up": 119, "down": 115, "left": 97, "right": 100, "stop": 101, "fire": 32} |
+| ui_keyset | map | Keyset to move in the menu | {"up": 119, "down": 115} | {"up": 107, "down": 106, "enter": 10, "quit": 113} |
+
+For the two key sets, user can also specify part of the keys (unspecified keys will follow the default) 
+
+A full Example of user configure file:
+```json
+{
+    "theme": "light, bord",
+    "resource_path": "/home/eric/hama/",
+    "saving_path": "/home/eric/mysavings",
+    "clock_frequency": 8,
+    "player_keyset": {
+        "fire": 122
+    },
+    "ui_keyset": {
+        "enter": 111,
+        "quit": 112
+    }
+}
+```
