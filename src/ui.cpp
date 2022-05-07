@@ -1,15 +1,3 @@
-/*
-    Homepage:
-    |-- Change setting
-        |-- clock_frequency
-        |-- resource_dir
-    |-- New game
-        |-- Map
-        |-- Difficulty
-    |-- Load from saving
-        |-- Select saving
-*/
-
 #include "ui.h"
 #include "player.h"
 #include "zombie.h"
@@ -47,9 +35,6 @@ namespace game
         WIN_OFFSET_X = (COLS - WIN_WIDTH) / 2;
 
         return true;
-
-        // box(stdscr, 0, 0);
-        // refresh();
     }
 
     void UI::configure(uiKeySet keyset, int theme)
@@ -571,5 +556,4 @@ namespace game
     }
 
     UI::~UI() { stop_game(); }
-
 }

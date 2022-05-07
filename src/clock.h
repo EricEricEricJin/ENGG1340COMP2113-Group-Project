@@ -18,7 +18,6 @@ namespace game
         void _thread_loop();
         bool running;
         std::thread *thread_obj;
-
         std::mutex clock_lock;
 
     public:

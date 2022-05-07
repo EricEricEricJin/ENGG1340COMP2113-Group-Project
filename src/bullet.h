@@ -76,47 +76,39 @@ namespace game
         Map *map;
         std::list<Zombie *> *zombie_list;
         Player *player;
+        Clock *clock;
 
         std::list<Bullet *> *bullet_list;
         std::map<std::string, bulletType *> bul_type_dict;
+
         bool running;
         bool paused;
-
         void _thread_loop();
         std::thread *thread_obj;
+        std::mutex bullet_list_lock;
 
         double temp_distance; // pass to tiny expr
-
-        Clock *clock;
-
-        std::mutex bullet_list_lock;
 
         void _out_of_map(std::pair<float, float> yx);
 
     public:
         bulletManager();
         void init(Map *map, std::list<Zombie *> *zombie_list, Player *player, Clock *clock);
-
         int load_resource(std::string resource_path);
 
         void set_variables(std::vector<std::string> types, std::vector<int> shoot_times, std::vector<std::pair<int, int>> yxs, std::vector<int> dirs);
         void get_variables(std::vector<std::string> &types, std::vector<int> &shoot_times, std::vector<std::pair<int, int>> &yxs, std::vector<int> &dirs);
-
         void print();
-
-        std::list<Bullet *> *get_bullet_list();
 
         void reset();
         void run();
-
         void shoot(std::string name, std::pair<float, float> yx, int dir, clock_tick_t shoot_time); // add bullet to loop
-
         void stop();
-
         void pause();
         void resume();
 
         std::vector<std::string> get_names();
+        std::list<Bullet *> *get_bullet_list();
 
         ~bulletManager();
     };

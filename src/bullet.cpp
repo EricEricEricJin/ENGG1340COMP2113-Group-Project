@@ -6,8 +6,6 @@
 #include <experimental/filesystem>
 #include <fstream>
 
-#include "tinyexpr.h"
-
 float pair_distance(std::pair<float, float> p1, std::pair<float, float> p2)
 {
     return sqrt((p1.first - p2.first) * (p1.first - p2.first) +
@@ -157,15 +155,9 @@ namespace game
         }
     }
 
-    std::list<Bullet *> *bulletManager::get_bullet_list()
-    {
-        return bullet_list;
-    }
+    std::list<Bullet *> *bulletManager::get_bullet_list() { return bullet_list; }
 
-    void bulletManager::reset()
-    {
-        bullet_list->clear();
-    }
+    void bulletManager::reset() { bullet_list->clear(); }
 
     void bulletManager::run()
     {
@@ -324,10 +316,7 @@ namespace game
         }
     }
 
-    void bulletManager::pause()
-    {
-        paused = true;
-    }
+    void bulletManager::pause() { paused = true; }
 
     void bulletManager::resume() { paused = false; }
 

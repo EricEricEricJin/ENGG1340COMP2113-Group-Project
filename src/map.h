@@ -9,7 +9,6 @@
 #include <fstream>
 #include <experimental/filesystem>
 
-// Load map file and add / delete walls.
 namespace game
 {
     class Wall

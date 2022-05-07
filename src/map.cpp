@@ -2,7 +2,6 @@
 
 namespace game
 {
-
     Wall::Wall(int durability, int y, int x)
     {
         this->durability = durability;
@@ -10,10 +9,7 @@ namespace game
         this->y = y;
     }
 
-    std::pair<int, int> Wall::get_yx()
-    {
-        return {y, x};
-    }
+    std::pair<int, int> Wall::get_yx() { return {y, x}; }
 
     std::string Wall::get_char()
     {
@@ -118,8 +114,6 @@ namespace game
         }
         catch (const std::exception &e)
         {
-
-            std::cerr << e.what() << '\n';
             return false;
         }
     }
@@ -202,16 +196,15 @@ namespace game
             if (map[y][x]->get_durability() <= 0)
                 remove(y, x);
         }
-
         return 0;
     }
 
     std::pair<int, int> Map::zb_get_rand_ent_yx()
     {
-        // std::cout << "Size: " << zb_ent_yx_list.size() << std::endl;
         std::random_device rd;
-        int i = (int)((float)(rd() - rd.min()) / (float)(rd.max() - rd.min()) * zb_ent_yx_list.size());
-        // std::cout << "Rand: " << i << std::endl;
+        int i;
+        for (i = (int)((float)(rd() - rd.min()) / (float)(rd.max() - rd.min()) * zb_ent_yx_list.size()); i < 0 || i >= zb_ent_yx_list.size();)
+            ;
         return zb_ent_yx_list[i];
     }
 
@@ -263,11 +256,8 @@ namespace game
             return ret;
         }
 
-        // json_data["minimap"]
         for (auto &line : json_data["minimap"])
-        {
             ret.push_back(line.get<std::string>());
-        }
 
         return ret;
     }

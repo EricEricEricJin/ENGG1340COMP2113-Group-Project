@@ -4,10 +4,7 @@
 
 namespace game
 {
-    Player::Player()
-    {
-        thread_obj = nullptr;
-    }
+    Player::Player() { thread_obj = nullptr; }
 
     void Player::init(bulletManager *bullet_manager, Map *map, Clock *clock, int *key_ptr)
     {
@@ -17,9 +14,7 @@ namespace game
         this->key_ptr = key_ptr;
 
         key_set = new playerKeySet;
-
         speed = 0.8;
-
         reset();
     }
 
@@ -42,15 +37,9 @@ namespace game
         score = this->score;
     }
 
-    void Player::configure(playerKeySet new_keyset)
-    {
-        *key_set = new_keyset;
-    }
+    void Player::configure(playerKeySet new_keyset) { *key_set = new_keyset; }
 
-    float Player::get_hp()
-    {
-        return hp;
-    }
+    float Player::get_hp() { return hp; }
 
     bool Player::set_hp(float new_hp)
     {
@@ -61,10 +50,7 @@ namespace game
             return false;
     }
 
-    std::pair<float, float> Player::get_yx()
-    {
-        return {y, x};
-    }
+    std::pair<float, float> Player::get_yx() { return {y, x}; }
 
     void Player::reset()
     {

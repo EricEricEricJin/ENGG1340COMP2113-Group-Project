@@ -64,10 +64,7 @@ namespace game
         Player *player;
 
         std::list<Zombie *> *zombie_list;
-        // std::vector<Zombie *> *zombie_list;
-
         int tar_num;
-
         bool running;
         bool paused;
 
@@ -83,7 +80,7 @@ namespace game
         void set_difficulty(int difficulty);
 
         void set_variables(std::vector<int> zombie_types, std::vector<std::pair<int, int>> zombie_yxs, std::vector<int> zombie_hps, int tar_num);
-        void get_variables(std::vector<int>& zombie_types, std::vector<std::pair<int, int>>& zombie_yxs, std::vector<int>& zombie_hps, int& tar_num);
+        void get_variables(std::vector<int> &zombie_types, std::vector<std::pair<int, int>> &zombie_yxs, std::vector<int> &zombie_hps, int &tar_num);
 
         void add(int type, std::pair<int, int> yx);
         std::list<Zombie *> *get_zombie_list();
@@ -91,10 +88,8 @@ namespace game
         int get_num(); // number of zombies alive
 
         void reset();
-
         void run();
         void stop();
-
         void pause();
         void resume();
 

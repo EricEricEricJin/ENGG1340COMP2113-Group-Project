@@ -128,7 +128,6 @@ namespace game
 
         int get_status();
 
-        void exit_game();
 
         void notice(int type, std::string content);
 

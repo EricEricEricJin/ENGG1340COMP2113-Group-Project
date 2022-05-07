@@ -2,10 +2,7 @@
 
 namespace game
 {
-    Setting::Setting()
-    {
-        json_data = nullptr;
-    }
+    Setting::Setting() { json_data = nullptr; }
 
     bool Setting::load(std::string boxheadrc_path)
     {
@@ -55,13 +52,11 @@ namespace game
         {
             return (*json_data)["saving_path"].get<std::string>();
         }
-        catch(const std::exception& e)
+        catch (const std::exception &e)
         {
             return "";
         }
-        
     }
-
 
     int Setting::get_clock_frequency()
     {
@@ -135,9 +130,6 @@ namespace game
         }
     }
 
-    Setting::~Setting()
-    {
-        delete json_data;
-    }
+    Setting::~Setting() { delete json_data; }
 
 }

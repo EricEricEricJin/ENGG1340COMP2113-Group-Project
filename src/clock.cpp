@@ -30,10 +30,7 @@ namespace game
         }
     }
 
-    void Clock::reset()
-    {
-        set_ticks(0);
-    }
+    void Clock::reset() { set_ticks(0); }
 
     void Clock::set_ticks(clock_tick_t ticks)
     {
@@ -74,9 +71,5 @@ namespace game
         }
     }
 
-    Clock::~Clock()
-    {
-        stop();
-    }
-
+    Clock::~Clock() { stop(); }
 }

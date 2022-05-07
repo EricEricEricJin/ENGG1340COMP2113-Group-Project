@@ -39,47 +39,38 @@ namespace game
     private:
         Map *map;
         bulletManager *bullet_manager;
-
         Clock *clock;
-
         int *key_ptr;
-
-        int direction;
-
-        float speed;
-
-        std::string cur_bul_name;
-
         playerKeySet *key_set;
 
+        int direction;
+        int last_nonstop_dir;
+        float speed;
+        std::string cur_bul_name;
         int score;
-
         float hp;
-        std::string chr = "P";
         float x = -1, y = -1;
 
         void _player_thread_loop();
         std::thread *thread_obj;
         bool running;
         bool paused;
+        std::mutex score_lock;
 
         bool _debug;
-        int last_nonstop_dir;
-
-        std::mutex score_lock;
 
     public:
         Player();
         void init(bulletManager *bullet_manager, Map *map, Clock *clock, int *key_ptr);
-        
+
         void set_variables(std::pair<int, int> yx, int hp, int dir, std::string cur_bul_name, int score);
-        void get_variables(std::pair<int, int>& yx, int& hp, int& dir, std::string& cur_bul_name, int& score);
+        void get_variables(std::pair<int, int> &yx, int &hp, int &dir, std::string &cur_bul_name, int &score);
 
         void configure(playerKeySet new_keyset);
 
         float get_hp();            // return hp
         bool set_hp(float new_hp); // true for alive, false for dead
-        chtype get_char();    // depend on direction
+        chtype get_char();         // depend on direction
         std::pair<float, float> get_yx();
 
         void reset();
@@ -88,7 +79,6 @@ namespace game
 
         void run(bool debug = false);
         void stop();
-
         void pause();
         void resume();
 

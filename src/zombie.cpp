@@ -77,7 +77,7 @@ namespace game
         }
     }
 
-    void zombieManager::get_variables(std::vector<int> &zombie_types, std::vector<std::pair<int, int>> &zombie_yxs, std::vector<int> &zombie_hps, int& tar_num)
+    void zombieManager::get_variables(std::vector<int> &zombie_types, std::vector<std::pair<int, int>> &zombie_yxs, std::vector<int> &zombie_hps, int &tar_num)
     {
         tar_num = this->tar_num;
         for (auto &zombie : *zombie_list)
@@ -159,11 +159,11 @@ namespace game
                     if ((*zombie_it)->get_hp() <= 0)
                     {
                         player->set_score(player->get_score() + 100);
-                        
+
                         zombie_list_lock.lock();
                         zombie_list->erase(zombie_it++);
                         zombie_list_lock.unlock();
-                        
+
                         continue;
                     }
 
@@ -235,5 +235,4 @@ namespace game
         zombie_list->clear();
         delete zombie_list;
     }
-
 }

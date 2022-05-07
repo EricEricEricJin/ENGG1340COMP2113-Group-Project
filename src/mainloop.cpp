@@ -1,25 +1,4 @@
-/*
-
-    DO:
-    - Initialize UI
-    - UI hp
-    - Initialize Map
-    - Initialize player
-    - player.run
-    - // enter mainloop
-    - Add zombies
-    - zombie.run
-    - Player add Bullets
-    - zombie add bullets
-    - for each bullet
-        if triggered
-            calculate damage
-
-
-*/
-
 #include "mainloop.h"
-#include <queue>
 #include <vector>
 
 #include "ui.h"
@@ -30,8 +9,6 @@
 #include "clock.h"
 #include "setting.h"
 #include "rw_saved.h"
-
-float distance(std::pair<int, int> p1, std::pair<int, int> p2);
 
 void mainloop()
 {
