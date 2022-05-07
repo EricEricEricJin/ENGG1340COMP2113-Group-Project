@@ -61,7 +61,7 @@ clean:
 
 install: build/main local_resource
 	if ! [ -d $(INSTALL_DIR) ]; \
-		then mkdir INSTALL_DIR; \
+		then mkdir $(INSTALL_DIR); \
 	fi; \
 	cp $< $(INSTALL_DIR)/boxhead; \
 	if [ -d $(RESOURCE_DIR) ]; \
