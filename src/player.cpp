@@ -20,8 +20,7 @@ namespace game
 
         speed = 0.8;
 
-        direction = PDIR_RIGHT;
-        hp = 100;
+        reset();
     }
 
     void Player::set_variables(std::pair<int, int> yx, int hp, int dir, std::string cur_bul_name)
@@ -69,20 +68,20 @@ namespace game
     {
         y = map->player_get_init_yx().first;
         x = map->player_get_init_yx().second;
+        direction = PDIR_STOP;
+        last_nonstop_dir = PDIR_RIGHT;
         hp = 100;
     }
 
     chtype Player::get_char()
     {
-        if (direction == PDIR_LEFT)
-            return ACS_LARROW;
-        if (direction == PDIR_RIGHT)
-            return ACS_RARROW;
-        if (direction == PDIR_UP)
+        if (last_nonstop_dir == PDIR_UP)
             return ACS_UARROW;
-        if (direction == PDIR_DOWN)
+        if (last_nonstop_dir == PDIR_DOWN)
             return ACS_DARROW;
-        return ACS_DIAMOND;
+        if (last_nonstop_dir == PDIR_LEFT)
+            return ACS_LARROW;
+        return ACS_RARROW;
     }
 
     void Player::run(bool debug)
@@ -126,7 +125,7 @@ namespace game
                 else if (key == key_set->FIRE)
                 {
                     if (!cur_bul_name.empty())
-                        bullet_manager->shoot(cur_bul_name, {y, x}, direction, clock->get_ticks());
+                        bullet_manager->shoot(cur_bul_name, {y, x}, last_nonstop_dir, clock->get_ticks());
                 }
 
                 else if ('1' <= key && key <= '9')
@@ -141,6 +140,9 @@ namespace game
                     // put wall
                     map->add(round(y), round(x), 100);
                 }
+
+                if (direction != PDIR_STOP)
+                    last_nonstop_dir = direction;
 
                 // Walk
                 float x_temp = x, y_temp = y;

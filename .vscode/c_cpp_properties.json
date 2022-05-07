@@ -3,14 +3,12 @@
         {
             "name": "engg1340_proj",
             "includePath": [
-                "include/ncursesw",
                 "include",
                 "src"
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "include/ncursesw",
                     "include",
                     "src"
                 ]

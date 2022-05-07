@@ -61,6 +61,7 @@ namespace game
         bool paused;
 
         bool _debug;
+        int last_nonstop_dir;
 
     public:
         Player();
