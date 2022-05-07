@@ -24,6 +24,10 @@ namespace game
         this->x = yx.second;
         this->hp = hp;
         this->direction = dir;
+        if (dir != PDIR_STOP)
+            last_nonstop_dir = dir;
+        else
+            last_nonstop_dir = PDIR_RIGHT;
         this->cur_bul_name = cur_bul_name;
         set_score(score);
     }
