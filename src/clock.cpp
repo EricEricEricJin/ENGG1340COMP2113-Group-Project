@@ -30,11 +30,16 @@ namespace game
         }
     }
 
-    void Clock::reset() { ticks = 0; }
+    void Clock::reset()
+    {
+        set_ticks(0);
+    }
 
     void Clock::set_ticks(clock_tick_t ticks)
     {
+        clock_lock.lock();
         this->ticks = ticks;
+        clock_lock.unlock();
     }
 
     void Clock::set_freq(float freq)
@@ -63,7 +68,9 @@ namespace game
         while (running)
         {
             usleep(period_us);
+            clock_lock.lock();
             ticks++;
+            clock_lock.unlock();
         }
     }
 

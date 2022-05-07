@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <mutex>
 #include "clock.h"
 
 enum
@@ -73,6 +74,7 @@ namespace game
         void _thread_loop();
 
         std::thread *thread_obj;
+        std::mutex zombie_list_lock;
 
     public:
         zombieManager();

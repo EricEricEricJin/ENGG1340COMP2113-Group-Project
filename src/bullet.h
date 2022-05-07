@@ -6,6 +6,7 @@
 #include <map>
 #include <thread>
 #include <list>
+#include <mutex>
 
 #include "tinyexpr.h"
 #include "clock.h"
@@ -84,9 +85,11 @@ namespace game
         void _thread_loop();
         std::thread *thread_obj;
 
-        float temp_distance; // pass to tiny expr
+        double temp_distance; // pass to tiny expr
 
         Clock *clock;
+
+        std::mutex bullet_list_lock;
 
         void _out_of_map(std::pair<float, float> yx);
 

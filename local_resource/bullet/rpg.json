@@ -10,5 +10,5 @@
         "zombie",
         "player"
     ],
-    "damage_expr": "(80 - x * 10)"
+    "damage_expr": "80-(x*10)"
 }

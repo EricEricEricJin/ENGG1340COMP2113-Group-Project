@@ -225,9 +225,11 @@ namespace game
                     else if (bullet_type->trig_mode == TRIG_TIMER && clock->get_ticks() - bullet->get_shoot_time() >= bullet_type->trig_c)
                         triggered = true;
 
-                    // // Out-of-map
+                    // Out-of-map
                     // if (map->get_bit(bullet->get_yx().first, bullet->get_yx().second))
                     //     triggered = true;
+                    if (auto bullet_yx = bullet->get_yx(); bullet_yx.first < -1 || bullet_yx.first > map->lines() || bullet_yx.second < -1 || bullet_yx.second > map->columns())
+                        triggered = true;
 
                     if (triggered)
                     {
@@ -239,10 +241,10 @@ namespace game
                             {
                                 if (pair_distance(zombie->get_yx(), bullet->get_yx()) < bullet_type->damage_dist)
                                 {
-                                    temp_distance = pair_distance(zombie->get_yx(), bullet->get_yx());
-                                    float damage = te_eval(bullet_type->damage_func);
+                                    temp_distance = (double)pair_distance(zombie->get_yx(), bullet->get_yx());
+                                    double damage = te_eval(bullet_type->damage_func);
                                     // std::cout << "Distance: " << temp_distance << " Damage: " << damage << std::endl;
-                                    zombie->set_hp(zombie->get_hp() - damage);
+                                    zombie->set_hp(zombie->get_hp() - (float)damage);
                                 }
                             }
                         }
@@ -252,9 +254,10 @@ namespace game
                         {
                             if (pair_distance(player->get_yx(), bullet->get_yx()) <= bullet_type->damage_dist)
                             {
-                                temp_distance = pair_distance(player->get_yx(), bullet->get_yx());
-                                float damage = te_eval(bullet_type->damage_func);
-                                player->set_hp(player->get_hp() - damage);
+                                temp_distance = (double)pair_distance(player->get_yx(), bullet->get_yx());
+                                double damage = te_eval(bullet_type->damage_func);
+                                // std::cout << "player damage" << damage;
+                                player->set_hp(player->get_hp() - (float)damage);
                             }
                         }
 
@@ -267,15 +270,17 @@ namespace game
                                 {
                                     if (map->get_bit(i, j) && pair_distance({i, j}, bullet->get_yx()) <= bullet_type->damage_dist)
                                     {
-                                        temp_distance = pair_distance({i, j}, bullet->get_yx());
-                                        map->damage(i, j, te_eval(bullet_type->damage_func));
+                                        temp_distance = (double)pair_distance({i, j}, bullet->get_yx());
+                                        map->damage(i, j, (int)te_eval(bullet_type->damage_func));
                                     }
                                 }
                             }
                         }
                         // destroy bullet
                         delete bullet;
+                        bullet_list_lock.lock();
                         bullet_list->erase(bul_iter++);
+                        bullet_list_lock.unlock();
                         /*
                             list iterator: cannot have something like {erase(it); it++;}
                         */
@@ -303,7 +308,9 @@ namespace game
     void bulletManager::shoot(std::string name, std::pair<float, float> yx, int dir, clock_tick_t shoot_time)
     {
         Bullet *b = new Bullet{name, shoot_time, yx, dir, bul_type_dict[name]->chr};
+        bullet_list_lock.lock();
         bullet_list->push_back(b);
+        bullet_list_lock.unlock();
     }
 
     void bulletManager::stop()

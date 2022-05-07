@@ -90,6 +90,7 @@ namespace game
 
     void zombieManager::add(int type, std::pair<int, int> yx)
     {
+        zombie_list_lock.lock();
         if (type == ZOMBIETYPE_ODNR)
         {
             zombie_list->push_back(new Zombie(yx, ZOMBIETYPE_ODNR, 3));
@@ -98,6 +99,7 @@ namespace game
         {
             // TODO later
         }
+        zombie_list_lock.unlock();
     }
     std::list<Zombie *> *zombieManager::get_zombie_list() { return zombie_list; }
 
@@ -157,7 +159,11 @@ namespace game
                     if ((*zombie_it)->get_hp() <= 0)
                     {
                         player->set_score(player->get_score() + 100);
+                        
+                        zombie_list_lock.lock();
                         zombie_list->erase(zombie_it++);
+                        zombie_list_lock.unlock();
+                        
                         continue;
                     }
 
