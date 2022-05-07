@@ -111,9 +111,9 @@ namespace game
             if ((*json_data)["ui_keyset"]["down"] != nullptr)
                 ret[1] = (*json_data)["ui_keyset"]["down"].get<int>();
             if ((*json_data)["ui_keyset"]["enter"] != nullptr)
-                ret[4] = (*json_data)["ui_keyset"]["enter"].get<int>();
+                ret[2] = (*json_data)["ui_keyset"]["enter"].get<int>();
             if ((*json_data)["ui_keyset"]["quit"] != nullptr)
-                ret[5] = (*json_data)["ui_keyset"]["quit"].get<int>();
+                ret[3] = (*json_data)["ui_keyset"]["quit"].get<int>();
             return ret;
         }
         catch (const std::exception &e)
