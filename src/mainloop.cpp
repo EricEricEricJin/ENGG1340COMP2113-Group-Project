@@ -164,7 +164,6 @@ void mainloop()
         clock->reset();
         zombie_manager->reset();
         bullet_manager->reset();
-        player->reset();
         if (homepage_ret_kind == game::HOMEPAGE_NEWG)
         {
             if (map->load(homepage_ret_string))
@@ -175,7 +174,7 @@ void mainloop()
                     zombie_manager->set_difficulty(game::ZDIFFICULTY_MED);
                 else if (homepage_ret_val == 2)
                     zombie_manager->set_difficulty(game::ZDIFFICULTY_LOW);
-                // break;
+                player->reset();
             }
             else
             {
