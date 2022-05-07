@@ -1,9 +1,8 @@
-# [Box head game]
-> HKU ENGG1340 / COMP2113 Group Project
+# Box head game
+> Group number: 106   
+> Group members: Jin Yushang (3035855064), Lu Haoze (3035951519)
 
-<div align=left>Group members: Jin Yushang (3035855064), Lu Haoze (3035951519)</div>
-
-Description of the game:
+## Description of the game:
 The Box head game is a fast paced zombie shooting game in which the player act as the main character whose aim is to shoot as much zombies as possible(getting more points) before the main character dies. The number of zombies is changing(probably increasing) as the game proceeds, all the zombies are trying to get closer to the main character.
 
 Rules and actions:
@@ -70,18 +69,32 @@ make uninstall RESOURCE_DIR=your_resource_folder INSTALL_DIR=your_binary_folder
 
 __WARNING: When uninstalling, all files under RESOURCE_DIR will be removed. Please type correct path if you use customized location, and backup your savings and resources.__
 
+## Usage
+Start the game, it will first check terminal environment and check resources. Output will be given if they are not satisfied.
+Terminal size equal to or larger than 80 line, 24 columns is required.
+
+Then user can follow the menus and play. By default `j` is used to go down in menus and `k` is used to go up in menus. This can be configured in config file.
+`q` is used to go back in the menus and `Enter` key is used to choose item.
+
+Entered the game, user can use keys to move and shoot. By default they are `w s a d` to move,
+and `SPACE` to fire. This can also be changed in user config file.
+
+User can also use \` key (the key left to `1`) to build walls, and use number keys (1 - 9) to select weapons.
+
+To pause game, press `p`. Then select what to do in the menu.
+
 ## User configure file
 User can configure config file under RESOURCE_DIR. Its name is `init.bh` and is in JSON format.
 
 Following are the keys can be added to configure file
-| Key | Type | Description | Example | Default value |
-| --- | ---- | -----------| --- | --- |
-| theme | string | dark or light, bord or thin | "dark, bord" | "dark, thin"
-| resource_path | string | directory of resource | "/home/eric/hama/" | $HOME/.boxhead/resource/| 
-| saving_path | string | directory of savings | "/home/eric/mysavings/" | $HOME/.boxhead/saving |
-| Clock frequency | integer | Frequency of the game loop | 8 | 12 |
-| player_keyset | map | Keyset to move, shoot | {"up": 107, "down": 106} | {"up": 119, "down": 115, "left": 97, "right": 100, "stop": 101, "fire": 32} |
-| ui_keyset | map | Keyset to move in the menu | {"up": 119, "down": 115} | {"up": 107, "down": 106, "enter": 10, "quit": 113} |
+| Key             | Type    | Description                 | Example                  | Default value                                                               |
+| --------------- | ------- | --------------------------- | ------------------------ | --------------------------------------------------------------------------- |
+| theme           | string  | dark or light, bord or thin | "dark, bord"             | "dark, thin"                                                                |
+| resource_path   | string  | directory of resource       | "/home/eric/hama/"       | $HOME/.boxhead/resource/                                                    |
+| saving_path     | string  | directory of savings        | "/home/eric/mysavings/"  | $HOME/.boxhead/saving                                                       |
+| Clock frequency | integer | Frequency of the game loop  | 8                        | 12                                                                          |
+| player_keyset   | map     | Keyset to move, shoot       | {"up": 107, "down": 106} | {"up": 119, "down": 115, "left": 97, "right": 100, "stop": 101, "fire": 32} |
+| ui_keyset       | map     | Keyset to move in the menu  | {"up": 119, "down": 115} | {"up": 107, "down": 106, "enter": 10, "quit": 113}                          |
 
 For the two key sets, user can also specify part of the keys (unspecified keys will follow the default) 
 
