@@ -16,7 +16,21 @@ Features planning to implement:
 5. Determining whether main character or zombie is killed
 6. Control the appearing and number of zombies throughout the game
 
+## Complexity markers
+- Used multi threading
+- Used JSON file IO
+- Used TUI with color
+- Used keyboard event
+- Used exception handling
+- Evaluate math expression at runtime
+- Used STL (list, vector, pair, map)
+- ...
+
 ## Installation
+### Requirements
+- curses lib is installed
+- GCC version is v7 or higher 
+
 ### Install to default location
 By default, the binary is installed in directory `$HOME/.local/bin/` and resource folder is `$HOME/.boxhead/`. Note that resource folder is created while installation, user does not need to create it.
 
@@ -69,6 +83,7 @@ make uninstall RESOURCE_DIR=your_resource_folder INSTALL_DIR=your_binary_folder
 
 __WARNING: When uninstalling, all files under RESOURCE_DIR will be removed. Please type correct path if you use customized location, and backup your savings and resources.__
 
+
 ## Usage
 ### Start the game
 Start the game by executing `INSTALL_DIR/boxhead` or `boxhead` if `INSTALL_DIR` is in environment variable path. Then the program will check terminal environment and check resources. Output will be given if there are errors or problems.
@@ -99,6 +114,15 @@ Score is counted by both the time you lived for, and the number of zombies you k
 Permanent walls (the walls coded in map files) will never be destroyed, while walls built by player can be destroyed by player with certain weapons. 
 
 Player and zombies cannot go through walls, and some bullets (bullets with wall in their trig_obj list) cannot go through walls. Some bullets (bullets without wall in their trig_obj list) can fly over walls.   
+
+### Some highlights in user experience
+- Preview of minimap is offered when player is selecting map
+- Direction of player is showed with arrow to tell user the heading (which is also the direction of shooting)
+- Theme can be modified (Dark or light, bord of thin) in configure file
+- Keysets can be modified in configure file according to users' preference
+- Beep is made when player crashes on a wall
+- To warn the player, player's HP is displayed in Yellow when it is lower than 66, and displayed in Red when it is lower than 33.
+- Player is asked to double-confirm before deleting a saving 
 
 ### Screenshots 
 homepage
@@ -148,7 +172,7 @@ Following are the keys can be added to configure file
 
 For the two key sets, user can also specify part of the keys instead of all. (unspecified keys will follow the default) 
 
-A full Example of user configure file:
+An example of user configure file:
 ```json
 {
     "theme": "light, bord",
